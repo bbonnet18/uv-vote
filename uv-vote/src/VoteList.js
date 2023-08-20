@@ -1,0 +1,32 @@
+import Table from "react-bootstrap/Table";
+import  Container  from "react-bootstrap/Container";
+
+function VoteList (props){
+   
+
+    return (
+        <Container>
+        <Table striped bordered hover>
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Link</th>
+            </tr>
+          </thead>
+          <tbody>
+            { props.votes ? Object.keys(props.votes).map((itm,ind)=>{
+              return <tr key={itm}> 
+              <td>{props.votes[itm].title}</td>
+              <td>{props.votes[itm].link}</td>
+            </tr>
+            }) : <></>}
+          
+          </tbody>
+        </Table>
+        </Container>
+      );
+}
+
+
+
+export default VoteList
