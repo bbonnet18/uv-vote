@@ -8,15 +8,29 @@ import { useState, useEffect } from "react";
 function App() {
 
   var [votes,setVotes] = useState([{}]);// to hold votes when we get them from the axios call 
-
+  var [voterKey, setVoterKey] = useState(null);// holds the voter key the user entered
   const getVotes = async()=>{
-    const votes = await axios.get("https://vote.u-vote.us/limeapi/participant-surveys");
-    console.log(votes);
-    if(votes && votes.data){
-      setVotes(votes.data);
+
+    let key = document.getElementById('voterKey').value;
+    console.log('key : ',key);
+    const keyPattern = /[a-z0-9]+-[a-z0-9]+-[a-z0-9]+-[a-z0-9]+-[a-z0-9]+/;
+
+    if(key && keyPattern.test(key)) {
+      console.log('they match')
+      const payload = {
+        voterKey:key
+      }
+      const votes = await axios.post("http://localhost:3003/limeapi/participant-surveys",payload);
+      console.log(votes);
+      if(votes && votes.data){
+        setVotes(votes.data);
+      }else{
+        console.error('no votes returned');
+      }
     }else{
-      console.error('no votes returned');
+      alert('incorrect voter key')
     }
+    
   }
 
 
@@ -25,9 +39,12 @@ function App() {
     <Container>
       <Form id="voterForm">
       <InputGroup className="mb-3">
-        <InputGroup.Text id="voterKey">Enter your voter key:</InputGroup.Text>
-        <Form.Control id="voterKey" name="voterKey" size="lg" type="text" placeholder="voter key" defaultValue={'drop your voter key here'} required />
+        <InputGroup.Text for="voterKey">Enter your voter key:</InputGroup.Text>
+        <Form.Control id="voterKey" name="voterKey" size="lg" type="text" placeholder="voter key"  required />
         <Button variant='primary' onClick={()=>getVotes()}>Get Votes</Button>
+        <Form.Control.Feedback type="invalid">
+              Invalid voter key, your voter key should look something like... a1b2c3d4-e5f6-g7h8-i9j0-k11l12m13n14
+        </Form.Control.Feedback>
       </InputGroup>
       </Form>
       <VoteList votes={votes}></VoteList>

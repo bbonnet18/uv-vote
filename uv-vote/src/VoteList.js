@@ -17,7 +17,7 @@ function VoteList (props){
             { props.votes ? Object.keys(props.votes).map((itm,ind)=>{
               return <tr key={itm}> 
               <td>{props.votes[itm].title}</td>
-              <td>{props.votes[itm].link}</td>
+              <td>{props.votes[itm].link && props.votes[itm].link !== "no link available" ? (<a href={props.votes[itm].link} alt='link to vote'>Vote</a>):<span>{props.votes[itm].link}</span>}</td>
             </tr>
             }) : <></>}
           
