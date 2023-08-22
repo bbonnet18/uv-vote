@@ -20,7 +20,7 @@ function App() {
       const payload = {
         voterKey:key
       }
-      const votes = await axios.post("http://vote.u-vote.us/limeapi/participant-surveys",payload);
+      const votes = await axios.post("https://vote.u-vote.us/limeapi/participant-surveys",payload);
       console.log(votes);
       if(votes && votes.data){
         setVotes(votes.data);
