@@ -2,7 +2,7 @@ import './App.css';
 import axios from 'axios';
 
 
-import { InputGroup, Form, Button, Container, Spinner } from "react-bootstrap";
+import { InputGroup, Col, Row, Form, Button, Container, Spinner } from "react-bootstrap";
 import { useState } from 'react';
 
 function Register() {
@@ -25,8 +25,8 @@ function Register() {
     if (isValid) {
       form.classList.remove('invalid');
       var formFields = form.querySelectorAll('.form-control');
-      var genderSelect = form.querySelector('#aGender');
-      var stateSelect = form.querySelector('#aState');
+      var genderSelect = form.querySelector('#gender');
+      var stateSelect = form.querySelector('#state');
       var idFile = form.querySelector("#idFile")
 
       var formData = new FormData();
@@ -36,6 +36,7 @@ function Register() {
             formData.append(formFields[i].name,formFields[i].value);
         }
       }
+
       formData.append('gender',genderSelect.value);
       formData.append('state',stateSelect.value); 
       formData.append('idFile',idFile.files[0]);
@@ -55,20 +56,38 @@ function Register() {
     <Container>
         {loading ? (<Spinner></Spinner>):(
           <>
-              <h2>Add Voter</h2>
+              <h2>Register for U-Vote</h2>
              <Form id="registerForm">
-               <InputGroup className="mb-3">
-                 <InputGroup.Text id="aFirst">First</InputGroup.Text>
-                 <Form.Control id="firstName" name="firstname" size="lg" type="text" placeholder="first name" defaultValue={currentVoter.firstname} required />
-                 <InputGroup.Text id="aLast" className='form-col'>Last</InputGroup.Text>
-                 <Form.Control id="lastName" name="lastname" size="lg" type="text" placeholder="last name" defaultValue={currentVoter.lastname} required />
-               </InputGroup>
-               <InputGroup className='mb-3'>
-                 <InputGroup.Text id="aCity">City</InputGroup.Text>
-                 <Form.Control id="city" name="city" size="lg" type="text" minLength={2} placeholder="city" defaultValue={currentVoter.city} required />
-                 <InputGroup.Text id="aState-addon1" className='form-col' >State</InputGroup.Text>
-                 {/* <Form.Control id="state" name="state" size="lg" type="text" minLength={2} maxLength={2} placeholder="state" defaultValue={currentVoter.state} required/> */}
-                 <Form.Select aria-label="State" name="state" id="aState" required defaultValue="F">
+               <Row className='mb-2'>
+                    <Col lg={2}>
+                        <Form.Label id="aFirst" as={Col} lg={2}>First</Form.Label>
+                    </Col>
+                    <Col lg={10}>
+                        <Form.Control id="firstName" name="firstname" lg={6} type="text" placeholder="first name" defaultValue={currentVoter.firstname} required />
+                    </Col>
+               </Row>
+               <Row  className='mb-2'>
+                    <Col lg={2}>
+                        <Form.Label id="aLast">Last</Form.Label>
+                    </Col>
+                    <Col lg={10}>
+                        <Form.Control id="lastName" name="lastname" type="text" placeholder="last name" defaultValue={currentVoter.lastname} required />
+                    </Col>
+               </Row>
+               <Row className='mb-2'>
+                    <Col lg={2}>
+                        <Form.Label id="aCity" as={Col} lg={2}>City</Form.Label>
+                    </Col>
+                    <Col lg={10}>
+                        <Form.Control id="city" name="city" lg={6} type="text" minLength={2} placeholder="city" defaultValue={currentVoter.city} />
+                    </Col>
+               </Row>
+               <Row className='mb-2'>
+                    <Col lg={2}>
+                        <Form.Label id="aState" as={Col} lg={2}>State</Form.Label>
+                    </Col>
+                    <Col lg={10}>
+                    <Form.Select aria-label="State" name="state" id="state" required defaultValue="F">
                    <option value="AL">Alabama</option>
                    <option value="AK">Alaska</option>
                    <option value="AZ">Arizona</option>
@@ -121,31 +140,51 @@ function Register() {
                    <option value="WI">Wisconsin</option>
                    <option value="WY">Wyoming</option>
                  </Form.Select>
-               </InputGroup>
-               <InputGroup className='mb-3'>
-                 <InputGroup.Text id="aPhone" >Phone</InputGroup.Text>
-                 <Form.Control id="phone" name="phone" size="lg" type="tel" placeholder="phone" defaultValue={currentVoter.phone} required />
-                 <InputGroup.Text id="aAge" className='form-col' >Age</InputGroup.Text>
-                 <Form.Control id="age" name="age" size="lg" type="number" placeholder="age" defaultValue={currentVoter.state} required />
-               </InputGroup>
-               <InputGroup className='mb-3'>
-                 <Form.Check // prettier-ignore
+                    </Col>
+               </Row>
+               <Row className='mb-2'>
+                    <Col lg={2}>
+                        <Form.Label id="aPhone" as={Col} lg={2}>Phone</Form.Label>
+                    </Col>
+                    <Col lg={10}>
+                    <Form.Control id="phone" name="phone" type="tel" placeholder="phone" defaultValue={currentVoter.phone} required />
+                    </Col>
+               </Row>
+               <Row className='mb-2'>
+                    <Col lg={2}>
+                        <Form.Label id="aAge" as={Col} lg={2}>Age</Form.Label>
+                    </Col>
+                    <Col lg={10}>
+                        <Form.Control id="age" name="age" size="lg" type="number" placeholder="age" defaultValue={currentVoter.state} required />
+                    </Col>
+               </Row>
+                <Row className='mb-2'>
+                <Form.Check // prettier-ignore
                    type={'checkbox'}
                    id={'opt-in'}
                    label={'Agree to receive text messages'} required
                  />
-               </InputGroup>
-               <InputGroup className='mb-3'>
-                 <Form.Select aria-label="Gender" name="gender" id="aGender" required defaultValue="F">
+                </Row>
+                <Row className='mb-2'>
+                    <Col lg={2}>
+                        <Form.Label id="aGender" as={Col} lg={2}>Gender</Form.Label>
+                    </Col>
+                    <Col lg={10}>
+                    <Form.Select aria-label="Gender" name="gender" id="gender" required defaultValue="F">
                    <option value="F">Female</option>
                    <option value="M">Male</option>
                    <option value="U">Unknown</option>
                  </Form.Select>
-               </InputGroup>
-               <InputGroup  className='mb-3'>
-                <InputGroup.Text id="aFile" >ID File:</InputGroup.Text>
-                <Form.Control type="file" id="idFile" required/>
-               </InputGroup>
+                    </Col>
+               </Row>
+               <Row className='mb-2'>
+                    <Col lg={2}>
+                        <Form.Label id="aFile" as={Col} lg={2}>ID File:</Form.Label>
+                    </Col>
+                    <Col lg={10}>
+                    <Form.Control type="file" id="idFile" required/>
+                    </Col>
+               </Row>
                <Button variant='primary' onClick={() => register()}>Submit</Button>
              </Form>
           </>
