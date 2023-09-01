@@ -3,6 +3,7 @@ import { useState } from 'react';
 import axios from "axios";
 import {Form, Col, Row, Button, Container, Spinner } from "react-bootstrap";
 import VoteList from './VoteList';
+import { NavLink } from 'react-router-dom';
 
 function Home() {
 
@@ -41,6 +42,9 @@ function Home() {
 
 return(
 <Container className='mt-2'>
+    <nav>
+    <NavLink to="/register">Register</NavLink>
+    </nav>
 <Form id="voterForm" className='mb-3'> 
  <Form.Group className='mb-3' as={Col} lg={8}>
   <Form.Label >

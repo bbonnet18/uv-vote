@@ -1,9 +1,10 @@
 import './App.css';
 import axios from 'axios';
-
+import { NavLink } from 'react-router-dom';
 
 import { InputGroup, Col, Row, Form, Button, Container, Spinner } from "react-bootstrap";
 import { useState } from 'react';
+
 
 function Register() {
 
@@ -40,12 +41,17 @@ function Register() {
       formData.append('gender',genderSelect.value);
       formData.append('state',stateSelect.value); 
       formData.append('idFile',idFile.files[0]);
-
-      setLoading(true)
-      let res = await axios.post("http://localhost:3003/register", formData);
-      form.reset();
-      console.log(res);
-      setLoading(false)
+      try{
+        setLoading(true)
+        let res = await axios.post("https://vote.u-vote.us/register", formData);
+        form.reset();
+        console.log(res);
+        setLoading(false)
+      }catch(err){
+        let errorsDiv = document.getElementById('errors');
+        errorsDiv.innerText = err;
+      }
+     
     } else {
       form.classList.add('invalid');
       console.log('not valid')
@@ -56,7 +62,11 @@ function Register() {
     <Container>
         {loading ? (<Spinner></Spinner>):(
           <>
+             <nav>
+                <NavLink to="/">Home</NavLink>
+            </nav>
               <h2>Register for U-Vote</h2>
+           
              <Form id="registerForm">
                <Row className='mb-2'>
                     <Col lg={2}>
@@ -190,7 +200,7 @@ function Register() {
           </>
            
         )}
-     
+     <div id="errors">Errors Div</div>
     </Container>
   );
 }
