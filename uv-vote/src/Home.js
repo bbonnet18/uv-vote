@@ -1,7 +1,7 @@
 import './App.css';
 import { useState } from 'react';
 import axios from "axios";
-import {Form, Col, Row, Button, Container, Spinner } from "react-bootstrap";
+import {Accordion, Form, Col, Row, Button, Container, Spinner } from "react-bootstrap";
 import VoteList from './VoteList';
 import { NavLink } from 'react-router-dom';
 
@@ -43,8 +43,21 @@ function Home() {
 return(
 <Container className='mt-2'>
     <nav>
-    <NavLink to="/register">Register</NavLink>
+    <NavLink to="/getkey">Get a voter key</NavLink>
     </nav>
+    <Row>
+      <Accordion>
+        <Accordion.Item eventKey="0">
+          <Accordion.Header>What's a voter key?</Accordion.Header>
+          <Accordion.Body>
+            (A voter key is used to vote. Voter keys are anonymous to the voting system, 
+            only you know how you vote and only you can vote with your voter key. 
+            Get a voter key by <a href="/getkey">registering</a>. We'll validate your identity and send you a 
+            text message with your key. )
+          </Accordion.Body>
+        </Accordion.Item>
+      </Accordion>
+    </Row>
 <Form id="voterForm" className='mb-3'> 
  <Form.Group className='mb-3' as={Col} lg={8}>
   <Form.Label >
