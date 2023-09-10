@@ -1,6 +1,7 @@
 import './App.css';
 import Home from './Home';
 import Register from './Register';
+import Verify from './Verify';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 
@@ -13,6 +14,7 @@ export default function App() {
           <Route index element={<Home />} />
         </Route>
         <Route path="/getkey" element={<Register />} />
+        <Route path="/verify" element={<Verify />} />
       </Routes>
     </BrowserRouter>
    

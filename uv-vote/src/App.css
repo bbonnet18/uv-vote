@@ -36,6 +36,37 @@
   border:2px red inset; 
 }
 
+button{
+  border-radius: 0;
+}
+
+.img-preview-wrapper{
+  width:100%;
+  height:auto;
+  min-height: 200px;
+  background-position: center;
+  background-size: 180px;
+  background-image: url('person-badge.svg');
+  background-repeat: no-repeat;
+  border: 1px black out;
+  
+
+}
+
+.img-preview-wrapper::after{
+  content: "preview image";
+}
+
+.img-preview{
+  visibility: hidden;
+}
+.img-preview.showing{
+  visibility: visible;
+}
+
+.key-info-img{
+  height: 32px;
+}
 
 @keyframes App-logo-spin {
   from {

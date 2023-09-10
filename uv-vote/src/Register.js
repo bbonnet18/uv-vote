@@ -2,7 +2,7 @@ import './App.css';
 import axios from 'axios';
 import { NavLink } from 'react-router-dom';
 
-import { InputGroup, Col, Row, Form, Button, Container, Spinner } from "react-bootstrap";
+import { Accordion, Col, Row, Form, Button, Container, Spinner } from "react-bootstrap";
 import { useState } from 'react';
 
 
@@ -43,7 +43,7 @@ function Register() {
       formData.append('idFile',idFile.files[0]);
       try{
         setLoading(true)
-        let res = await axios.post("https://vote.u-vote.us/register", formData);
+        let res = await axios.post("http://localhost:3003/register", formData);//await axios.post("https://vote.u-vote.us/register", formData);
         form.reset();
         console.log(res);
         setLoading(false)
@@ -65,7 +65,9 @@ function Register() {
              <nav>
                 <NavLink to="/">Home</NavLink>
             </nav>
-              <h2>Register for U-Vote</h2>
+              <h2>Register for a U-Vote Key <a href="#keyInfo"><img src="info-circle.svg" className='key-info-img' alt="info about keys"></img></a></h2>
+              
+    <hr></hr>
            
              <Form id="registerForm">
                <Row className='mb-2'>
@@ -75,6 +77,9 @@ function Register() {
                     <Col lg={10}>
                         <Form.Control id="firstName" name="firstname" lg={6} type="text" placeholder="first name" defaultValue={currentVoter.firstname} required />
                     </Col>
+               </Row>
+               <Row id="firstError" class="error-txt">
+                  
                </Row>
                <Row  className='mb-2'>
                     <Col lg={2}>
@@ -192,8 +197,19 @@ function Register() {
                         <Form.Label id="aFile" as={Col} lg={2}>ID File:</Form.Label>
                     </Col>
                     <Col lg={10}>
-                    <Form.Control type="file" id="idFile" required/>
+                    <Form.Control type="file" id="idFile" onChange={(evt)=>{
+                        let preview = document.getElementById('previewImg');
+                        console.log('received a file - ',URL.createObjectURL(evt.target.files[0]));
+                        preview.src = URL.createObjectURL(evt.target.files[0]);
+                        preview.onload = function() {
+                          URL.revokeObjectURL(preview.src) // free memory
+                        }
+                        preview.classList.add('showing')
+                    }} required/>
                     </Col>
+               </Row>
+               <Row className='img-preview-wrapper'>
+                    <img id="previewImg" alt="preview image" src="https://uv-vote-registrations.s3.amazonaws.com/13211234567.jpg?AWSAccessKeyId=AKIAQFHFDVH3JOED3SRX&Expires=1694222459&Signature=h25fetlXfVqVBJChrpQhptgLJrw%3D" className='img-preview'/>
                </Row>
                <Button variant='primary' onClick={() => register()}>Submit</Button>
              </Form>
@@ -201,6 +217,38 @@ function Register() {
            
         )}
      <div id="errors">Errors Div</div>
+     <hr></hr>
+     <Row id="keyInfo">
+      <Accordion>
+        <Accordion.Item eventKey="0">
+          <Accordion.Header>What's a voter key?</Accordion.Header>
+          <Accordion.Body>
+            (A voter key is used to vote. Voter keys are anonymous to the voting system, 
+            only you know how you vote and only you can vote with your voter key. 
+            Get a voter key by <a href="/getkey">registering</a>. We'll validate your identity and send you a 
+            text message with your key. )
+          </Accordion.Body>
+        </Accordion.Item>
+        <Accordion.Item eventKey="1">
+          <Accordion.Header>How do I get a key?</Accordion.Header>
+          <Accordion.Body>
+            (A voter key is used to vote. Voter keys are anonymous to the voting system, 
+            only you know how you vote and only you can vote with your voter key. 
+            Get a voter key by <a href="/getkey">registering</a>. We'll validate your identity and send you a 
+            text message with your key. )
+          </Accordion.Body>
+        </Accordion.Item>
+        <Accordion.Item eventKey="2">
+          <Accordion.Header>How do I vote?</Accordion.Header>
+          <Accordion.Body>
+            (A voter key is used to vote. Voter keys are anonymous to the voting system, 
+            only you know how you vote and only you can vote with your voter key. 
+            Get a voter key by <a href="/getkey">registering</a>. We'll validate your identity and send you a 
+            text message with your key. )
+          </Accordion.Body>
+        </Accordion.Item>
+      </Accordion>
+    </Row>
     </Container>
   );
 }
