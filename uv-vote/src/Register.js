@@ -29,6 +29,7 @@ function Register() {
       var genderSelect = form.querySelector('#gender');
       var stateSelect = form.querySelector('#state');
       var idFile = form.querySelector("#idFile")
+      var selfyFile = form.querySelector("#selfyFile")
 
       var formData = new FormData();
       for (let i = 0; i < formFields.length; i++) {
@@ -41,6 +42,8 @@ function Register() {
       formData.append('gender',genderSelect.value);
       formData.append('state',stateSelect.value); 
       formData.append('idFile',idFile.files[0]);
+      formData.append('selfyFile',selfyFile.files[0]);
+
       try{
         setLoading(true)
         let res = await axios.post("http://localhost:3003/register", formData);//await axios.post("https://vote.u-vote.us/register", formData);
@@ -78,7 +81,7 @@ function Register() {
                         <Form.Control id="firstName" name="firstname" lg={6} type="text" placeholder="first name" defaultValue={currentVoter.firstname} required />
                     </Col>
                </Row>
-               <Row id="firstError" class="error-txt">
+               <Row id="firstError" className="error-txt">
                   
                </Row>
                <Row  className='mb-2'>
@@ -207,9 +210,32 @@ function Register() {
                         preview.classList.add('showing')
                     }} required/>
                     </Col>
+                   
                </Row>
-               <Row className='img-preview-wrapper'>
-                    <img id="previewImg" alt="preview image" src="https://uv-vote-registrations.s3.amazonaws.com/13211234567.jpg?AWSAccessKeyId=AKIAQFHFDVH3JOED3SRX&Expires=1694222459&Signature=h25fetlXfVqVBJChrpQhptgLJrw%3D" className='img-preview'/>
+               <Row>
+               <Col lg={2}>
+                        <Form.Label id="aFile" as={Col} lg={2}>Selfy File:</Form.Label>
+                    </Col>
+               <Col lg={10}>
+                
+                    <Form.Control type="file" id="selfyFile" onChange={(evt)=>{
+                        let preview = document.getElementById('selfyImg');
+                        console.log('received a file - ',URL.createObjectURL(evt.target.files[0]));
+                        preview.src = URL.createObjectURL(evt.target.files[0]);
+                        preview.onload = function() {
+                          URL.revokeObjectURL(preview.src) // free memory
+                        }
+                        preview.classList.add('showing')
+                    }} required/>
+                    </Col>
+               </Row>
+               <Row className="img-preview-wrapper" >
+                    <Col className='img-preview' lg={{span:4,offset:2}}>
+                    <img id="previewImg" alt="preview image" src="" />
+                    </Col>
+                    <Col className='img-preview selfy' lg={{span:4,offset:2}}>
+                    <img id="selfyImg" alt="selfy image" src="" />
+                    </Col>
                </Row>
                <Button variant='primary' onClick={() => register()}>Submit</Button>
              </Form>
