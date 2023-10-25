@@ -4,6 +4,7 @@ import axios from "axios";
 import {Accordion, Form, Col, Row, Button, Container, OverlayTrigger, Popover, Spinner } from "react-bootstrap";
 import VoteList from './VoteList';
 import { NavLink } from 'react-router-dom';
+import config from './config';
 
 function Home() {
 
@@ -23,7 +24,7 @@ function Home() {
       const payload = {
         voterKey:key
       }
-      const votes = await axios.post("https://vote.u-vote.us/limeapi/participant-surveys",payload);
+      const votes = await axios.post(`${config.apiBaseUrl}/limeapi/participant-surveys`,payload);
       console.log(votes);
       
       if(votes && votes.data){

@@ -1,7 +1,7 @@
 import './App.css';
 import axios from 'axios';
 import { NavLink } from 'react-router-dom';
-
+import config from './config';
 import {Col, Row, Form, Button, Container, Spinner } from "react-bootstrap";
 import { useState } from 'react';
 
@@ -28,7 +28,7 @@ function Verify() {
       setLoading(true)
       try{
         
-        let res = await axios.post("http://localhost:3003/validate", payload);//await axios.post("https://vote.u-vote.us/register", formData);
+        let res = await axios.post(`${config.apiBaseUrl}/validate`, payload);//await axios.post("https://vote.u-vote.us/register", formData);
         form.reset();
         console.log(res);
         setLoading(false)

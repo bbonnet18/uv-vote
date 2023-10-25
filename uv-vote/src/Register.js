@@ -1,9 +1,10 @@
 import './App.css';
 import axios from 'axios';
 import { NavLink } from 'react-router-dom';
-
+import config from './config';
 import { Accordion, Col, Row, Form, Button, Container, Spinner } from "react-bootstrap";
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 
 function Register() {
@@ -16,7 +17,9 @@ function Register() {
     "phone": ""
   }
   const [loading, setLoading] = useState(false);
-  const [currentVoter, setCurrentVoter] = useState(starterVoter)
+  const [currentVoter, setCurrentVoter] = useState(starterVoter);
+  const [registered, setRegistered] = useState(false);//to represent that the voter has not registered
+  const navigate = useNavigate();
   // check fields and attempt to add
   const register = async () => {
 
@@ -46,9 +49,11 @@ function Register() {
 
       try{
         setLoading(true)
-        let res = await axios.post("http://localhost:3003/register", formData);//await axios.post("https://vote.u-vote.us/register", formData);
+        let res = await axios.post(`${config.apiBaseUrl}/register`, formData);//await axios.post("https://vote.u-vote.us/register", formData);
         form.reset();
-        console.log(res);
+        if(res.status === 200){
+          navigate('/complete')
+        }
         setLoading(false)
       }catch(err){
         let errorsDiv = document.getElementById('errors');
@@ -200,7 +205,7 @@ function Register() {
                         <Form.Label id="aFile" as={Col} lg={2}>ID File:</Form.Label>
                     </Col>
                     <Col lg={10}>
-                    <Form.Control type="file" id="idFile" onChange={(evt)=>{
+                    <Form.Control type="file" id="idFile" accept='.jpeg' onChange={(evt)=>{
                         let preview = document.getElementById('previewImg');
                         console.log('received a file - ',URL.createObjectURL(evt.target.files[0]));
                         preview.src = URL.createObjectURL(evt.target.files[0]);
@@ -208,7 +213,7 @@ function Register() {
                           URL.revokeObjectURL(preview.src) // free memory
                         }
                         preview.classList.add('showing')
-                    }} required/>
+                    }}  required/>
                     </Col>
                    
                </Row>
@@ -218,7 +223,7 @@ function Register() {
                     </Col>
                <Col lg={10}>
                 
-                    <Form.Control type="file" id="selfyFile" onChange={(evt)=>{
+                    <Form.Control type="file" id="selfyFile" accept='.jpeg' onChange={(evt)=>{
                         let preview = document.getElementById('selfyImg');
                         console.log('received a file - ',URL.createObjectURL(evt.target.files[0]));
                         preview.src = URL.createObjectURL(evt.target.files[0]);
