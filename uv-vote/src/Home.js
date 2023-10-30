@@ -1,9 +1,8 @@
 import './App.css';
 import { useState } from 'react';
 import axios from "axios";
-import {Accordion, Form, Col, Row, Button, Container, OverlayTrigger, Popover, Spinner } from "react-bootstrap";
+import { Nav, Form, Col, Row, Button, Container, OverlayTrigger, Popover, Spinner } from "react-bootstrap";
 import VoteList from './VoteList';
-import { NavLink } from 'react-router-dom';
 import config from './config';
 
 function Home() {
@@ -52,11 +51,7 @@ function Home() {
 
 return(
 <Container className='mt-2'>
-    <nav>
-    <NavLink to="/getkey">Get a voter key</NavLink> | <OverlayTrigger trigger="click" placement="bottom" overlay={popover}>
-        <Button ><img src="key.svg" alt="key" width="30" height="30"></img></Button>
-    </OverlayTrigger>
-    </nav>
+  
     <p>Welcome to U-Vote. Enter your voter key to see your votes. Register here to get a voter key.</p>
 <hr></hr>
 

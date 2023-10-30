@@ -70,9 +70,6 @@ function Register() {
     <Container>
         {loading ? (<Spinner></Spinner>):(
           <>
-             <nav>
-                <NavLink to="/">Home</NavLink>
-            </nav>
               <h2>Register for a U-Vote Key <a href="#keyInfo"><img src="info-circle.svg" className='key-info-img' alt="info about keys"></img></a></h2>
               
     <hr></hr>
