@@ -5,6 +5,7 @@ import { Nav, Form, Col, Row, Button, Container, OverlayTrigger, Popover, Spinne
 import VoteList from './VoteList';
 import config from './config';
 
+
 function Home() {
 
     const [votes,setVotes] = useState([{}]);// to hold votes when we get them from the axios call 

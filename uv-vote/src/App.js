@@ -1,27 +1,14 @@
 import './App.css';
-import Home from './Home';
-import Register from './Register';
-import Confirm from './Confirm';
 import Navbar from './Navbar';
+import { Outlet } from 'react-router-dom';
 import { Container } from 'react-bootstrap';
-import { BrowserRouter, Routes, Route, NavLink } from "react-router-dom";
-
 
 export default function App() {
 
   return (
-    <Container> 
+    <Container>
     <Navbar></Navbar>
-    <BrowserRouter>
-      <Routes>
-        <Route path="/home" element={<Home />}>
-          <Route index element={<Home />} />
-        </Route>
-        <Route path="/getkey" element={<Register />} />
-        <Route path="/complete" element={<Confirm />} />
-      </Routes>
-    </BrowserRouter>
-   
+    <Outlet />
     </Container>
   );
 }
