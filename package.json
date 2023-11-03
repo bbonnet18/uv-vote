@@ -1,0 +1,22 @@
+{
+  "name": "uv-vote",
+  "version": "1.0.0",
+  "description": "this is the app to allow voters to see their possible votes.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bbonnet18/uv-vote.git"
+  },
+  "keywords": [
+    "uv-vote"
+  ],
+  "author": "ben bonnet",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bbonnet18/uv-vote/issues"
+  },
+  "homepage": "https://github.com/bbonnet18/uv-vote#readme"
+}

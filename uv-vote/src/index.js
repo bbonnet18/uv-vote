@@ -6,6 +6,7 @@ import Confirm from './Confirm';
 import Register from './Register';
 import Home from './Home';
 import Info from './Info';
+import About from './About';
 import ErrorPage from './error-page';
 import reportWebVitals from './reportWebVitals';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -28,6 +29,10 @@ const router = createBrowserRouter([
       {
         path:"votes",
         element:<Home />
+      },
+      {
+        path:"about",
+        element:<About />
       },
       {
         path:"confirm",

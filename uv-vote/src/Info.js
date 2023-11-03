@@ -11,7 +11,7 @@ function Info() {
 return(
 <Container className='mt-2'>
   <h2>Welcome to U-Vote</h2>
-    <p>U-Vote is a voting platform tha exists to provide you, the voter, with a direct and convenient way to local, state and federal government. U-Vote votes are non-binding, but address the number one reason we vote - to tell them how we feel!</p>
+    <p>U-Vote is a voting platform that exists to provide you, the voter, with a direct and convenient way to provide your input to your local, state and federal government. U-Vote votes are non-binding, but address the number one reason we vote - to tell them how we feel!</p>
 <hr></hr>
 <Row>
     <Col lg={6} sm={12} className='mt-4'>

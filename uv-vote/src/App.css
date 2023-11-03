@@ -1,7 +1,4 @@
 body{
-  /* min-height: 100vh;
-  display: flex;
-  flex-direction: column; */
   min-height: 100vh;
   display: grid;
   grid-template-rows: 1fr auto;
@@ -71,6 +68,17 @@ button{
   background-image: url('person-bounding-box.svg');
 }
 
+.confirm-txt{
+  text-align: center;
+}
+
+.confirm-img{
+  background-position: center;
+  background-size: 180px;
+  background-image: url('check2-square.svg');
+  background-repeat: no-repeat;
+}
+
 
 .img-preview img{
   visibility: hidden;
@@ -93,19 +101,6 @@ button{
   }
 }
 
-.icon-brand{
-  width:100%;
-  margin-left: 0;
-  margin-right: 0;
-  height:65px;
-  background-color: grey;
-}
-.icon-brand .container{
 
-}
-
-.footer{
-margin-top:auto;
-}
 
 
