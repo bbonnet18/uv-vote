@@ -1,8 +1,7 @@
 import './App.css';
 import axios from 'axios';
-import { NavLink } from 'react-router-dom';
 import config from './config';
-import { Accordion, Col, Row, Form, Button, Container, Spinner } from "react-bootstrap";
+import { Col, Row, Form, Button, Container, Spinner } from "react-bootstrap";
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -18,7 +17,7 @@ function Register() {
   }
   const [loading, setLoading] = useState(false);
   const [currentVoter, setCurrentVoter] = useState(starterVoter);
-  const [registered, setRegistered] = useState(false);//to represent that the voter has not registered
+  // const [registered, setRegistered] = useState(false);//to represent that the voter has not registered
   const navigate = useNavigate();
   // check fields and attempt to add
   const register = async () => {
@@ -245,38 +244,8 @@ function Register() {
            
         )}
      <div id="errors">Errors Div</div>
-     <hr></hr>
-     <Row id="keyInfo">
-      <Accordion>
-        <Accordion.Item eventKey="0">
-          <Accordion.Header>What's a voter key?</Accordion.Header>
-          <Accordion.Body>
-            (A voter key is used to vote. Voter keys are anonymous to the voting system, 
-            only you know how you vote and only you can vote with your voter key. 
-            Get a voter key by <a href="/getkey">registering</a>. We'll validate your identity and send you a 
-            text message with your key. )
-          </Accordion.Body>
-        </Accordion.Item>
-        <Accordion.Item eventKey="1">
-          <Accordion.Header>How do I get a key?</Accordion.Header>
-          <Accordion.Body>
-            (A voter key is used to vote. Voter keys are anonymous to the voting system, 
-            only you know how you vote and only you can vote with your voter key. 
-            Get a voter key by <a href="/getkey">registering</a>. We'll validate your identity and send you a 
-            text message with your key. )
-          </Accordion.Body>
-        </Accordion.Item>
-        <Accordion.Item eventKey="2">
-          <Accordion.Header>How do I vote?</Accordion.Header>
-          <Accordion.Body>
-            (A voter key is used to vote. Voter keys are anonymous to the voting system, 
-            only you know how you vote and only you can vote with your voter key. 
-            Get a voter key by <a href="/getkey">registering</a>. We'll validate your identity and send you a 
-            text message with your key. )
-          </Accordion.Body>
-        </Accordion.Item>
-      </Accordion>
-    </Row>
+
+    
     </Container>
   );
 }

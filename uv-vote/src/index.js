@@ -5,6 +5,7 @@ import App from './App';
 import Confirm from './Confirm';
 import Register from './Register';
 import Home from './Home';
+import Info from './Info';
 import ErrorPage from './error-page';
 import reportWebVitals from './reportWebVitals';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -16,6 +17,10 @@ const router = createBrowserRouter([
     element:<App />,
     errorElement:<ErrorPage />,
     children:[
+      {
+        path:'/',
+        element:<Info />
+      },
       {
         path:"getkey",
         element:<Register />
