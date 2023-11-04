@@ -2,9 +2,9 @@ import './App.css';
 import axios from 'axios';
 import config from './config';
 import { Col, Row, Form, Button, Container, Spinner } from "react-bootstrap";
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-
+import ReCAPTCHA from "react-google-recaptcha";
 
 function Register() {
 
@@ -16,15 +16,40 @@ function Register() {
     "phone": ""
   }
   const [loading, setLoading] = useState(false);
+  const [disabled, setDisabled] = useState(true);
   const [currentVoter, setCurrentVoter] = useState(starterVoter);
   // const [registered, setRegistered] = useState(false);//to represent that the voter has not registered
   const navigate = useNavigate();
+  // for captcha
+  const recaptchaRef = useRef(null);
+
+  // check captcha val
+  const checkCaptcha = async ()=>{
+    const captchaToken = recaptchaRef.current.getValue();
+    recaptchaRef.current.reset();// reset the captcha
+    
+    var payload = {};
+    payload['token'] = captchaToken;
+
+    let response = await axios.post(`${config.apiBaseUrl}/register/check-bot`,payload);//await axios.post("https://vote.u-vote.us/register", formData);
+
+    if(response.status === 200){
+      setDisabled(false);
+    }else{
+      setDisabled(true);
+    }
+
+  }
+
+
+
   // check fields and attempt to add
   const register = async () => {
 
     console.log('currentVoter :', currentVoter);
     const form = document.getElementById('registerForm');
     const isValid = form.checkValidity();
+
     if (isValid) {
       form.classList.remove('invalid');
       var formFields = form.querySelectorAll('.form-control');
@@ -238,7 +263,11 @@ function Register() {
                     <img id="selfyImg" alt="selfy image" src="" />
                     </Col>
                </Row>
-               <Button variant='primary' onClick={() => register()}>Submit</Button>
+              <Row >
+                  <ReCAPTCHA className={(disabled)?'show-captcha':'hide-captcha'} ref={recaptchaRef} sitekey={"6Le-QPIoAAAAAJT5-G3P009gn52wZR3TLLSBB3Fj"} onChange={()=>checkCaptcha()} />
+               </Row>
+              <Button variant='primary' onClick={() => register()} disabled={disabled}>Submit</Button>
+               
              </Form>
           </>
            

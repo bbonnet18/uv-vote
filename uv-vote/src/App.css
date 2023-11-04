@@ -79,6 +79,13 @@ button{
   background-repeat: no-repeat;
 }
 
+.show-captcha{
+  display: block;
+}
+
+.hide-captcha{
+  display: none;
+}
 
 .img-preview img{
   visibility: hidden;
