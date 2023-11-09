@@ -7,7 +7,7 @@ function Confirm() {
 
 
 return(
-<Container className='mt-2'>
+<Container fluid="md" className='mt-2'>
     <p className='confirm-txt'>Registration complete! Your registration will be validated and you will receive your voter key within ~24 hours.</p>
     <Row className="img-preview-wrapper" >
         <Col className='confirm-img' lg={12}>            

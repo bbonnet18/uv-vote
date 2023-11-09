@@ -51,7 +51,7 @@ function Home() {
 
 
 return(
-<Container className='mt-2'>
+<Container fluid="md" className='mt-2'>
   
     <p>Welcome to U-Vote. Enter your voter key to see your votes. Register here to get a voter key.</p>
 <hr></hr>

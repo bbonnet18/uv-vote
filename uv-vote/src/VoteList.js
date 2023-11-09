@@ -5,7 +5,7 @@ function VoteList (props){
    
 
     return (
-        <Container>
+        <Container fluid="md">
         <Table striped bordered hover>
           <thead>
             <tr>

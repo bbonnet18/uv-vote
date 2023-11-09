@@ -76,7 +76,7 @@ function Register() {
         let res = await axios.post(`${config.apiBaseUrl}/register`, formData);//await axios.post("https://vote.u-vote.us/register", formData);
         form.reset();
         if(res.status === 200){
-          navigate('/complete')
+          navigate('/confirm')
         }
         setLoading(false)
       }catch(err){
@@ -91,7 +91,7 @@ function Register() {
 
   }
   return (
-    <Container>
+    <Container fluid="md">
         {loading ? (<Spinner></Spinner>):(
           <>
               <h2>Register for a U-Vote Key <a href="#keyInfo"><img src="info-circle.svg" className='key-info-img' alt="info about keys"></img></a></h2>
@@ -100,10 +100,10 @@ function Register() {
            
              <Form id="registerForm">
                <Row className='mb-2'>
-                    <Col lg={2}>
+                    <Col lg={2} md={12}>
                         <Form.Label id="aFirst" as={Col} lg={2}>First</Form.Label>
                     </Col>
-                    <Col lg={10}>
+                    <Col lg={10} md={12}>
                         <Form.Control id="firstName" name="firstname" lg={6} type="text" placeholder="first name" defaultValue={currentVoter.firstname} required />
                     </Col>
                </Row>
@@ -221,6 +221,14 @@ function Register() {
                  </Form.Select>
                     </Col>
                </Row>
+               <Row className="img-preview-wrapper" >
+               <Col  lg={{span:4,offset:2}} className='step-one'>
+                    <p><strong>Step 1:</strong> Take a picture of your ID</p>
+                    </Col>
+               <Col className='img-preview mt-2' lg={{span:4,offset:2}}>
+                    <img id="previewImg" alt="preview image" src="" />
+              </Col>
+               </Row>
                <Row className='mb-2'>
                     <Col lg={2}>
                         <Form.Label id="aFile" as={Col} lg={2}>ID File:</Form.Label>
@@ -237,6 +245,15 @@ function Register() {
                     }}  required/>
                     </Col>
                    
+               </Row>
+            
+               <Row className="img-preview-wrapper" >
+                    <Col  lg={{span:4,offset:2}} className='step-two'> 
+                    <p><strong>Step 2:</strong>Take a selfy with your ID</p>
+                    </Col>
+                    <Col className='img-preview selfy mt-2' lg={{span:4,offset:2}}>
+                    <img id="selfyImg" alt="selfy image" src="" />
+                    </Col>
                </Row>
                <Row>
                <Col lg={2}>
@@ -255,16 +272,9 @@ function Register() {
                     }} required/>
                     </Col>
                </Row>
-               <Row className="img-preview-wrapper" >
-                    <Col className='img-preview' lg={{span:4,offset:2}}>
-                    <img id="previewImg" alt="preview image" src="" />
-                    </Col>
-                    <Col className='img-preview selfy' lg={{span:4,offset:2}}>
-                    <img id="selfyImg" alt="selfy image" src="" />
-                    </Col>
-               </Row>
+            
               <Row >
-                  <ReCAPTCHA className={(disabled)?'show-captcha':'hide-captcha'} ref={recaptchaRef} sitekey={"6Le-QPIoAAAAAJT5-G3P009gn52wZR3TLLSBB3Fj"} onChange={()=>checkCaptcha()} />
+                  <ReCAPTCHA ref={recaptchaRef} sitekey={"6Le-QPIoAAAAAJT5-G3P009gn52wZR3TLLSBB3Fj"} onChange={()=>checkCaptcha()} />
                </Row>
               <Button variant='primary' onClick={() => register()} disabled={disabled}>Submit</Button>
                

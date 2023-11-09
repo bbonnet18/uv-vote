@@ -9,12 +9,17 @@ function About() {
 
 
 return(
-<Container className='mt-2'>
-  <h2>About U-Vote</h2>
+<Container fluid="md" className='mt-2'>
+  <Row>
+  
+         <h2>About U-Vote</h2>
     <p>U-Vote is a voting platform that exists to provide you, the voter, with a direct and convenient way to provide your input to your local, state and federal government. U-Vote votes are non-binding, but address the number one reason we vote - to tell them how we feel!</p>
-<hr></hr>
-<Row>
-    <Col lg={6} sm={12} className='mt-4'>
+    <hr></hr>
+   
+  </Row>
+
+<Row fluid="md">
+    <Col lg={6} sm={12} xs={12} className='mt-4'>
     <Card style={{ width: '25rem' }}>
       <Card.Body>
         <Card.Title>Card Title</Card.Title>
@@ -28,7 +33,7 @@ return(
       </Card.Body>
     </Card>
     </Col>
-    <Col lg={6} sm={12} className='mt-4'>
+    <Col lg={6} sm={12} xs={12}  className='mt-4'>
     <Card style={{ width: '25rem' }}>
       <Card.Body>
         <Card.Title>Card Title</Card.Title>
