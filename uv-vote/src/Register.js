@@ -26,7 +26,7 @@ function Register() {
   // check captcha val
   const checkCaptcha = async ()=>{
     const captchaToken = recaptchaRef.current.getValue();
-    recaptchaRef.current.reset();// reset the captcha
+    //recaptchaRef.current.reset();// reset the captcha
     
     var payload = {};
     payload['token'] = captchaToken;
@@ -49,7 +49,12 @@ function Register() {
     console.log('currentVoter :', currentVoter);
     const form = document.getElementById('registerForm');
     const isValid = form.checkValidity();
+    const phone = form.querySelector('#phone');
 
+    if(phone){
+      const isvalid = phone.checkValidity();
+      console.log('phone valid: ', isvalid)
+    }
     if (isValid) {
       form.classList.remove('invalid');
       var formFields = form.querySelectorAll('.form-control');
@@ -123,7 +128,7 @@ function Register() {
                         <Form.Label id="aCity" as={Col} lg={2}>City</Form.Label>
                     </Col>
                     <Col lg={10}>
-                        <Form.Control id="city" name="city" lg={6} type="text" minLength={2} placeholder="city" defaultValue={currentVoter.city} />
+                        <Form.Control id="city" name="city" lg={6} type="text" minLength={2} placeholder="city" defaultValue={currentVoter.city} required />
                     </Col>
                </Row>
                <Row className='mb-2'>
@@ -131,7 +136,7 @@ function Register() {
                         <Form.Label id="aState" as={Col} lg={2}>State</Form.Label>
                     </Col>
                     <Col lg={10}>
-                    <Form.Select aria-label="State" name="state" id="state" required defaultValue="F">
+                    <Form.Select aria-label="State" name="state" id="state" required defaultValue="AL" >
                    <option value="AL">Alabama</option>
                    <option value="AK">Alaska</option>
                    <option value="AZ">Arizona</option>
@@ -191,7 +196,10 @@ function Register() {
                         <Form.Label id="aPhone" as={Col} lg={2}>Phone</Form.Label>
                     </Col>
                     <Col lg={10}>
-                    <Form.Control id="phone" name="phone" type="tel" placeholder="phone" defaultValue={currentVoter.phone} required />
+                    <Form.Control className='' id="phone" name="phone" maxLength={10} minLength={10} type="tel" pattern="[0-9]{10}" placeholder="phone" defaultValue={currentVoter.phone} required />
+                    <Form.Text id="phoneHelp" muted>
+                          Enter a 10 digit phone number starting with the area code
+                    </Form.Text>
                     </Col>
                </Row>
                <Row className='mb-2'>
@@ -199,15 +207,26 @@ function Register() {
                         <Form.Label id="aAge" as={Col} lg={2}>Age</Form.Label>
                     </Col>
                     <Col lg={10}>
-                        <Form.Control id="age" name="age" size="lg" type="number" placeholder="age" defaultValue={currentVoter.state} required />
+                        <Form.Control id="age" name="age" size="lg" type="number" min={18} placeholder="age" defaultValue={currentVoter.age} required />
                     </Col>
+                    <Form.Text id="phoneHelp" muted>
+                          You must be 18 or older
+                    </Form.Text>
                </Row>
                 <Row className='mb-2'>
-                <Form.Check // prettier-ignore
+                  <Col lg={2}>
+                    <Form.Label id="aText" as={Col} lg={2}>Agree to text messages</Form.Label>
+                  </Col>
+                  <Col lg={10}>
+                  <Form.Check // prettier-ignore
                    type={'checkbox'}
                    id={'opt-in'}
-                   label={'Agree to receive text messages'} required
+                   label={'I agree to receive text messages from U-Vote'} required
                  />
+                  </Col>
+                   <Form.Text id="phoneHelp" muted>
+                      Agreement is required for U-Vote participation
+                    </Form.Text>
                 </Row>
                 <Row className='mb-2'>
                     <Col lg={2}>
@@ -217,7 +236,7 @@ function Register() {
                     <Form.Select aria-label="Gender" name="gender" id="gender" required defaultValue="F">
                    <option value="F">Female</option>
                    <option value="M">Male</option>
-                   <option value="U">Unknown</option>
+                   <option value="U">Note Specified</option>
                  </Form.Select>
                     </Col>
                </Row>
@@ -273,10 +292,10 @@ function Register() {
                     </Col>
                </Row>
             
-              <Row >
+              <Row className='mb-4 mt-4' >
                   <ReCAPTCHA ref={recaptchaRef} sitekey={"6Le-QPIoAAAAAJT5-G3P009gn52wZR3TLLSBB3Fj"} onChange={()=>checkCaptcha()} />
                </Row>
-              <Button variant='primary' onClick={() => register()} disabled={disabled}>Submit</Button>
+              <Button variant='primary' onClick={() => register()} disabled={disabled}>Register</Button>
                
              </Form>
           </>

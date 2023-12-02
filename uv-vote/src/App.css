@@ -122,9 +122,20 @@ button{
   font-size: large;
 }
 
-#registerForm input[type='text']{
+
+
+#registerForm input[type='text'], #registerForm input[type='tel'], #registerForm input[type='checkbox'], #registerForm select {
   line-height: 2rem;
   font-size: large;
+}
+
+#registerForm.invalid input[type='text']:invalid, #registerForm.invalid input[type='tel']:invalid, #registerForm.invalid input[type='checkbox']:invalid, #registerForm.invalid select:invalid{
+  background-color: lightpink;
+}
+
+#registerForm.valid input[type='text']:valid, #registerForm.valid input[type='tel']:valid, #registerForm.valid input[type='checkbox']:valid, #registerForm.valid select:valid{
+  background-color: palegreen;
+
 }
 
 
