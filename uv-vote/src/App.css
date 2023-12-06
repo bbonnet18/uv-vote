@@ -34,6 +34,10 @@ body{
   color: #61dafb;
 }
 
+.bg-grey {
+  background-color: #f6f6f6;
+}
+
 #voterKey{
   border:1px black;
 }
@@ -55,6 +59,23 @@ button{
   
 }
 
+.hero-image{
+  background-image: url("vote_here_large2.jpeg");
+
+  /* Set a specific height */
+  height: 472px;
+
+  /* Position and center the image to scale nicely on all screens */
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: relative;
+  border-radius: 5px;
+
+}
+
+
+
 /* .img-preview{
   background-position: center;
   background-size: 180px;
@@ -73,6 +94,68 @@ button{
   border-radius: 15px;
   min-height:200px;
 
+}
+
+.alt-grey{
+  background-color: grey;
+  border-radius: 15px;
+}
+
+.card{
+  height: 100% !important;
+  margin-left:auto;
+  margin-right: auto;
+}
+
+
+
+.card .card-img-top{
+  padding: 0 10px;
+  background-color: #282c34;
+}
+
+.centered-img{
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#voiceImg{
+  width: 400px;
+}
+
+#modernPhone{
+  width:300px;
+}
+
+.figure-img{
+  margin-top: 30px;
+
+}
+
+.jumbotron {
+  background-color: #f4511e;
+  color: #fff;
+  padding: 100px 25px;
+  font-family: Montserrat, sans-serif;
+}
+
+.u-vote-blade-grey{
+  color:white;
+}
+
+.u-vote-description{
+  margin-top:20px;
+  padding-right: 2em;
+
+}
+
+.voter-img{
+  height:300px;
+  background-image: url('woman_megaphone Medium.jpeg');
+  background-position: top;
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: relative;
 }
 
 

@@ -1,6 +1,6 @@
 import './App.css';
 
-import { Accordion, Container, Col, Row, Card,} from "react-bootstrap";
+import { Container, Col, Row, Card,} from "react-bootstrap";
 import { useNavigate } from 'react-router-dom';
 
 function Info() {
@@ -10,72 +10,47 @@ function Info() {
 
 return(
 <Container className='mt-2'>
+  <Row className='mb-2'>
+    <Col lg={12} className='hero-image'>
+
+    </Col>
+  </Row>
   <h2>Welcome to U-Vote</h2>
     <p>U-Vote is a voting platform that exists to provide you, the voter, with a direct and convenient way to provide your input to your local, state and federal government. U-Vote votes are non-binding, but address the number one reason we vote - to tell them how we feel!</p>
+    <p><a href="/getkey" alt="get a voter key">Get a voter key</a></p>
 <hr></hr>
+<h2>What is U-Vote?</h2>
+<p>U-Vote is a modern voting system. Our venerable voting system has served us for over 200 years and remains the binding way we make decisions on our leaders and our intentions at the federal, state and local level. But the system has its limitations. For example, we only vote once a year and only on a few issues and candidates. At U-Vote, we think we can do better. We all know that there are far more issues of concern than those that end up on the ballot each year. U-Vote intends to close that gap between the relatively small amount covered on a typical ballot and how voters really feel about issues both on and off the ballot. 
+</p>
 <Row>
     <Col lg={6} sm={12} className='mt-4'>
-    <Card style={{ width: '25rem' }}>
+    <Card >
+      <Card.Img variant='top' src="devices.png"></Card.Img>
       <Card.Body>
-        <Card.Title>Card Title</Card.Title>
-        <Card.Subtitle className="mb-2 text-muted">Card Subtitle</Card.Subtitle>
+        <Card.Title>Modern Voting</Card.Title>
         <Card.Text>
-          Some quick example text to build on the card title and make up the
-          bulk of the card's content.
+          Voting that's convenient and feels like it should for the 21st century. 
         </Card.Text>
-        <Card.Link href="#">Card Link</Card.Link>
-        <Card.Link href="#">Another Link</Card.Link>
+        <Card.Link href="#">See how we do it</Card.Link>
       </Card.Body>
     </Card>
     </Col>
     <Col lg={6} sm={12} className='mt-4'>
-    <Card style={{ width: '25rem' }}>
+    <Card >
+      <div className='voter-img'></div>
       <Card.Body>
-        <Card.Title>Card Title</Card.Title>
-        <Card.Subtitle className="mb-2 text-muted">Card Subtitle</Card.Subtitle>
+        <Card.Title>Be Heard</Card.Title>
         <Card.Text>
-          Some quick example text to build on the card title and make up the
-          bulk of the card's content.
+          Voters are unique, we're humans afterall. We value things differently and U-Vote helps bring those values home to policy makers and elected officials.  
         </Card.Text>
-        <Card.Link href="#">Card Link</Card.Link>
-        <Card.Link href="#">Another Link</Card.Link>
+        <Card.Link href="#">How we amplify your voice</Card.Link>
       </Card.Body>
     </Card>
     </Col>
 
 </Row>
 <hr></hr>
-<Row id="keyInfo">
-      <Accordion>
-        <Accordion.Item eventKey="0">
-          <Accordion.Header>What's a voter key?</Accordion.Header>
-          <Accordion.Body>
-            (A voter key is used to vote. Voter keys are anonymous to the voting system, 
-            only you know how you vote and only you can vote with your voter key. 
-            Get a voter key by <a href="/getkey">registering</a>. We'll validate your identity and send you a 
-            text message with your key. )
-          </Accordion.Body>
-        </Accordion.Item>
-        <Accordion.Item eventKey="1">
-          <Accordion.Header>How do I get a key?</Accordion.Header>
-          <Accordion.Body>
-            (A voter key is used to vote. Voter keys are anonymous to the voting system, 
-            only you know how you vote and only you can vote with your voter key. 
-            Get a voter key by <a href="/getkey">registering</a>. We'll validate your identity and send you a 
-            text message with your key. )
-          </Accordion.Body>
-        </Accordion.Item>
-        <Accordion.Item eventKey="2">
-          <Accordion.Header>How do I vote?</Accordion.Header>
-          <Accordion.Body>
-            (A voter key is used to vote. Voter keys are anonymous to the voting system, 
-            only you know how you vote and only you can vote with your voter key. 
-            Get a voter key by <a href="/getkey">registering</a>. We'll validate your identity and send you a 
-            text message with your key. )
-          </Accordion.Body>
-        </Accordion.Item>
-      </Accordion>
-    </Row>
+
 </Container>
 )
 }
