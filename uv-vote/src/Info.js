@@ -9,12 +9,17 @@ function Info() {
 
 
 return(
-<Container className='mt-2'>
-  <Row className='mb-2'>
-    <Col lg={12} className='hero-image'>
+<>
+<div class="jumbotron text-center">
+  <img src="statue_of_liberty_banner.jpg"  />
+  <div className='banner-text'>
+  <h1>U-Vote</h1> 
+  <p>A modern voting experience</p> 
+  </div>
 
-    </Col>
-  </Row>
+</div>
+<Container className='mt-2'>
+ 
   <h2>Welcome to U-Vote</h2>
     <p>U-Vote is a voting platform that exists to provide you, the voter, with a direct and convenient way to provide your input to your local, state and federal government. U-Vote votes are non-binding, but address the number one reason we vote - to tell them how we feel!</p>
     <p><a href="/getkey" alt="get a voter key">Get a voter key</a></p>
@@ -31,7 +36,7 @@ return(
         <Card.Text>
           Voting that's convenient and feels like it should for the 21st century. 
         </Card.Text>
-        <Card.Link href="#">See how we do it</Card.Link>
+        <Card.Link href="/about#elevate">See how we do it</Card.Link>
       </Card.Body>
     </Card>
     </Col>
@@ -43,7 +48,7 @@ return(
         <Card.Text>
           Voters are unique, we're humans afterall. We value things differently and U-Vote helps bring those values home to policy makers and elected officials.  
         </Card.Text>
-        <Card.Link href="#">How we amplify your voice</Card.Link>
+        <Card.Link href="/about#u-vote">How we amplify your voice</Card.Link>
       </Card.Body>
     </Card>
     </Col>
@@ -52,6 +57,7 @@ return(
 <hr></hr>
 
 </Container>
+</>
 )
 }
 

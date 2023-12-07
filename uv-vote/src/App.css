@@ -34,6 +34,14 @@ body{
   color: #61dafb;
 }
 
+#avatarImg{
+  width: 300px;
+  margin-top:50px;
+  margin-left:auto;
+  margin-right: auto;
+  display: block;
+}
+
 .bg-grey {
   background-color: #f6f6f6;
 }
@@ -97,8 +105,11 @@ button{
 }
 
 .alt-grey{
-  background-color: grey;
-  border-radius: 15px;
+  background-color: rgba(128,128,128,0.1)
+}
+
+.row img{
+  border-radius: 5px;
 }
 
 .card{
@@ -133,10 +144,37 @@ button{
 }
 
 .jumbotron {
-  background-color: #f4511e;
-  color: #fff;
-  padding: 100px 25px;
+  color: #000;
+  padding: 0;
   font-family: Montserrat, sans-serif;
+  height: 200px;
+  overflow: hidden;
+}
+
+.jumbotron img{
+  opacity: 0.6;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: auto;
+
+}
+
+.jumbotron-bg{
+  background-color: rgb(88,122,185,0.6)
+}
+
+.jumbotron-short{
+  max-height: 120px;
+}
+
+.banner-text{
+  position:relative;
+  top: 35px;
+  padding: 20px 20px;
+  background-color: rgb(255,255,255,0.2);
+
+
 }
 
 .u-vote-blade-grey{

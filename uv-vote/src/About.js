@@ -10,9 +10,9 @@ function About() {
 
 return(
 <>
-<div class="jumbotron text-center">
-  <h1>U-Vote</h1> 
-  <p>A modern voting experience</p> 
+<div className="jumbotron text-center jumbotron-bg jumbotron-short pt-3">
+    <h1>U-Vote</h1> 
+    <p>A modern voting experience</p> 
 </div>
 <Container  fluid="md" className='mt-2'>
   <Row>
@@ -21,21 +21,12 @@ return(
     <p>U-Vote is a voting platform that exists to provide you, the <strong>Voter</strong>, with a direct and convenient way to engage with your elected officials at the local, state and federal level. U-Vote votes are non-binding, but address the number one reason we vote - to tell them how we feel!</p>
    
   </Row>
-
- <Row className='pb-3 mb-2'> 
+  
+ <Row id="u-vote" className='pb-3 mb-2 alt-grey'> 
     <Col lg={4} sm={12} xs={12} className='mt-4'>
-    <Card >
-      <Card.Img id="modernPhone" variant='top' src="to-do-list-736_640.png"></Card.Img> 
-      <Card.Body>
-        
-        <Card.Title></Card.Title>
-        <Card.Subtitle className="mb-2 text-muted">A modern voting experience.</Card.Subtitle>
-        <Card.Text>
-          Vote with your smartphone, tablet or computer on issues that matter to you. 
-        </Card.Text>
-        <Card.Link href="#">Get a voter key</Card.Link>
-      </Card.Body>
-    </Card>
+    
+      <img id="modernPhone" src="to-do-list-736_640.png" /> 
+     
     </Col>
     <Col lg={8} sm={12} xs={12}  className='mt-4'>
     <h2>U-Vote is...</h2>
@@ -52,7 +43,7 @@ return(
     </Col>
 
 </Row>
-<Row>
+<Row id="elevate" className='mt-3'>
   <Col sm={8}>
     <h2>How we elevate your voice</h2>
     <p>Imagine you only get once a year to make your voice heard by your elected officials. Now imagine that once a year moment, you can ony express yourself through yes or no answers or by checking a box for one candidate or another. Going further, now imagine that there are only a couple of issues or races, so you have to limit yourself to whatever is on the ballot.</p>
@@ -68,8 +59,8 @@ return(
     <div className="centered-img"><img id="voiceImg" src="interviewer_sm.jpeg" /></div>
   </Col>
 </Row>
-<Row>
-  <Col lg={6} sm={12} className='mt-4'>
+<Row className='mt-3 alt-grey'>
+  <Col lg={8} sm={12} className='mt-4'>
   <h3>How we handle your anonymity</h3>
   <Row>
     <Col lg={{span:10,offset:1}} className='x-offset-1'>
@@ -81,23 +72,20 @@ return(
       You are anonymous when voting because we create a copy of you to use n the voting system
     </Figure.Caption>
   </Figure>
-  <p>U-Vote creates an anonymous copy of you and puts that anonymous copy in the voting system. We send you a key, that allows you to operate as the anonymous copy in the system. Basically, you anonymous copy votes and that's all the system knows about.</p>
+  <p>U-Vote creates an anonymous copy of you and puts that anonymous copy in the voting system. We send you a key, that allows you to operate as the anonymous copy in the system. Basically, your anonymous copy votes and that's all the system knows about.</p>
     </Col>
   </Row>
   
   </Col>
-  <Col lg={6} sm={12} className='mt-4'>
-  <Card style={{ width: '25rem' }}>
-  <Card.Img variant='top' src="avatar-3814081_640.png"></Card.Img> 
-      <Card.Body>
-        <Card.Title>Anonymous</Card.Title>
-        <Card.Subtitle className="mb-2 text-muted">21st century voting</Card.Subtitle>
-        <Card.Text>
-          U-Vote is a lot like normal voting, just WAY more convenient and we cover more issues that matter to you. Your votes are anonymous, we just maintain a voter roll like a normal election office would.
-        </Card.Text>
-        <Card.Link href="#">See how it works</Card.Link>
-      </Card.Body>
-    </Card>
+  <Col lg={4} sm={12} className='mt-4'>
+  <Figure>
+    <Figure.Image width={300} height={300} alt="400x400" src="avatar-bw.jpg">
+      
+    </Figure.Image>
+    <Figure.Caption>
+      Administrators do not have access to your voter key. Your voter key is kept separately from your data in the voter roll.  Matching your key to you can only be done in certain circumstances based on a request from you. This is just one step we take to keep your voting record anonymous.  
+    </Figure.Caption>
+  </Figure>
   </Col>
 </Row>
 <Row>

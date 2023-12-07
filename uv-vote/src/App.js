@@ -7,8 +7,8 @@ export default function App() {
 
   return (
     <>
-    <div className="icon-brand"><div className='container'><a><img src='vote_draft_icon.png' ></img></a>U-Vote</div></div>
-    <Container fluid>
+    <div className="icon-brand"><div className='container'><a><img src='u-vote-logo-new-trans.png' ></img></a>U-Vote</div></div>
+    <Container fluid className='p-0'>
       <Container>
       <Navbar></Navbar>
       </Container>
