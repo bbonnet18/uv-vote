@@ -36,7 +36,7 @@ return(
         <Card.Text>
           Voting that's convenient and feels like it should for the 21st century. 
         </Card.Text>
-        <Card.Link href="/about#elevate">See how we do it</Card.Link>
+        <Card.Link href="/about">See how we do it</Card.Link>
       </Card.Body>
     </Card>
     </Col>
@@ -48,7 +48,7 @@ return(
         <Card.Text>
           Voters are unique, we're humans afterall. We value things differently and U-Vote helps bring those values home to policy makers and elected officials.  
         </Card.Text>
-        <Card.Link href="/about#u-vote">How we amplify your voice</Card.Link>
+        <Card.Link href="/about">How we amplify your voice</Card.Link>
       </Card.Body>
     </Card>
     </Col>

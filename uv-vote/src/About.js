@@ -14,7 +14,7 @@ return(
     <h1>U-Vote</h1> 
     <p>A modern voting experience</p> 
 </div>
-<Container  fluid="md" className='mt-2'>
+<Container className='mt-2'>
   <Row>
   
     <h2>About U-Vote</h2>
@@ -23,12 +23,12 @@ return(
   </Row>
   
  <Row id="u-vote" className='pb-3 mb-2 alt-grey'> 
-    <Col lg={4} sm={12} xs={12} className='mt-4'>
+    <Col lg={4} sm={12} className='mt-4'>
     
       <img id="modernPhone" src="to-do-list-736_640.png" /> 
      
     </Col>
-    <Col lg={8} sm={12} xs={12}  className='mt-4'>
+    <Col lg={8} sm={12}  className='mt-4'>
     <h2>U-Vote is...</h2>
     <p>While U-Vote helps in a lot of ways, there are a few that set it apart from the way we currently vote.</p>
 
@@ -69,7 +69,7 @@ return(
 
     </Figure.Image>
     <Figure.Caption>
-      You are anonymous when voting because we create a copy of you to use n the voting system
+      You are anonymous when voting because we create a copy of you to use in the voting system
     </Figure.Caption>
   </Figure>
   <p>U-Vote creates an anonymous copy of you and puts that anonymous copy in the voting system. We send you a key, that allows you to operate as the anonymous copy in the system. Basically, your anonymous copy votes and that's all the system knows about.</p>
