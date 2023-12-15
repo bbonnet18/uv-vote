@@ -18,6 +18,9 @@ function Register() {
   const [loading, setLoading] = useState(false);
   const [disabled, setDisabled] = useState(true);
   const [currentVoter, setCurrentVoter] = useState(starterVoter);
+  const [addressOptions, setAddressOptions] = useState([]);// used to show addresses as the user types 
+  const [selectedAddress,setSelectedAddress] = useState();// the address the user chose
+  const [showSelect,setShowSelect] = useState(false);// controls showing the address select
   // const [registered, setRegistered] = useState(false);//to represent that the voter has not registered
   const navigate = useNavigate();
   // for captcha
@@ -41,6 +44,23 @@ function Register() {
 
   }
 
+  // checks to see if the address entered is a real address and offers options 
+  const checkAddress = async (val) => {
+
+    if(val.length === 0){
+      return;
+    }
+
+    setShowSelect(true);
+
+    const payload = {address:val};
+    let res = await axios.post(`${config.apiBaseUrl}/address`, payload);
+    if(res && res.data && res.data.result){
+      setAddressOptions(res.data.result)
+    }else{
+      setAddressOptions([]); 
+    }
+  }
 
 
   // check fields and attempt to add
@@ -126,70 +146,45 @@ function Register() {
                </Row>
                <Row className='mb-2'>
                     <Col lg={2}>
+                        <Form.Label id="aAddress" as={Col} lg={2}>Address</Form.Label>
+                    </Col>
+                    <Col lg={10}>
+                        <Form.Control id="address" name="address" lg={6} type="text" placeholder="enter and select your address" defaultValue="" onChange={(e)=>{
+                            checkAddress(e.target.value);
+                        }}  required />
+                    </Col>
+               </Row>
+               { showSelect ? (<Row>
+                  <Col lg={{offset:2,span:10}}>
+                        <Form.Select id="address" name="address" lg={6} type="text" minLength={2} placeholder="enter and select your address" onChange={(e) => { setSelectedAddress(addressOptions[e.target.value]); setShowSelect(false); }}  required >
+                            {addressOptions.map((itm,ind) => {
+                              return <option key={ind} value={ind}>{itm.streetLine}</option>
+                            })}
+                        </Form.Select>
+                    </Col>
+               </Row>) : (<></>)}
+               
+               <Row className='mb-2'>
+                    <Col lg={2}>
                         <Form.Label id="aCity" as={Col} lg={2}>City</Form.Label>
                     </Col>
                     <Col lg={10}>
-                        <Form.Control id="city" name="city" lg={6} type="text" minLength={2} placeholder="city" defaultValue={currentVoter.city} required />
+                        <Form.Control id="city" name="city" lg={6} type="text" minLength={2} placeholder="city" defaultValue={currentVoter.city} required disabled/>
                     </Col>
                </Row>
+          
                <Row className='mb-2'>
                     <Col lg={2}>
                         <Form.Label id="aState" as={Col} lg={2}>State</Form.Label>
                     </Col>
-                    <Col lg={10}>
-                    <Form.Select aria-label="State" name="state" id="state" required defaultValue="AL" >
-                   <option value="AL">Alabama</option>
-                   <option value="AK">Alaska</option>
-                   <option value="AZ">Arizona</option>
-                   <option value="AR">Arkansas</option>
-                   <option value="CA">California</option>
-                   <option value="CO">Colorado</option>
-                   <option value="CT">Connecticut</option>
-                   <option value="DE">Delaware</option>
-                   <option value="DC">District Of Columbia</option>
-                   <option value="FL">Florida</option>
-                   <option value="GA">Georgia</option>
-                   <option value="HI">Hawaii</option>
-                   <option value="ID">Idaho</option>
-                   <option value="IL">Illinois</option>
-                   <option value="IN">Indiana</option>
-                   <option value="IA">Iowa</option>
-                   <option value="KS">Kansas</option>
-                   <option value="KY">Kentucky</option>
-                   <option value="LA">Louisiana</option>
-                   <option value="ME">Maine</option>
-                   <option value="MD">Maryland</option>
-                   <option value="MA">Massachusetts</option>
-                   <option value="MI">Michigan</option>
-                   <option value="MN">Minnesota</option>
-                   <option value="MS">Mississippi</option>
-                   <option value="MO">Missouri</option>
-                   <option value="MT">Montana</option>
-                   <option value="NE">Nebraska</option>
-                   <option value="NV">Nevada</option>
-                   <option value="NH">New Hampshire</option>
-                   <option value="NJ">New Jersey</option>
-                   <option value="NM">New Mexico</option>
-                   <option value="NY">New York</option>
-                   <option value="NC">North Carolina</option>
-                   <option value="ND">North Dakota</option>
-                   <option value="OH">Ohio</option>
-                   <option value="OK">Oklahoma</option>
-                   <option value="OR">Oregon</option>
-                   <option value="PA">Pennsylvania</option>
-                   <option value="RI">Rhode Island</option>
-                   <option value="SC">South Carolina</option>
-                   <option value="SD">South Dakota</option>
-                   <option value="TN">Tennessee</option>
-                   <option value="TX">Texas</option>
-                   <option value="UT">Utah</option>
-                   <option value="VT">Vermont</option>
-                   <option value="VA">Virginia</option>
-                   <option value="WA">Washington</option>
-                   <option value="WV">West Virginia</option>
-                   <option value="WI">Wisconsin</option>
-                   <option value="WY">Wyoming</option>
-                 </Form.Select>
+                    <Col lg={4} className='mb-2'>
+                    <Form.Control aria-label="State" name="state" id="state" defaultValue="AL" required disabled />
+                    </Col>
+                    <Col lg={2}>
+                        <Form.Label id="aZip" as={Col} lg={2}>Zipcode</Form.Label>
+                    </Col>
+                    <Col lg={4}>
+                    <Form.Control aria-label="Zipcode" name="zipcode" id="zipcode" defaultValue="" required disabled />
                     </Col>
                </Row>
                <Row className='mb-2'>

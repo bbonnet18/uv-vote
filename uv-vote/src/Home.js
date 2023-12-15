@@ -17,8 +17,6 @@ function Home() {
   // check the voter's clipboard and paste in the value if it fits the format
 
     async function getClipboard(){
-
-      console.log('env vars: ', process.env)
       if(window.navigator && window.navigator.clipboard){
 
         const clipboardData = await window.navigator.clipboard.readText();
