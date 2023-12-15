@@ -82,11 +82,12 @@ function Register() {
         form.reset();
         if(res.status === 200){
           navigate('/confirm')
+        }else{
+          alert('unable to register, please try live validation');
         }
         setLoading(false)
       }catch(err){
-        let errorsDiv = document.getElementById('errors');
-        errorsDiv.innerText = err;
+        alert('unable to register, please try live validation');
       }
      
     } else {
@@ -301,7 +302,6 @@ function Register() {
           </>
            
         )}
-     <div id="errors">Errors Div</div>
 
     
     </Container>

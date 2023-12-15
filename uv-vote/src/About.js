@@ -46,10 +46,10 @@ return(
 <Row id="elevate" className='mt-3'>
   <Col sm={8}>
     <h2>How we elevate your voice</h2>
-    <p>Imagine you only get once a year to make your voice heard by your elected officials. Now imagine that once a year moment, you can ony express yourself through yes or no answers or by checking a box for one candidate or another. Going further, now imagine that there are only a couple of issues or races, so you have to limit yourself to whatever is on the ballot.</p>
+    <p>Imagine you only get once a year to make your voice heard by your elected officials. Now imagine that in that once a year moment, you can ony express yourself through yes or no answers or by checking a box for one candidate or another. Going further, now imagine that there are only a couple of issues or races, so you have to limit yourself to whatever is on the ballot.</p>
     <p>Wow, that's pretty restrictive... but that's the reality we live in.</p> 
     <ul>
-      <li>What if you wanted to provide some additonal feedback other than yes or no? or a selection for a single candidate?</li>
+      <li>What if you wanted to provide some additonal feedback other than yes or no?</li>
       <li>What if you didn't want any of the candidates that were on the ballot?</li>
       <li>What if you wanted to express your voice on something that wasn't on the ballot at all?</li>
     </ul>
@@ -96,28 +96,22 @@ return(
         <Accordion.Item eventKey="0">
           <Accordion.Header>What's a voter key?</Accordion.Header>
           <Accordion.Body>
-            (A voter key is used to vote. Voter keys are anonymous to the voting system, 
+            A voter key is used to vote. Voter keys are anonymous to the voting system, 
             only you know how you vote and only you can vote with your voter key. 
             Get a voter key by <a href="/getkey">registering</a>. We'll validate your identity and send you a 
-            text message with your key. )
+            text message with your key.
           </Accordion.Body>
         </Accordion.Item>
         <Accordion.Item eventKey="1">
           <Accordion.Header>How do I get a key?</Accordion.Header>
           <Accordion.Body>
-            (A voter key is used to vote. Voter keys are anonymous to the voting system, 
-            only you know how you vote and only you can vote with your voter key. 
-            Get a voter key by <a href="/getkey">registering</a>. We'll validate your identity and send you a 
-            text message with your key. )
+            You can get a key by <a href="/getkey">registering</a>. We will validate your identity and add you to the appropriate voting areas based on your state and local area. You will receive a voting key and you will use that to vote, it's pretty simple.
           </Accordion.Body>
         </Accordion.Item>
         <Accordion.Item eventKey="2">
           <Accordion.Header>How do I vote?</Accordion.Header>
           <Accordion.Body>
-            (A voter key is used to vote. Voter keys are anonymous to the voting system, 
-            only you know how you vote and only you can vote with your voter key. 
-            Get a voter key by <a href="/getkey">registering</a>. We'll validate your identity and send you a 
-            text message with your key. )
+            Once you receive a key, you can go to <a href="/votes">your votes</a> to see what votes are taking place in your state and local area, as well as any national votes. From there, simply click the link for a vote and vote how you see fit.
           </Accordion.Body>
         </Accordion.Item>
       </Accordion>

@@ -10,7 +10,7 @@ function Info() {
 
 return(
 <>
-<div class="jumbotron text-center">
+<div className="jumbotron text-center">
   <img src="statue_of_liberty_banner.jpg"  />
   <div className='banner-text'>
   <h1>U-Vote</h1> 
