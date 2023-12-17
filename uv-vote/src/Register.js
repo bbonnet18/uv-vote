@@ -37,7 +37,6 @@ function Register() {
   }, [addressOptions])
 
 
-
   // check captcha val
   const checkCaptcha = async () => {
     const captchaToken = recaptchaRef.current.getValue();
@@ -91,7 +90,6 @@ function Register() {
       form.classList.remove('invalid');
       var formFields = form.querySelectorAll('.form-control');
       var genderSelect = form.querySelector('#gender');
-      var stateSelect = form.querySelector('#state');
       var idFile = form.querySelector("#idFile")
       var selfyFile = form.querySelector("#selfyFile")
 
@@ -105,10 +103,8 @@ function Register() {
 
 
       formData.append('gender', genderSelect.value);
-      formData.append('state', stateSelect.value);
       formData.append('idFile', idFile.files[0]);
       formData.append('selfyFile', selfyFile.files[0]);
-
       try {
         setLoading(true)
         let res = await axios.post(`${config.apiBaseUrl}/register`, formData);//await axios.post("https://vote.u-vote.us/register", formData);
@@ -133,14 +129,14 @@ function Register() {
     <Container fluid="md">
       {loading ? (<Spinner></Spinner>) : (
         <>
-          <h2>Register for a U-Vote Key <a href="#keyInfo"><img src="info-circle.svg" className='key-info-img' alt="info about keys"></img></a></h2>
-
+          <h2>Register for a U-Vote Key</h2>
+          <div className='limit-notice'><p>U-Vote is in alpha and currently only available in Arlington Virginia. We plan to learn from our experiences in Arlington and expand to your neighborhood sometime soon!</p></div>
           <hr></hr>
 
           <Form id="registerForm">
             <Row className='mb-2'>
               <Col lg={2} md={12}>
-                <Form.Label id="aFirst" as={Col} lg={2}>First</Form.Label>
+                <Form.Label id="aFirst" >First</Form.Label>
               </Col>
               <Col lg={10} md={12}>
                 <Form.Control id="firstName" name="firstname" lg={6} type="text" placeholder="first name" defaultValue={currentVoter.firstname} required />
@@ -159,13 +155,13 @@ function Register() {
             </Row>
             <Row className='mb-2'>
               <Col lg={2}>
-                <Form.Label id="aAddress" as={Col} lg={2}>Address</Form.Label>
+                <Form.Label id="aAddress" >Address</Form.Label>
               </Col>
-              <Col lg={8}>
+              <Col lg={8} className='address-check'>
                 <Form.Control id="address" name="address" lg={6} type="text" placeholder="enter and select your address" defaultValue="" onChange={(e) => {
                   setSelectedStreet(e.target.value);
                   
-                }} value={selectedStreet} required />
+                }} value={selectedStreet} required /> { (selectedAddress && selectedAddress.city && selectedStreet) ? <img src="check2-square.svg"  /> : <></>}
               </Col>
               <Col lg={2}>
                 <Button variant={(selectedAddress && selectedAddress.city && selectedAddress.zipcode) ? 'success' : 'warning'} onClick={()=>{
@@ -195,7 +191,7 @@ function Register() {
 
             <Row className='mb-2'>
               <Col lg={2}>
-                <Form.Label id="aCity" as={Col} lg={2}>City</Form.Label>
+                <Form.Label id="aCity">City</Form.Label>
               </Col>
               <Col lg={10}>
                 <Form.Control id="city" name="city" lg={6} type="text" placeholder="city" defaultValue={selectedAddress.city} required disabled />
@@ -204,13 +200,13 @@ function Register() {
 
             <Row className='mb-2'>
               <Col lg={2}>
-                <Form.Label id="aState" as={Col} lg={2}>State</Form.Label>
+                <Form.Label id="aState" >State</Form.Label>
               </Col>
               <Col lg={4} className='mb-2'>
                 <Form.Control aria-label="State" name="state" id="state" placeholder='state' type="text" defaultValue={selectedAddress.state} required disabled />
               </Col>
               <Col lg={2}>
-                <Form.Label id="aZip" as={Col} lg={2}>Zipcode</Form.Label>
+                <Form.Label id="aZip" >Zipcode</Form.Label>
               </Col>
               <Col lg={4}>
                 <Form.Control aria-label="Zipcode" name="zipcode" id="zipcode" placeholder='zipcode' type="text" defaultValue={selectedAddress.zipcode} required disabled />
@@ -218,7 +214,7 @@ function Register() {
             </Row>
             <Row className='mb-2'>
               <Col lg={2}>
-                <Form.Label id="aPhone" as={Col} lg={2}>Phone</Form.Label>
+                <Form.Label id="aPhone" >Phone</Form.Label>
               </Col>
               <Col lg={10}>
                 <Form.Control className='' id="phone" name="phone" maxLength={10} minLength={10} type="tel" pattern="[0-9]{10}" placeholder="phone" defaultValue={currentVoter.phone} required />
@@ -229,18 +225,19 @@ function Register() {
             </Row>
             <Row className='mb-2'>
               <Col lg={2}>
-                <Form.Label id="aAge" as={Col} lg={2}>Age</Form.Label>
+                <Form.Label id="aAge">Age</Form.Label>
               </Col>
               <Col lg={10}>
                 <Form.Control id="age" name="age" size="lg" type="number" min={18} placeholder="age" defaultValue={currentVoter.age} required />
+                <Form.Text  muted>
+                  You must be 18 or older
+                </Form.Text>
               </Col>
-              <Form.Text id="phoneHelp" muted>
-                You must be 18 or older
-              </Form.Text>
+              
             </Row>
             <Row className='mb-2'>
               <Col lg={2}>
-                <Form.Label id="aText" as={Col} lg={2}>Agree to text messages</Form.Label>
+                <Form.Label id="aText">Agree to text messages</Form.Label>
               </Col>
               <Col lg={10}>
                 <Form.Check // prettier-ignore
@@ -248,14 +245,15 @@ function Register() {
                   id={'opt-in'}
                   label={'I agree to receive text messages from U-Vote'} required
                 />
-              </Col>
-              <Form.Text id="phoneHelp" muted>
-                Agreement is required for U-Vote participation
+                <Form.Text id="textHelp">
+                * Agreement is required for U-Vote participation
               </Form.Text>
+              </Col>
+              
             </Row>
             <Row className='mb-2'>
               <Col lg={2}>
-                <Form.Label id="aGender" as={Col} lg={2}>Gender</Form.Label>
+                <Form.Label id="aGender" >Gender</Form.Label>
               </Col>
               <Col lg={10}>
                 <Form.Select aria-label="Gender" name="gender" id="gender" required defaultValue="F">
@@ -275,7 +273,7 @@ function Register() {
             </Row>
             <Row className='mb-2'>
               <Col lg={2}>
-                <Form.Label id="aFile" as={Col} lg={2}>ID File:</Form.Label>
+                <Form.Label id="aFile">ID File:</Form.Label>
               </Col>
               <Col lg={10}>
                 <Form.Control type="file" id="idFile" accept='.jpeg' onChange={(evt) => {
@@ -301,7 +299,7 @@ function Register() {
             </Row>
             <Row>
               <Col lg={2}>
-                <Form.Label id="aFile" as={Col} lg={2}>Selfy File:</Form.Label>
+                <Form.Label id="aFile" >Selfy File:</Form.Label>
               </Col>
               <Col lg={10}>
 
@@ -320,7 +318,13 @@ function Register() {
             <Row className='mb-4 mt-4' >
               <ReCAPTCHA ref={recaptchaRef} sitekey={"6Le-QPIoAAAAAJT5-G3P009gn52wZR3TLLSBB3Fj"} onChange={() => checkCaptcha()} />
             </Row>
-            <Button variant='primary' onClick={() => register()} disabled={disabled}>Register</Button>
+            <Row className='mb-4'>
+              <Col lg={3}>
+                <Button variant='primary' onClick={() => register()} disabled={disabled}>Register</Button>
+              </Col>
+            
+            </Row>
+            
 
           </Form>
         </>

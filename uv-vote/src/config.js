@@ -6,5 +6,4 @@ export default {
     // manageAppBaseUrl:"https://manage.u-vote.us",    
     // voteAppBaseUrl:"https://vote.u-vote.us",
     // apiBaseUrl:"https://vote.u-vote.us"
-    key: process.env.TEST_NAME
 }
