@@ -13,7 +13,7 @@ export default function Header() {
 
   return (
     <Container>
-      <div class="icon-brand"><div className='container'><a><img src='vote_draft_icon.png' ></img></a></div></div>
+      <div class="icon-brand"><div className='container'><a><img src='vote_draft_icon.png' ></img></a><div className='alpha-mark'>EARLY ALPHA</div></div></div>
     </Container>
   );
 }

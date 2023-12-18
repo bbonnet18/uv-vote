@@ -53,6 +53,12 @@ body{
 
 }
 
+.alpha-mark{
+  float:right;
+  color:orange;
+  font-size: small;
+}
+
 .App {
   text-align: center;
 }
@@ -378,7 +384,7 @@ button{
 }
 
 
-@media screen and (max-width:400px) {
+@media screen and (max-width:420px) {
 
   .banner-text{
     position:relative;
@@ -386,13 +392,14 @@ button{
     left: 0px;
   }
 
+  
   .jumbotron{
-    background-color: #145DA0;
+    background-color:rgba(34, 164, 244, 0.4); ; 
   }
-
+  /* 
   .jumbotron img{
     display: none;
-  }  
+  }   */
 
   .nav-item{
     --bs-nav-link-padding-y: 0;
