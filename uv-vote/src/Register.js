@@ -11,9 +11,12 @@ function Register() {
   const starterVoter = {
     "lastname": "",
     "firstname": "",
+    "address_1":"",
+    "address_2":"",
     "city": "",
     "state": "",
-    "phone": ""
+    "phone": "",
+    "DOB":""
   }
   const [loading, setLoading] = useState(false);
   const [disabled, setDisabled] = useState(true);
@@ -21,7 +24,9 @@ function Register() {
   const [addressOptions, setAddressOptions] = useState([]);// used to show addresses as the user types 
   const [selectedAddress, setSelectedAddress] = useState({ city: '', state: '', zipcode: '' });// the address the user chose
   const [showSelect, setShowSelect] = useState(false);// controls showing the address select
-  const [selectedStreet, setSelectedStreet] = useState("")
+  const [selectedStreet1, setSelectedStreet1] = useState("");
+  const [selectedStreet2, setSelectedStreet2] = useState("");
+  const [normalizedStreet, setNormalizedStreet] = useState(""); 
 
   // const [registered, setRegistered] = useState(false);//to represent that the voter has not registered
   const navigate = useNavigate();
@@ -31,7 +36,9 @@ function Register() {
   useEffect(() => {
     if(addressOptions && addressOptions.length===1){
           setSelectedAddress(addressOptions[0])
-          setSelectedStreet(addressOptions[0].streetLine);
+          setSelectedStreet1(addressOptions[0].streetLine);
+          setSelectedStreet2(addressOptions[0].secondary);
+          setNormalizedStreet(addressOptions[0].streetLine);// this will be the value we use in the registration
           setShowSelect(false);
     }
   }, [addressOptions])
@@ -96,27 +103,38 @@ function Register() {
       var formData = new FormData();
       for (let i = 0; i < formFields.length; i++) {
         if (formFields[i].type !== "file") {
-          console.log('val: ', formFields[i].value);
-          formData.append(formFields[i].name, formFields[i].value);
+          if(formFields[i].name === "address1"){
+            console.log('val: ', formFields[i].value);
+            formData.append(formFields[i].name, normalizedStreet);// used to formalize the address so user doesn't enter something else after it's selected. 
+            // if they do, it will be ignored. 
+          }else{
+            console.log('val: ', formFields[i].value);
+            formData.append(formFields[i].name, formFields[i].value);
+          }
+          
         }
       }
-
 
       formData.append('gender', genderSelect.value);
       formData.append('idFile', idFile.files[0]);
       formData.append('selfyFile', selfyFile.files[0]);
+      console.log('form data');
       try {
         setLoading(true)
         let res = await axios.post(`${config.apiBaseUrl}/register`, formData);//await axios.post("https://vote.u-vote.us/register", formData);
         form.reset();
         if (res.status === 200) {
+          setLoading(false);
           navigate('/confirm')
         } else {
-          alert('unable to register, please try live validation');
+          setLoading(false);
+          console.log('res is not a 200, but another: ', res.status);
+          alert('unable to register,please try live validation');
         }
-        setLoading(false)
+       
       } catch (err) {
-        alert('unable to register, please try live validation');
+        setLoading(false);
+        alert('unable to register - ',err || "unknown error");
       }
 
     } else {
@@ -155,17 +173,28 @@ function Register() {
             </Row>
             <Row className='mb-2'>
               <Col lg={2}>
-                <Form.Label id="aAddress" >Address</Form.Label>
+                <Form.Label id="aAddress1" >Address</Form.Label>
               </Col>
               <Col lg={8} className='address-check'>
-                <Form.Control id="address" name="address" lg={6} type="text" placeholder="enter and select your address" defaultValue="" onChange={(e) => {
-                  setSelectedStreet(e.target.value);
+                <Form.Control id="address1" name="address1" lg={6} type="text" placeholder="enter and select your address" onChange={(e) => {
+                  setSelectedStreet1(e.target.value);
                   
-                }} value={selectedStreet} required /> { (selectedAddress && selectedAddress.city && selectedStreet) ? <img src="check2-square.svg"  /> : <></>}
+                }} value={selectedStreet1} required /> { (selectedAddress && selectedAddress.city && selectedStreet1) ? <img src="check2-square.svg"  /> : <></>}
+              </Col>
+            </Row>
+            <Row className='mb-2'>
+              <Col lg={2}>
+                <Form.Label id="aAddress2" >Address Line 2</Form.Label>
+              </Col>
+              <Col lg={8} className='address-check'>
+                <Form.Control id="address2" name="address2" lg={6} type="text" placeholder="optional ex. apt 3a"  onChange={(e) => {
+                  setSelectedStreet2(e.target.value);
+                  
+                }} value={selectedStreet2} />
               </Col>
               <Col lg={2}>
                 <Button variant={(selectedAddress && selectedAddress.city && selectedAddress.zipcode) ? 'success' : 'warning'} onClick={()=>{
-                  checkAddress(selectedStreet)
+                  checkAddress(`${selectedStreet1} ${selectedStreet2}`)
                 }}>check address</Button>
               </Col>
             </Row>
@@ -176,14 +205,15 @@ function Register() {
                   console.log('vale:', e.target.value)
                   console.log('address: ', addressOptions[e.target.value])
                   if (addressOptions[e.target.value].streetLine) {
-                    setSelectedStreet(addressOptions[e.target.value].streetLine);
+                    setSelectedStreet1(addressOptions[e.target.value].streetLine);
+                    setSelectedStreet2(addressOptions[e.target.value].secondary);
                   }
 
                   setShowSelect(false);
                 }} 
                  required >
                   {addressOptions.map((itm, ind) => {
-                    return <option key={ind} value={ind}>{itm.streetLine}</option>
+                    return <option key={ind} value={ind}>{itm.streetLine} {itm.secondary}</option>
                   })}
                 </Form.Select>
               </Col>
@@ -225,10 +255,10 @@ function Register() {
             </Row>
             <Row className='mb-2'>
               <Col lg={2}>
-                <Form.Label id="aAge">Age</Form.Label>
+                <Form.Label id="aDOB">DOB</Form.Label>
               </Col>
               <Col lg={10}>
-                <Form.Control id="age" name="age" size="lg" type="number" min={18} placeholder="age" defaultValue={currentVoter.age} required />
+                <Form.Control id="DOB" name="DOB" size="lg" type="text" pattern='(0[1-9]|1[1,2,0])\/(0[1-9]|[12][0-9]|3[01])\/(19|20)\d{2}' min={18} placeholder="MM/DD/YYYY" defaultValue={currentVoter.DOB} required />
                 <Form.Text  muted>
                   You must be 18 or older
                 </Form.Text>
