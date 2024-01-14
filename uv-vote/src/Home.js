@@ -25,19 +25,25 @@ function Home() {
           if(keyPattern.test(clipboardData)){
             const matches = clipboardData.match(keyPattern); 
             const key = matches[0];
+            var keyBox = document.getElementById('voterKey');
+            keyBox.value = key;
             setVoterKey(key);
+            return key;
           }
 
         }
       }
     }
 
+    
 
 
 
   const getVotes = async()=>{
 
     let key = document.getElementById('voterKey').value;
+    
+
     key = key.trim();
     let kp = /[a-z0-9]+-[a-z0-9]+-[a-z0-9]+-[a-z0-9]+-[a-z0-9]+/
     if(key && kp.test(key)) {
@@ -82,7 +88,7 @@ return(
   <Form.Label >
   Enter your voter key:
   </Form.Label>
-  <Form.Control id="voterKey" name="voterKey" type="text" placeholder="paste in your voter key" defaultValue={voterKey && keyPattern.test(voterKey) ? voterKey : ""}  required />
+  <Form.Control id="voterKey" name="voterKey" type="text" pattern="[a-z0-9]+-[a-z0-9]+-[a-z0-9]+-[a-z0-9]+-[a-z0-9]+" placeholder="paste in your voter key"  required />
  </Form.Group>
  <Row>
  <Col lg={8}>

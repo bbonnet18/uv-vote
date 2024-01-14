@@ -22,7 +22,7 @@ function Register() {
   const [disabled, setDisabled] = useState(true);
   const [currentVoter, setCurrentVoter] = useState(starterVoter);
   const [addressOptions, setAddressOptions] = useState([]);// used to show addresses as the user types 
-  const [selectedAddress, setSelectedAddress] = useState({ city: '', state: '', zipcode: '' });// the address the user chose
+  const [selectedAddress, setSelectedAddress] = useState();// the address the user chose
   const [showSelect, setShowSelect] = useState(false);// controls showing the address select
   const [selectedStreet1, setSelectedStreet1] = useState("");
   const [selectedStreet2, setSelectedStreet2] = useState("");
@@ -87,12 +87,16 @@ function Register() {
     console.log('currentVoter :', currentVoter);
     const form = document.getElementById('registerForm');
     const isValid = form.checkValidity();
-    const phone = form.querySelector('#phone');
+    // check the disabled fields to make sure they have real values
+    const city = form.querySelector('#city');
+    const state = form.querySelector('#state');
+    const zipcode = form.querySelector('#zipcode');
 
-    if (phone) {
-      const isvalid = phone.checkValidity();
-      console.log('phone valid: ', isvalid)
+    if(city.value.length < 2 || state.value.length < 2 || zipcode.value.length < 5){
+      console.log('need to select an address');
+      return;
     }
+
     if (isValid) {
       form.classList.remove('invalid');
       var formFields = form.querySelectorAll('.form-control');
@@ -134,13 +138,15 @@ function Register() {
        
       } catch (err) {
         setLoading(false);
-        alert('unable to register - ',err || "unknown error");
-      }
+      
+          navigate('/registration-error',{state: {
+            message:"Error with the registration",
+            error:err.response.data
+          }
+        })
 
-    } else {
-      form.classList.add('invalid');
-      console.log('not valid')
     }
+  }
 
   }
   return (
@@ -193,9 +199,9 @@ function Register() {
                 }} value={selectedStreet2} />
               </Col>
               <Col lg={2}>
-                <Button variant={(selectedAddress && selectedAddress.city && selectedAddress.zipcode) ? 'success' : 'warning'} onClick={()=>{
+                <Button id="verifyAddress" variant={(selectedAddress && selectedAddress.city && selectedAddress.zipcode) ? 'success' : 'warning'} onClick={()=>{
                   checkAddress(`${selectedStreet1} ${selectedStreet2}`)
-                }}>check address</Button>
+                }}>Verify Address{(selectedAddress && selectedAddress.city && selectedAddress.zipcode) ? <img src="check-square.svg" /> : <span> ...</span>} </Button>
               </Col>
             </Row>
             {showSelect ? (<Row>
@@ -224,7 +230,7 @@ function Register() {
                 <Form.Label id="aCity">City</Form.Label>
               </Col>
               <Col lg={10}>
-                <Form.Control id="city" name="city" lg={6} type="text" placeholder="city" defaultValue={selectedAddress.city} required disabled />
+                <Form.Control id="city" name="city" lg={6} type="text" placeholder="city" value={selectedAddress && selectedAddress.city ? selectedAddress.city : ""} required disabled />
               </Col>
             </Row>
 
@@ -233,13 +239,13 @@ function Register() {
                 <Form.Label id="aState" >State</Form.Label>
               </Col>
               <Col lg={4} className='mb-2'>
-                <Form.Control aria-label="State" name="state" id="state" placeholder='state' type="text" defaultValue={selectedAddress.state} required disabled />
+                <Form.Control aria-label="State" name="state" id="state" placeholder='state' type="text" value={selectedAddress && selectedAddress.state ? selectedAddress.state : ""} required disabled />
               </Col>
               <Col lg={2}>
                 <Form.Label id="aZip" >Zipcode</Form.Label>
               </Col>
               <Col lg={4}>
-                <Form.Control aria-label="Zipcode" name="zipcode" id="zipcode" placeholder='zipcode' type="text" defaultValue={selectedAddress.zipcode} required disabled />
+                <Form.Control aria-label="Zipcode" name="zipcode" id="zipcode" placeholder='zipcode' type="text" value={selectedAddress && selectedAddress.zipcode ? selectedAddress.zipcode : ""} required disabled />
               </Col>
             </Row>
             <Row className='mb-2'>

@@ -8,6 +8,7 @@ import Home from './Home';
 import Info from './Info';
 import About from './About';
 import ErrorPage from './error-page';
+import Error from "./Error";
 import reportWebVitals from './reportWebVitals';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { createBrowserRouter, Router, RouterProvider } from 'react-router-dom';
@@ -37,6 +38,10 @@ const router = createBrowserRouter([
       {
         path:"/confirm",
         element: <Confirm />
+      },
+      {
+        path:"/registration-error",
+        element: <Error />
       }
     ]
 

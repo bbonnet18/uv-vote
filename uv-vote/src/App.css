@@ -69,7 +69,7 @@ body{
 }
 
 #aZip{
-  margin-left:80%;
+  margin-left:40%;
 }
 
 .App-header {
@@ -135,7 +135,7 @@ button{
   margin-right: auto;
 }
 
-.confirm-txt{
+.confirm-txt, .error-txt{
   text-align: center;
 }
 
@@ -143,6 +143,13 @@ button{
   background-position: center;
   background-size: 180px;
   background-image: url('check2-square.svg');
+  background-repeat: no-repeat;
+}
+
+.error-img{
+  background-position: center;
+  background-size: 180px;
+  background-image: url('x-square.svg');
   background-repeat: no-repeat;
 }
 
@@ -325,8 +332,30 @@ button{
   border:1px black;
 }
 
+#voterForm {
+
+}
+
 #voterKey:invalid{
   border:2px red inset; 
+  background-color: lightpink;
+}
+
+#voterKey:valid{
+  border:2px lightgrey; 
+  background-color: lightgreen;
+}
+
+
+#verifyAddress{
+  color: white;
+}
+
+#verifyAddress img{
+  width:30px;
+  height:30px;
+  padding: 3px;
+  margin-left: 10px;
 }
 
 
