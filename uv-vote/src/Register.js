@@ -11,12 +11,12 @@ function Register() {
   const starterVoter = {
     "lastname": "",
     "firstname": "",
-    "address_1":"",
-    "address_2":"",
+    "address_1": "",
+    "address_2": "",
     "city": "",
     "state": "",
     "phone": "",
-    "DOB":""
+    "DOB": ""
   }
   const [loading, setLoading] = useState(false);
   const [disabled, setDisabled] = useState(true);
@@ -26,7 +26,7 @@ function Register() {
   const [showSelect, setShowSelect] = useState(false);// controls showing the address select
   const [selectedStreet1, setSelectedStreet1] = useState("");
   const [selectedStreet2, setSelectedStreet2] = useState("");
-  const [normalizedStreet, setNormalizedStreet] = useState(""); 
+  const [normalizedStreet, setNormalizedStreet] = useState("");
 
   // const [registered, setRegistered] = useState(false);//to represent that the voter has not registered
   const navigate = useNavigate();
@@ -34,12 +34,12 @@ function Register() {
   const recaptchaRef = useRef(null);
 
   useEffect(() => {
-    if(addressOptions && addressOptions.length===1){
-          setSelectedAddress(addressOptions[0])
-          setSelectedStreet1(addressOptions[0].streetLine);
-          setSelectedStreet2(addressOptions[0].secondary);
-          setNormalizedStreet(addressOptions[0].streetLine);// this will be the value we use in the registration
-          setShowSelect(false);
+    if (addressOptions && addressOptions.length === 1) {
+      setSelectedAddress(addressOptions[0])
+      setSelectedStreet1(addressOptions[0].streetLine);
+      setSelectedStreet2(addressOptions[0].secondary);
+      setNormalizedStreet(addressOptions[0].streetLine);// this will be the value we use in the registration
+      setShowSelect(false);
     }
   }, [addressOptions])
 
@@ -71,13 +71,18 @@ function Register() {
 
     setShowSelect(true);
 
-    const payload = { address: val };
-    let res = await axios.post(`${config.apiBaseUrl}/address`, payload);
-    if (res && res.data && res.data.result) {
-      setAddressOptions(res.data.result)
-    } else {
-      setAddressOptions([]);
+    try {
+      const payload = { address: val };
+      let res = await axios.post(`${config.apiBaseUrl}/address`, payload);
+      if (res && res.data && res.data.result) {
+        setAddressOptions(res.data.result)
+      } else {
+        setAddressOptions([]);
+      }
+    } catch (err) {
+      alert('unable to register at this time');
     }
+
   }
 
 
@@ -92,7 +97,7 @@ function Register() {
     const state = form.querySelector('#state');
     const zipcode = form.querySelector('#zipcode');
 
-    if(city.value.length < 2 || state.value.length < 2 || zipcode.value.length < 5){
+    if (city.value.length < 2 || state.value.length < 2 || zipcode.value.length < 5) {
       console.log('need to select an address');
       return;
     }
@@ -107,15 +112,15 @@ function Register() {
       var formData = new FormData();
       for (let i = 0; i < formFields.length; i++) {
         if (formFields[i].type !== "file") {
-          if(formFields[i].name === "address1"){
+          if (formFields[i].name === "address1") {
             console.log('val: ', formFields[i].value);
             formData.append(formFields[i].name, normalizedStreet);// used to formalize the address so user doesn't enter something else after it's selected. 
             // if they do, it will be ignored. 
-          }else{
+          } else {
             console.log('val: ', formFields[i].value);
             formData.append(formFields[i].name, formFields[i].value);
           }
-          
+
         }
       }
 
@@ -135,18 +140,21 @@ function Register() {
           console.log('res is not a 200, but another: ', res.status);
           alert('unable to register,please try live validation');
         }
-       
+
       } catch (err) {
         setLoading(false);
-      
-          navigate('/registration-error',{state: {
-            message:"Error with the registration",
-            error:err.response.data
+
+        navigate('/registration-error', {
+          state: {
+            message: "Error with the registration",
+            error: err.response.data
           }
         })
 
+      }
+    }else{
+      form.classList.add('invalid');
     }
-  }
 
   }
   return (
@@ -184,8 +192,8 @@ function Register() {
               <Col lg={8} className='address-check'>
                 <Form.Control id="address1" name="address1" lg={6} type="text" placeholder="enter and select your address" onChange={(e) => {
                   setSelectedStreet1(e.target.value);
-                  
-                }} value={selectedStreet1} required /> { (selectedAddress && selectedAddress.city && selectedStreet1) ? <img src="check2-square.svg"  /> : <></>}
+
+                }} value={selectedStreet1} required /> {(selectedAddress && selectedAddress.city && selectedStreet1) ? <img src="check2-square.svg" /> : <></>}
               </Col>
             </Row>
             <Row className='mb-2'>
@@ -193,13 +201,13 @@ function Register() {
                 <Form.Label id="aAddress2" >Address Line 2</Form.Label>
               </Col>
               <Col lg={8} className='address-check'>
-                <Form.Control id="address2" name="address2" lg={6} type="text" placeholder="optional ex. apt 3a"  onChange={(e) => {
+                <Form.Control id="address2" name="address2" lg={6} type="text" placeholder="optional ex. apt 3a" onChange={(e) => {
                   setSelectedStreet2(e.target.value);
-                  
+
                 }} value={selectedStreet2} />
               </Col>
               <Col lg={2}>
-                <Button id="verifyAddress" variant={(selectedAddress && selectedAddress.city && selectedAddress.zipcode) ? 'success' : 'warning'} onClick={()=>{
+                <Button id="verifyAddress" variant={(selectedAddress && selectedAddress.city && selectedAddress.zipcode) ? 'success' : 'warning'} onClick={() => {
                   checkAddress(`${selectedStreet1} ${selectedStreet2}`)
                 }}>Verify Address{(selectedAddress && selectedAddress.city && selectedAddress.zipcode) ? <img src="check-square.svg" /> : <span> ...</span>} </Button>
               </Col>
@@ -216,8 +224,8 @@ function Register() {
                   }
 
                   setShowSelect(false);
-                }} 
-                 required >
+                }}
+                  required >
                   {addressOptions.map((itm, ind) => {
                     return <option key={ind} value={ind}>{itm.streetLine} {itm.secondary}</option>
                   })}
@@ -265,11 +273,11 @@ function Register() {
               </Col>
               <Col lg={10}>
                 <Form.Control id="DOB" name="DOB" size="lg" type="text" pattern='(0[1-9]|1[1,2,0])\/(0[1-9]|[12][0-9]|3[01])\/(19|20)\d{2}' min={18} placeholder="MM/DD/YYYY" defaultValue={currentVoter.DOB} required />
-                <Form.Text  muted>
+                <Form.Text muted>
                   You must be 18 or older
                 </Form.Text>
               </Col>
-              
+
             </Row>
             <Row className='mb-2'>
               <Col lg={2}>
@@ -282,10 +290,10 @@ function Register() {
                   label={'I agree to receive text messages from U-Vote'} required
                 />
                 <Form.Text id="textHelp">
-                * Agreement is required for U-Vote participation
-              </Form.Text>
+                  * Agreement is required for U-Vote participation
+                </Form.Text>
               </Col>
-              
+
             </Row>
             <Row className='mb-2'>
               <Col lg={2}>
@@ -358,9 +366,9 @@ function Register() {
               <Col lg={3}>
                 <Button variant='primary' onClick={() => register()} disabled={disabled}>Register</Button>
               </Col>
-            
+
             </Row>
-            
+
 
           </Form>
         </>
