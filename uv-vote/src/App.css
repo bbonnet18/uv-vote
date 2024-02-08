@@ -254,11 +254,13 @@ button{
 }
 
 .limit-notice{
-  padding: 5px 20px;
+  padding: 5px 5px 0px 5px;
   border-radius: 8px;
   background-color: orangered;
   color:#000;
   border-color: #282c34;
+  text-align: center;
+  vertical-align: middle;
 }
 
 #modernPhone{

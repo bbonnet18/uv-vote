@@ -162,7 +162,7 @@ function Register() {
       {loading ? (<Spinner></Spinner>) : (
         <>
           <h2>Register for a U-Vote Key</h2>
-          <div className='limit-notice'><p>U-Vote is in alpha and currently only available in Arlington Virginia. We plan to learn from our experiences in Arlington and expand to your neighborhood sometime soon!</p></div>
+          <div className='limit-notice'><p>U-Vote is in alpha and currently only available in Arlington Virginia. Please check back soon to see if we've added your neighborhood. </p></div>
           <hr></hr>
 
           <Form id="registerForm">
@@ -191,8 +191,13 @@ function Register() {
               </Col>
               <Col lg={8} className='address-check'>
                 <Form.Control id="address1" name="address1" lg={6} type="text" placeholder="enter and select your address" onChange={(e) => {
-                  setSelectedStreet1(e.target.value);
-
+                    
+                      //setSelectedStreet1(e.target.value);
+                  if(e.currentTarget.value !== selectedStreet1){
+                    setAddressOptions([]);
+                  }
+                  return 
+                    
                 }} value={selectedStreet1} required /> {(selectedAddress && selectedAddress.city && selectedStreet1) ? <img src="check2-square.svg" /> : <></>}
               </Col>
             </Row>
@@ -208,15 +213,21 @@ function Register() {
               </Col>
               <Col lg={2}>
                 <Button id="verifyAddress" variant={(selectedAddress && selectedAddress.city && selectedAddress.zipcode) ? 'success' : 'warning'} onClick={() => {
-                  checkAddress(`${selectedStreet1} ${selectedStreet2}`)
-                }}>Verify Address{(selectedAddress && selectedAddress.city && selectedAddress.zipcode) ? <img src="check-square.svg" /> : <span> ...</span>} </Button>
+                  // need to get the value of the current street address field
+                  let streetAddress = document.getElementById('address1');
+                  if(streetAddress){
+                    setSelectedAddress(streetAddress.value);
+                    checkAddress(`${selectedStreet1} ${selectedStreet2}`)
+                  }
+                  
+                }}>{(selectedAddress && selectedAddress.city && selectedAddress.zipcode) ? (<>Address Verified <img src="check-square.svg" /></>) : (<span>Verify Address</span>)} </Button>
               </Col>
             </Row>
             {showSelect ? (<Row>
               <Col lg={{ offset: 2, span: 10 }}>
                 <Form.Select id="address" name="address" lg={6} type="text" minLength={2} placeholder="enter and select your address" onChange={(e) => {
                   setSelectedAddress(addressOptions[e.target.value]);
-                  console.log('vale:', e.target.value)
+                  console.log('value:', e.target.value)
                   console.log('address: ', addressOptions[e.target.value])
                   if (addressOptions[e.target.value].streetLine) {
                     setSelectedStreet1(addressOptions[e.target.value].streetLine);
