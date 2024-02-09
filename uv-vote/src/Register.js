@@ -1,7 +1,7 @@
 import './App.css';
 import axios from 'axios';
 import config from './config';
-import { Col, Row, Form, Button, Container, Spinner } from "react-bootstrap";
+import { Alert, Col, Row, Form, Button, Container, Spinner } from "react-bootstrap";
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ReCAPTCHA from "react-google-recaptcha";
@@ -27,6 +27,8 @@ function Register() {
   const [selectedStreet1, setSelectedStreet1] = useState("");
   const [selectedStreet2, setSelectedStreet2] = useState("");
   const [normalizedStreet, setNormalizedStreet] = useState("");
+  const [verified, setVerified] = useState(false);// used to handle selections and updates to address
+
 
   // const [registered, setRegistered] = useState(false);//to represent that the voter has not registered
   const navigate = useNavigate();
@@ -39,7 +41,21 @@ function Register() {
       setSelectedStreet1(addressOptions[0].streetLine);
       setSelectedStreet2(addressOptions[0].secondary);
       setNormalizedStreet(addressOptions[0].streetLine);// this will be the value we use in the registration
-      setShowSelect(false);
+      let streetInput = document.getElementById('address1');
+      if(streetInput && streetInput.value){
+        streetInput.value = addressOptions[0].streetLine;
+      }
+      //setShowSelect(false);
+      setVerified(true);
+    }
+
+    if(addressOptions && addressOptions.length === 0){
+      setSelectedAddress(null)
+      setSelectedStreet1(null);
+      setSelectedStreet2(null);
+      setNormalizedStreet(null);// this will be the value we use in the registration
+      //setShowSelect(false);
+      setVerified(false);
     }
   }, [addressOptions])
 
@@ -51,14 +67,18 @@ function Register() {
 
     var payload = {};
     payload['token'] = captchaToken;
+    try{
+      let response = await axios.post(`${config.apiBaseUrl}/register/check-bot`, payload);//await axios.post("https://vote.u-vote.us/register", formData);
 
-    let response = await axios.post(`${config.apiBaseUrl}/register/check-bot`, payload);//await axios.post("https://vote.u-vote.us/register", formData);
-
-    if (response.status === 200) {
-      setDisabled(false);
-    } else {
+      if (response.status === 200) {
+        setDisabled(false);
+      } else {
+        setDisabled(true);
+      }
+    }catch(err){
       setDisabled(true);
     }
+   
 
   }
 
@@ -192,13 +212,12 @@ function Register() {
               <Col lg={8} className='address-check'>
                 <Form.Control id="address1" name="address1" lg={6} type="text" placeholder="enter and select your address" onChange={(e) => {
                     
-                      //setSelectedStreet1(e.target.value);
-                  if(e.currentTarget.value !== selectedStreet1){
-                    setAddressOptions([]);
-                  }
-                  return 
-                    
-                }} value={selectedStreet1} required /> {(selectedAddress && selectedAddress.city && selectedStreet1) ? <img src="check2-square.svg" /> : <></>}
+                     if(verified && normalizedStreet !== e.currentTarget.value){
+                      setAddressOptions([]);
+                     }
+                     
+                 
+                }} required /> {(verified) ? <img alt="check mark for verified address" src="check2-square.svg" /> : <></>}
               </Col>
             </Row>
             <Row className='mb-2'>
@@ -212,37 +231,56 @@ function Register() {
                 }} value={selectedStreet2} />
               </Col>
               <Col lg={2}>
-                <Button id="verifyAddress" variant={(selectedAddress && selectedAddress.city && selectedAddress.zipcode) ? 'success' : 'warning'} onClick={() => {
+                <Button id="verifyAddress" variant={(verified) ? 'success' : 'warning'} onClick={() => {
                   // need to get the value of the current street address field
                   let streetAddress = document.getElementById('address1');
                   if(streetAddress){
-                    setSelectedAddress(streetAddress.value);
-                    checkAddress(`${selectedStreet1} ${selectedStreet2}`)
+                    const myStreet = streetAddress.value
+                    checkAddress(`${myStreet}`)
                   }
                   
-                }}>{(selectedAddress && selectedAddress.city && selectedAddress.zipcode) ? (<>Address Verified <img src="check-square.svg" /></>) : (<span>Verify Address</span>)} </Button>
+                }}>{(verified) ? (<>Address Verified <img alt="check mark for verified address" src="check-square.svg" /></>) : (<span>Verify Address</span>)} </Button>
               </Col>
             </Row>
-            {showSelect ? (<Row>
-              <Col lg={{ offset: 2, span: 10 }}>
+            {showSelect ? (
+            <><Row>
+              </Row>
+                <Col lg={{span:10,offset:2}}>
+                <Alert id="alertVerified" key={"primary"} variant={"primary"}>
+                  Select a verified address below
+                </Alert>
+                </Col>
+              <Row className='mb-2'>
+              <Col lg={2}>
+                <Form.Label id="verifiedAddress" >Verified Address:</Form.Label>
+              </Col>
+              <Col lg={10}>
                 <Form.Select id="address" name="address" lg={6} type="text" minLength={2} placeholder="enter and select your address" onChange={(e) => {
+                  
                   setSelectedAddress(addressOptions[e.target.value]);
                   console.log('value:', e.target.value)
                   console.log('address: ', addressOptions[e.target.value])
                   if (addressOptions[e.target.value].streetLine) {
                     setSelectedStreet1(addressOptions[e.target.value].streetLine);
+                    setNormalizedStreet(addressOptions[e.target.value].streetLine)
                     setSelectedStreet2(addressOptions[e.target.value].secondary);
+                    let streetInput = document.getElementById('address1');
+                    if(streetInput && streetInput.value){
+                      streetInput.value = addressOptions[0].streetLine;
+                    }
                   }
 
-                  setShowSelect(false);
+                  setVerified(true);
+
+                  //setShowSelect(false);
                 }}
-                  required >
+                 className={verified ? 'verified' : 'unverified'} required >
                   {addressOptions.map((itm, ind) => {
                     return <option key={ind} value={ind}>{itm.streetLine} {itm.secondary}</option>
                   })}
                 </Form.Select>
               </Col>
-            </Row>) : (<></>)}
+            </Row></>) : (<></>)}
 
             <Row className='mb-2'>
               <Col lg={2}>
@@ -323,7 +361,7 @@ function Register() {
                 <p><strong>Step 1:</strong> Take a picture of your ID</p>
               </Col>
               <Col className='img-preview mt-2' lg={{ span: 4, offset: 2 }}>
-                <img id="previewImg" alt="preview image" src="" />
+                <img id="previewImg" alt="preview of ID" src="" />
               </Col>
             </Row>
             <Row className='mb-2'>
@@ -349,7 +387,7 @@ function Register() {
                 <p><strong>Step 2:</strong>Take a selfy with your ID</p>
               </Col>
               <Col className='img-preview selfy mt-2' lg={{ span: 4, offset: 2 }}>
-                <img id="selfyImg" alt="selfy image" src="" />
+                <img id="selfyImg" alt="selfy preview" src="" />
               </Col>
             </Row>
             <Row>

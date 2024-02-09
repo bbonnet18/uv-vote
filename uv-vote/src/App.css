@@ -20,6 +20,10 @@ baby blue: #B1D4E0
   src: url('./fonts/Roboto/Roboto-Medium.ttf');
 }
 
+#alertVerified{
+  padding: 5px 15px;
+  font-size: large;
+}
 
 
 
@@ -359,6 +363,13 @@ button{
   margin-left: 10px;
 }
 
+.unverified{
+  background-color: lightpink !important;
+}
+
+.verified{
+  background-color: #198754 !important;
+}
 
 @keyframes App-logo-spin {
   from {
