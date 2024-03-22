@@ -356,6 +356,9 @@ function Register() {
                 </Form.Select>
               </Col>
             </Row>
+            <Row>
+              <Col lg={12}><Alert className='img-warning' variant='warning'><div id="imgBlock"><img src="exclamation-lg.svg" /></div><div id="alertBlock">Images below are used for verification only and will be deleted once you are verified.</div></Alert></Col>
+            </Row>
             <Row className="img-preview-wrapper" >
               <Col lg={{ span: 4, offset: 2 }} className='step-one'>
                 <p><strong>Step 1:</strong> Take a picture of your ID</p>

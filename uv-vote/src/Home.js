@@ -1,5 +1,6 @@
 import './App.css';
 import { useState, useEffect } from 'react';
+import { useSearchParams } from "react-router-dom";
 import axios from "axios";
 import { Form, Col, Row, Button, Container, OverlayTrigger, Popover, Spinner } from "react-bootstrap";
 import VoteList from './VoteList';
@@ -8,12 +9,47 @@ import config from './config';
 
 function Home() {
 
-    const [votes,setVotes] = useState([{}]);// to hold votes when we get them from the axios call 
+  const [votes,setVotes] = useState([{}]);// to hold votes when we get them from the axios call 
   const [voterKey, setVoterKey] = useState(null);// holds the voter key the user entered
   const [loading,setLoading] = useState(false);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [isSaved, setIsSaved] = useState(false);// set to false and reset if cookie there
   const keyPattern = /[a-z0-9]+-[a-z0-9]+-[a-z0-9]+-[a-z0-9]+-[a-z0-9]+/g;
   
+  // useEffect(()=>{
+    
+  // },[searchParams]);
 
+  //run to check if there is a cookie and load the votes
+  useEffect(()=>{
+      //check for the cookie 
+     console.log('searchParams: ',searchParams);
+    let key = "";
+    if(searchParams && searchParams.size > 0){
+      searchParams.forEach((itm,name)=>{
+        // check the id passed and pattern match to validate format
+        if(name === "id"){
+          // if the test passes, set the key and load the votes
+          if(keyPattern.test(itm)){
+            var keyBox = document.getElementById('voterKey');
+            keyBox.value = itm;
+            getVotes();
+            // clear the cookie so user can decide if they want to save this one
+            document.cookie = "key=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+          }
+        }
+      })
+    }else{
+      let keyCookie = getCookie('key');
+      if(keyCookie){
+        var keyBox = document.getElementById('voterKey');
+        keyBox.value = keyCookie;
+        getVotes();
+        setIsSaved(true);
+      }
+    }
+    
+  },[])
   // check the voter's clipboard and paste in the value if it fits the format
 
     async function getClipboard(){
@@ -35,8 +71,49 @@ function Home() {
       }
     }
 
-    
+  // save the key for next time
+  const saveKey = ()=>{
+    var keyBox = document.getElementById('voterKey');
+    let key = keyBox.value;
+    if(keyPattern.test(key)){
+      document.cookie = `key=${key}`;
 
+      const d = new Date();
+      const exdays = 60;
+      d.setTime(d.getTime() + (exdays*24*60*60*1000));
+      let expires = "expires="+ d.toUTCString();
+      document.cookie = "key" + "=" + key + ";" + expires + ";path=/";
+      setIsSaved(true);
+    }
+    
+    
+  }
+
+   // save the key for next time
+   const clearKey = ()=>{
+      document.cookie = "key=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+      var keyBox = document.getElementById('voterKey');
+      keyBox.value = "";
+      setIsSaved(false);
+      setVotes([{}])
+    
+  }
+
+  function getCookie(cname) {
+    let name = cname + "=";
+    let decodedCookie = decodeURIComponent(document.cookie);
+    let ca = decodedCookie.split(';');
+    for(let i = 0; i <ca.length; i++) {
+      let c = ca[i];
+      while (c.charAt(0) == ' ') {
+        c = c.substring(1);
+      }
+      if (c.indexOf(name) == 0) {
+        return c.substring(name.length, c.length);
+      }
+    }
+    return "";
+  }
 
 
   const getVotes = async()=>{
@@ -87,7 +164,12 @@ return(
  <Form.Group className='mb-3' as={Col} lg={8}>
   <Form.Label >
   Enter your voter key:
-  </Form.Label>
+  </Form.Label> 
+  { (isSaved === false )? (<Button variant='success' className='btn-sm float-end hide-key' onClick={()=>{
+    saveKey();
+  }}>Trust this device</Button>) : (<Button variant='danger' className='btn-sm float-end hide-key' onClick={()=>{
+    clearKey();
+  }}>Clear Key</Button>)}
   <Form.Control id="voterKey" name="voterKey" type="text" pattern="[a-z0-9]+-[a-z0-9]+-[a-z0-9]+-[a-z0-9]+-[a-z0-9]+" placeholder="paste in your voter key"  required />
  </Form.Group>
  <Row>

@@ -185,6 +185,16 @@ button{
   display: none;
 }
 
+:invalid .hide-key{
+  display:none !important;
+}
+
+
+
+.show-key{
+  display:inline-block;
+}
+
 
 .icon-brand{
   font-family: 'Roboto';
@@ -204,16 +214,19 @@ button{
 .img-preview{
   background-position: center;
   background-size: 180px;
+  /* background-size: 320px; */
   background-image: url('id_img.png');
+  /* background-image: url('reg_id.gif'); */
   background-repeat: no-repeat;
   border: 2px solid grey;
   border-radius: 15px;
-  min-height:200px;
+  min-height:300px;
 
 }
 
 .img-preview.selfy{
   background-image: url('selfy_id.png');
+  /* background-image: url('selfy.gif'); */
 }
 
 .img-preview img{
@@ -224,6 +237,22 @@ button{
 .img-preview img.showing{
   visibility: visible;
 }
+
+.img-warning img {
+  display: inline-block;
+  height: 40px;
+}
+.img-warning div{
+  display: inline-block;
+  vertical-align: middle;
+}
+.img-warning #imgBlock{
+  width:20%;
+}
+.img-warning #alertBlock{
+  width:80%;
+}
+
 
 .jumbotron {
   color: #000;
