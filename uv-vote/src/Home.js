@@ -23,7 +23,6 @@ function Home() {
   //run to check if there is a cookie and load the votes
   useEffect(()=>{
       //check for the cookie 
-     console.log('searchParams: ',searchParams);
     let key = "";
     if(searchParams && searchParams.size > 0){
       searchParams.forEach((itm,name)=>{
@@ -33,17 +32,16 @@ function Home() {
           if(keyPattern.test(itm)){
             var keyBox = document.getElementById('voterKey');
             keyBox.value = itm;
-            getVotes();
+            checkVoter();
             // clear the cookie so user can decide if they want to save this one
-            document.cookie = "key=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+            document.cookie = "voterToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
           }
         }
       })
     }else{
-      let keyCookie = getCookie('key');
-      if(keyCookie){
-        var keyBox = document.getElementById('voterKey');
-        keyBox.value = keyCookie;
+      // if the token is there, attempt to get votes
+      let tokenCookie = getCookie('voterToken');
+      if(tokenCookie){
         getVotes();
         setIsSaved(true);
       }
@@ -116,7 +114,7 @@ function Home() {
   }
 
 
-  const getVotes = async()=>{
+  const checkVoter = async()=>{
 
     let key = document.getElementById('voterKey').value;
     
@@ -129,18 +127,48 @@ function Home() {
       const payload = {
         voterKey:key
       }
-      const votes = await axios.post(`${config.apiBaseUrl}/limeapi/participant-surveys`,payload);
-      console.log(votes);
+      const resObj = await axios.post(`${config.apiBaseUrl}/votes`,payload,{withCredentials:true});
+      console.log('resObj: ',resObj);
       
-      if(votes && votes.data){
-        setVotes(votes.data);
+      if(resObj && resObj.data && resObj.data.isVerified === true){
+        setIsSaved(true)
+        getVotes();
       }else{
-        console.error('no votes returned');
+        console.error('no voter found');
       }
       setLoading(false);
     }else{
       alert('incorrect voter key')
     }
+    
+  }
+
+
+  const getVotes = async()=>{
+
+
+      setLoading(true);
+      const authCookie = getCookie('voterToken') || ""; 
+      if(authCookie === ""){
+        console.log('need to reauth')
+      }
+      // get the cookie and set the auth header
+      const reqOpts = { 
+        headers:{
+          "Authorization": `Bearer ${authCookie}`
+        },
+        withCredentials:true
+      }
+
+      const resObj = await axios.post(`${config.apiBaseUrl}/votes/my-votes`,{},reqOpts);
+      console.log(resObj);
+      
+      if(resObj && resObj.data && resObj.data.votes){
+        setVotes(resObj.data.votes);
+      }else{
+        console.error('no votes returned');
+      }
+      setLoading(false);
     
   }
 
@@ -179,7 +207,7 @@ return(
 await getClipboard();
 
 }}>Paste in from clipboard</Button>
- <Button variant='primary' className='float-end'  onClick={()=>getVotes()}>Get Votes</Button>
+ <Button variant='primary' className='float-end'  onClick={()=>checkVoter()}>Verify Voter Key</Button>
  </Col>
  </Row>
 
