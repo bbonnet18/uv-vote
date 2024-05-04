@@ -14,6 +14,7 @@ function Home() {
   const [loading,setLoading] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
   const [isSaved, setIsSaved] = useState(false);// set to false and reset if cookie there
+  const [validVoter,setValidVoter] = useState(null);// used to show a message if voter is not valid
   const keyPattern = /[a-z0-9]+-[a-z0-9]+-[a-z0-9]+-[a-z0-9]+-[a-z0-9]+/g;
   
   // useEffect(()=>{
@@ -32,9 +33,10 @@ function Home() {
           if(keyPattern.test(itm)){
             var keyBox = document.getElementById('voterKey');
             keyBox.value = itm;
-            checkVoter();
             // clear the cookie so user can decide if they want to save this one
-            document.cookie = "voterToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+            clearKey();
+            checkVoter();
+            
           }
         }
       })
@@ -69,29 +71,9 @@ function Home() {
       }
     }
 
-  // save the key for next time
-  const saveKey = ()=>{
-    var keyBox = document.getElementById('voterKey');
-    let key = keyBox.value;
-    if(keyPattern.test(key)){
-      document.cookie = `key=${key}`;
-
-      const d = new Date();
-      const exdays = 60;
-      d.setTime(d.getTime() + (exdays*24*60*60*1000));
-      let expires = "expires="+ d.toUTCString();
-      document.cookie = "key" + "=" + key + ";" + expires + ";path=/";
-      setIsSaved(true);
-    }
-    
-    
-  }
-
    // save the key for next time
    const clearKey = ()=>{
-      document.cookie = "key=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-      var keyBox = document.getElementById('voterKey');
-      keyBox.value = "";
+      document.cookie = "voterToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
       setIsSaved(false);
       setVotes([{}])
     
@@ -116,38 +98,46 @@ function Home() {
 
   const checkVoter = async()=>{
 
-    let key = document.getElementById('voterKey').value;
-    
-
-    key = key.trim();
-    let kp = /[a-z0-9]+-[a-z0-9]+-[a-z0-9]+-[a-z0-9]+-[a-z0-9]+/
-    if(key && kp.test(key)) {
-      setLoading(true);
-      console.log('they match')
-      const payload = {
-        voterKey:key
-      }
-      const resObj = await axios.post(`${config.apiBaseUrl}/votes`,payload,{withCredentials:true});
-      console.log('resObj: ',resObj);
-      
-      if(resObj && resObj.data && resObj.data.isVerified === true){
-        setIsSaved(true)
-        getVotes();
+    try{
+      let key = document.getElementById('voterKey').value;
+  
+      key = key.trim();
+      let kp = /[a-z0-9]+-[a-z0-9]+-[a-z0-9]+-[a-z0-9]+-[a-z0-9]+/
+      if(key && kp.test(key)) {
+        setLoading(true);
+        console.log('they match')
+        const payload = {
+          voterKey:key
+        }
+        const resObj = await axios.post(`${config.apiBaseUrl}/votes`,payload,{withCredentials:true});
+        console.log('resObj: ',resObj);
+        
+        if(resObj && resObj.data && resObj.data.isVerified === true){
+          setIsSaved(true)
+          setValidVoter(true);
+          getVotes();
+        }else{
+          console.error('no voter found');
+          setValidVoter(false);
+        }
+        setLoading(false);
       }else{
-        console.error('no voter found');
+        alert('incorrect voter key')
       }
+    }catch(err){
+
       setLoading(false);
-    }else{
-      alert('incorrect voter key')
+      setValidVoter(false);
     }
+   
     
   }
 
 
   const getVotes = async()=>{
-
-
-      setLoading(true);
+    
+    setLoading(true);
+    try{
       const authCookie = getCookie('voterToken') || ""; 
       if(authCookie === ""){
         console.log('need to reauth')
@@ -167,8 +157,15 @@ function Home() {
         setVotes(resObj.data.votes);
       }else{
         console.error('no votes returned');
+        setValidVoter(false);
       }
       setLoading(false);
+    }catch(err){
+      setValidVoter(false);
+      setLoading(false);
+    }
+     
+     
     
   }
 
@@ -188,19 +185,22 @@ return(
   
     <p>Welcome to U-Vote. Enter your voter key to see your votes. Register here to get a voter key.</p>
 <hr></hr>
-<Form id="voterForm" className='mb-3'> 
- <Form.Group className='mb-3' as={Col} lg={8}>
-  <Form.Label >
-  Enter your voter key:
-  </Form.Label> 
-  { (isSaved === false )? (<Button variant='success' className='btn-sm float-end hide-key' onClick={()=>{
-    saveKey();
-  }}>Trust this device</Button>) : (<Button variant='danger' className='btn-sm float-end hide-key' onClick={()=>{
+<Form id="voterForm" className='mb-3'>
+  { (isSaved === true) ? (<Row>
+    <Col lg={{span:4,offset:8}}>
+      <Button variant='danger' className='btn-sm float-end hide-key' onClick={()=>{
     clearKey();
-  }}>Clear Key</Button>)}
-  <Form.Control id="voterKey" name="voterKey" type="text" pattern="[a-z0-9]+-[a-z0-9]+-[a-z0-9]+-[a-z0-9]+-[a-z0-9]+" placeholder="paste in your voter key"  required />
+  }}>Clear all cookies and re-enter voter key</Button>
+    </Col>
+   </Row>): (<></>)} 
+ <Form.Group className='mb-3' as={Col} lg={8}>
+  
+  { (isSaved === false )? (<> <Form.Label >
+  Enter your voter key:
+  </Form.Label><Form.Control id="voterKey" name="voterKey" type="text" pattern="[a-z0-9]+-[a-z0-9]+-[a-z0-9]+-[a-z0-9]+-[a-z0-9]+" placeholder="paste in your voter key"  required /></>) : (<></>)}
+  
  </Form.Group>
- <Row>
+{ (isSaved === false) ? ( <Row>
  <Col lg={8}>
 <Button className='float-start' variant='outline-primary' onClick={async ()=>{
 
@@ -209,11 +209,14 @@ await getClipboard();
 }}>Paste in from clipboard</Button>
  <Button variant='primary' className='float-end'  onClick={()=>checkVoter()}>Verify Voter Key</Button>
  </Col>
- </Row>
+ </Row>):(<></>)}
 
 </Form>
+<Row>
+  { (validVoter === false) ? (<p>No voter found with that voter key. Get started with <a href="/getkey">a voter key</a> or click the 'Get a voter key' option above.</p>): (<></>)}
+</Row>
 <Row className="">
-  <Col lg={8}>
+  <Col lg={12}>
   {loading ? 
      <Spinner animation="border" role="status">
      <span className="visually-hidden">Loading...</span>
