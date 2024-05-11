@@ -15,6 +15,7 @@ function Register() {
     "address_2": "",
     "city": "",
     "state": "",
+    "zipcode" : "",
     "phone": "",
     "DOB": ""
   }
@@ -28,7 +29,7 @@ function Register() {
   const [selectedStreet2, setSelectedStreet2] = useState("");
   const [normalizedStreet, setNormalizedStreet] = useState("");
   const [verified, setVerified] = useState(false);// used to handle selections and updates to address
-
+  const [registerToken, setRegisterToken] = useState(null);
 
   // const [registered, setRegistered] = useState(false);//to represent that the voter has not registered
   const navigate = useNavigate();
@@ -50,10 +51,10 @@ function Register() {
     }
 
     if(addressOptions && addressOptions.length === 0){
-      setSelectedAddress(null)
-      setSelectedStreet1(null);
-      setSelectedStreet2(null);
-      setNormalizedStreet(null);// this will be the value we use in the registration
+      setSelectedAddress("")
+      setSelectedStreet1("");
+      setSelectedStreet2("");
+      setNormalizedStreet("");// this will be the value we use in the registration
       //setShowSelect(false);
       setVerified(false);
     }
@@ -70,7 +71,8 @@ function Register() {
     try{
       let response = await axios.post(`${config.apiBaseUrl}/register/check-bot`, payload);//await axios.post("https://vote.u-vote.us/register", formData);
 
-      if (response.status === 200) {
+      if (response.status === 200 && response.data) {
+        // setRegisterToken(response.data.regToken); 
         setDisabled(false);
       } else {
         setDisabled(true);
@@ -122,6 +124,11 @@ function Register() {
       return;
     }
 
+    // if(!registerToken){
+    //   console.log('answer captcha challenges')
+    //   return; 
+    // }
+
     if (isValid) {
       form.classList.remove('invalid');
       var formFields = form.querySelectorAll('.form-control');
@@ -147,6 +154,7 @@ function Register() {
       formData.append('gender', genderSelect.value);
       formData.append('idFile', idFile.files[0]);
       formData.append('selfyFile', selfyFile.files[0]);
+      //formData.append('regToken', registerToken);// received from captcha challenges
       console.log('form data');
       try {
         setLoading(true)
@@ -167,7 +175,7 @@ function Register() {
         navigate('/registration-error', {
           state: {
             message: "Error with the registration",
-            error: err.response.data
+            error: err.message
           }
         })
 
@@ -215,9 +223,12 @@ function Register() {
                      if(verified && normalizedStreet !== e.currentTarget.value){
                       setAddressOptions([]);
                      }
+                     else{
+                      setSelectedStreet1(e.currentTarget.value)
+                     }
                      
                  
-                }} required /> {(verified) ? <img alt="check mark for verified address" src="check2-square.svg" /> : <></>}
+                }} value={selectedStreet1} required /> {(verified) ? <img alt="check mark for verified address" src="check2-square.svg" /> : <></>}
               </Col>
             </Row>
             <Row className='mb-2'>
@@ -239,7 +250,7 @@ function Register() {
                     checkAddress(`${myStreet}`)
                   }
                   
-                }}>{(verified) ? (<>Address Verified <img alt="check mark for verified address" src="check-square.svg" /></>) : (<span>Verify Address</span>)} </Button>
+                }} >{(verified) ? (<>Address Verified <img alt="check mark for verified address" src="check-square.svg" /></>) : (<span>Verify Address</span>)} </Button>
               </Col>
             </Row>
             {showSelect ? (

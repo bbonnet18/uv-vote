@@ -23,7 +23,7 @@ return(
         <h3>{location.state.message} </h3>
     </Row>
     <Row>
-        <Col lg={{span:9,offset:2}} ><p>{location.state.error}</p></Col>
+        <Col lg={{span:9,offset:2}} ><p>{(location.state.error && location.state.error.status) ? location.state.error.status : 'service error'}</p></Col>
     </Row>
     <Row>
         <p className='confirm-txt'>  <NavLink to="/getkey">Try again</NavLink></p>
