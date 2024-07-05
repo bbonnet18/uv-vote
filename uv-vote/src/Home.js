@@ -15,7 +15,9 @@ function Home() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [isSaved, setIsSaved] = useState(false);// set to false and reset if cookie there
   const [validVoter,setValidVoter] = useState(null);// used to show a message if voter is not valid
-  const keyPattern = /[a-z0-9]+-[a-z0-9]+-[a-z0-9]+-[a-z0-9]+-[a-z0-9]+/g;
+  const keyPattern =  /([A-Za-z0-9]){10}v{1}([0-9])+/gi //  /[a-z0-9]+-[a-z0-9]+-[a-z0-9]+-[a-z0-9]+-[a-z0-9]+/g;
+  // new key pattern would be something like - ([A-Z0-9]){10}([A-Z]){2}v([0-9])+/gi
+  // because it will include the state 
   
   // useEffect(()=>{
     
@@ -102,7 +104,7 @@ function Home() {
       let key = document.getElementById('voterKey').value;
   
       key = key.trim();
-      let kp = /[a-z0-9]+-[a-z0-9]+-[a-z0-9]+-[a-z0-9]+-[a-z0-9]+/
+      let kp = keyPattern;///[a-z0-9]+-[a-z0-9]+-[a-z0-9]+-[a-z0-9]+-[a-z0-9]+/
       if(key && kp.test(key)) {
         setLoading(true);
         console.log('they match')
@@ -197,7 +199,7 @@ return(
   
   { (isSaved === false )? (<> <Form.Label >
   Enter your voter key:
-  </Form.Label><Form.Control id="voterKey" name="voterKey" type="text" pattern="[a-z0-9]+-[a-z0-9]+-[a-z0-9]+-[a-z0-9]+-[a-z0-9]+" placeholder="paste in your voter key"  required /></>) : (<></>)}
+  </Form.Label><Form.Control id="voterKey" name="voterKey" type="text" pattern="([A-Z0-9]){10}([A-Z]){2}v([0-9])+" placeholder="paste in your voter key"  required /></>) : (<></>)}
   
  </Form.Group>
 { (isSaved === false) ? ( <Row>

@@ -191,9 +191,10 @@ function Register() {
         <>
           <h2>Register for a U-Vote Key</h2>
           <div className='limit-notice'><p>U-Vote is in alpha and currently only available in Arlington Virginia. Please check back soon to see if we've added your neighborhood. </p></div>
-          <hr></hr>
+          <hr className='separator'></hr>
 
           <Form id="registerForm">
+          <h4>Step 1: Enter Your Info</h4>
             <Row className='mb-2'>
               <Col lg={2} md={12}>
                 <Form.Label id="aFirst" >First</Form.Label>
@@ -213,6 +214,61 @@ function Register() {
                 <Form.Control id="lastName" name="lastname" type="text" placeholder="last name" defaultValue={currentVoter.lastname} required />
               </Col>
             </Row>
+            <Row className='mb-2'>
+              <Col lg={2}>
+                <Form.Label id="aPhone" >Phone</Form.Label>
+              </Col>
+              <Col lg={10}>
+                <Form.Control className='' id="phone" name="phone" maxLength={10} minLength={10} type="tel" pattern="[0-9]{10}" placeholder="phone" defaultValue={currentVoter.phone} required />
+                <Form.Text id="phoneHelp" muted>
+                  Enter a 10 digit phone number starting with the area code
+                </Form.Text>
+              </Col>
+            </Row>
+            <Row className='mb-2'>
+              <Col lg={2}>
+                <Form.Label id="aDOB">DOB</Form.Label>
+              </Col>
+              <Col lg={10}>
+                <Form.Control id="DOB" name="DOB" size="lg" type="text" pattern='(0[1-9]|1[1,2,0])\/(0[1-9]|[12][0-9]|3[01])\/(19|20)\d{2}' min={18} placeholder="MM/DD/YYYY" defaultValue={currentVoter.DOB} required />
+                <Form.Text muted>
+                  You must be 18 or older
+                </Form.Text>
+              </Col>
+
+            </Row>
+            <Row className='mb-2'>
+              <Col lg={2}>
+                <Form.Label id="aText">Agree to text messages</Form.Label>
+              </Col>
+              <Col lg={10}>
+                <Form.Check // prettier-ignore
+                  type={'checkbox'}
+                  id={'opt-in'}
+                  label={'I agree to receive text messages from U-Vote'} required
+                />
+                <Form.Text id="textHelp">
+                  * Agreement is required for U-Vote participation
+                </Form.Text>
+              </Col>
+
+            </Row>
+            <Row className='mb-2'>
+              <Col lg={2}>
+                <Form.Label id="aGender" >Gender</Form.Label>
+              </Col>
+              <Col lg={10}>
+                <Form.Select aria-label="Gender" name="gender" id="gender" required defaultValue="F">
+                  <option value="F">Female</option>
+                  <option value="M">Male</option>
+                  <option value="U">Note Specified</option>
+                </Form.Select>
+              </Col>
+            </Row>
+            <hr className='separator'/>
+            
+            <h4>Step 2: Verify Address</h4>
+            <Container fluid  className='formSection'>
             <Row className='mb-2'>
               <Col lg={2}>
                 <Form.Label id="aAddress1" >Address</Form.Label>
@@ -316,63 +372,16 @@ function Register() {
                 <Form.Control aria-label="Zipcode" name="zipcode" id="zipcode" placeholder='zipcode' type="text" value={selectedAddress && selectedAddress.zipcode ? selectedAddress.zipcode : ""} required disabled />
               </Col>
             </Row>
-            <Row className='mb-2'>
-              <Col lg={2}>
-                <Form.Label id="aPhone" >Phone</Form.Label>
-              </Col>
-              <Col lg={10}>
-                <Form.Control className='' id="phone" name="phone" maxLength={10} minLength={10} type="tel" pattern="[0-9]{10}" placeholder="phone" defaultValue={currentVoter.phone} required />
-                <Form.Text id="phoneHelp" muted>
-                  Enter a 10 digit phone number starting with the area code
-                </Form.Text>
-              </Col>
-            </Row>
-            <Row className='mb-2'>
-              <Col lg={2}>
-                <Form.Label id="aDOB">DOB</Form.Label>
-              </Col>
-              <Col lg={10}>
-                <Form.Control id="DOB" name="DOB" size="lg" type="text" pattern='(0[1-9]|1[1,2,0])\/(0[1-9]|[12][0-9]|3[01])\/(19|20)\d{2}' min={18} placeholder="MM/DD/YYYY" defaultValue={currentVoter.DOB} required />
-                <Form.Text muted>
-                  You must be 18 or older
-                </Form.Text>
-              </Col>
-
-            </Row>
-            <Row className='mb-2'>
-              <Col lg={2}>
-                <Form.Label id="aText">Agree to text messages</Form.Label>
-              </Col>
-              <Col lg={10}>
-                <Form.Check // prettier-ignore
-                  type={'checkbox'}
-                  id={'opt-in'}
-                  label={'I agree to receive text messages from U-Vote'} required
-                />
-                <Form.Text id="textHelp">
-                  * Agreement is required for U-Vote participation
-                </Form.Text>
-              </Col>
-
-            </Row>
-            <Row className='mb-2'>
-              <Col lg={2}>
-                <Form.Label id="aGender" >Gender</Form.Label>
-              </Col>
-              <Col lg={10}>
-                <Form.Select aria-label="Gender" name="gender" id="gender" required defaultValue="F">
-                  <option value="F">Female</option>
-                  <option value="M">Male</option>
-                  <option value="U">Note Specified</option>
-                </Form.Select>
-              </Col>
-            </Row>
+            </Container>
+            <hr className='separator'/>
+            <h4>Step 3: ID Check</h4>
+            <Container fluid id="idFormSection" className='formSection'>
             <Row>
-              <Col lg={12}><Alert className='img-warning' variant='warning'><div id="imgBlock"><img src="exclamation-lg.svg" /></div><div id="alertBlock">Images below are used for verification only and will be deleted once you are verified.</div></Alert></Col>
+              <Col lg={12}><Alert className='img-warning' variant='info'><div id="imgBlock"><img src="exclamation-lg.svg" /></div><div id="alertBlock">Images below are used for verification only and will be deleted once you are verified.</div></Alert></Col>
             </Row>
             <Row className="img-preview-wrapper" >
               <Col lg={{ span: 4, offset: 2 }} className='step-one'>
-                <p><strong>Step 1:</strong> Take a picture of your ID</p>
+                <p><strong>First:</strong> Take a picture of your ID</p>
               </Col>
               <Col className='img-preview mt-2' lg={{ span: 4, offset: 2 }}>
                 <img id="previewImg" alt="preview of ID" src="" />
@@ -383,7 +392,7 @@ function Register() {
                 <Form.Label id="aFile">ID File:</Form.Label>
               </Col>
               <Col lg={10}>
-                <Form.Control type="file" id="idFile" accept='.jpeg' onChange={(evt) => {
+                <Form.Control type="file" id="idFile" accept='.jpeg, .jpg' onChange={(evt) => {
                   let preview = document.getElementById('previewImg');
                   console.log('received a file - ', URL.createObjectURL(evt.target.files[0]));
                   preview.src = URL.createObjectURL(evt.target.files[0]);
@@ -398,7 +407,7 @@ function Register() {
 
             <Row className="img-preview-wrapper" >
               <Col lg={{ span: 4, offset: 2 }} className='step-two'>
-                <p><strong>Step 2:</strong>Take a selfy with your ID</p>
+                <p><strong>Next:</strong>Take a selfy with your ID</p>
               </Col>
               <Col className='img-preview selfy mt-2' lg={{ span: 4, offset: 2 }}>
                 <img id="selfyImg" alt="selfy preview" src="" />
@@ -410,7 +419,7 @@ function Register() {
               </Col>
               <Col lg={10}>
 
-                <Form.Control type="file" id="selfyFile" accept='.jpeg' onChange={(evt) => {
+                <Form.Control type="file" id="selfyFile" accept='.jpeg, .jpg' onChange={(evt) => {
                   let preview = document.getElementById('selfyImg');
                   console.log('received a file - ', URL.createObjectURL(evt.target.files[0]));
                   preview.src = URL.createObjectURL(evt.target.files[0]);
@@ -421,7 +430,7 @@ function Register() {
                 }} required />
               </Col>
             </Row>
-
+            </Container>
             <Row className='mb-4 mt-4' >
               <ReCAPTCHA ref={recaptchaRef} sitekey={"6Le-QPIoAAAAAJT5-G3P009gn52wZR3TLLSBB3Fj"} onChange={() => checkCaptcha()} />
             </Row>
