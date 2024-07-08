@@ -140,6 +140,8 @@ function Home() {
     
     setLoading(true);
     try{
+
+      // get the JWT to use for auth
       const authCookie = getCookie('voterToken') || ""; 
       if(authCookie === ""){
         console.log('need to reauth')
@@ -158,7 +160,55 @@ function Home() {
       if(resObj && resObj.data && resObj.data.votes){
         setVotes(resObj.data.votes);
       }else{
-        console.error('no votes returned');
+        console.log('no votes returned');
+        setValidVoter(false);
+      }
+      setLoading(false);
+    }catch(err){
+      setValidVoter(false);
+      setLoading(false);
+    }
+    
+  }
+
+
+  const registerToVote = async(surveyId)=>{
+    setLoading(true);
+    try{
+
+      // get the JWT to use for auth
+      const authCookie = getCookie('voterToken') || ""; 
+      if(authCookie === ""){
+        console.log('need to reauth')
+      }
+      // get the cookie and set the auth header
+      const reqOpts = { 
+        headers:{
+          "Authorization": `Bearer ${authCookie}`
+        },
+        withCredentials:true
+      }
+
+      const payload = {
+        surveyId:`${surveyId}`
+      }
+
+      const resObj = await axios.post(`${config.apiBaseUrl}/votes/register`,payload,reqOpts);
+      console.log(resObj);
+      
+      if(resObj && resObj.data && resObj.data.surveyLink){
+        let myVotes = [...votes]
+        // add the survey link for the newly registered item
+        myVotes = myVotes.map((itm)=>{
+          if(itm.surveyId == surveyId){
+            itm.link = resObj.data.surveyLink;
+          }
+          return itm; 
+        })
+
+        setVotes(myVotes);
+      }else{
+        console.log('no votes returned');
         setValidVoter(false);
       }
       setLoading(false);
@@ -167,8 +217,6 @@ function Home() {
       setLoading(false);
     }
      
-     
-    
   }
 
   const popover = (
@@ -222,7 +270,7 @@ await getClipboard();
   {loading ? 
      <Spinner animation="border" role="status">
      <span className="visually-hidden">Loading...</span>
-   </Spinner> : <VoteList votes={votes}></VoteList>
+   </Spinner> : <VoteList votes={votes} register={registerToVote}></VoteList>
 } 
   </Col>
   
