@@ -400,6 +400,21 @@ button{
   background-color: lightgreen;
 }
 
+.vote-completed{
+  color:gray;
+}
+
+.vote-completed div{
+  display:inline-block;
+  text-align: center;
+  width:90%
+}
+
+.vote-completed div>img{
+  width:50%;
+}
+
+
 
 #verifyAddress{
   color: white;
