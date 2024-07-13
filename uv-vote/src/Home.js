@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { useSearchParams } from "react-router-dom";
 import axios from "axios";
 import { Form, Col, Row, Button, Container, OverlayTrigger, Popover, Spinner } from "react-bootstrap";
+import { useNavigate } from 'react-router-dom';
 import VoteList from './VoteList';
 import config from './config';
 
@@ -18,7 +19,7 @@ function Home() {
   const keyPattern =  /([A-Za-z0-9]){10}v{1}([0-9])+/gi //  /[a-z0-9]+-[a-z0-9]+-[a-z0-9]+-[a-z0-9]+-[a-z0-9]+/g;
   // new key pattern would be something like - ([A-Z0-9]){10}([A-Z]){2}v([0-9])+/gi
   // because it will include the state 
-  
+  const navigate = useNavigate();
   // useEffect(()=>{
     
   // },[searchParams]);
@@ -36,7 +37,7 @@ function Home() {
             var keyBox = document.getElementById('voterKey');
             keyBox.value = itm;
             // clear the cookie so user can decide if they want to save this one
-            clearKey();
+            //clearKey();
             checkVoter();
             
           }
@@ -48,6 +49,8 @@ function Home() {
       if(tokenCookie){
         getVotes();
         setIsSaved(true);
+      }else{
+        navigate('/validate')
       }
     }
     
@@ -105,6 +108,9 @@ function Home() {
   
       key = key.trim();
       let kp = keyPattern;///[a-z0-9]+-[a-z0-9]+-[a-z0-9]+-[a-z0-9]+-[a-z0-9]+/
+
+      let myres = keyPattern.test(key);
+      console.log('res : ',myres);
       if(key && kp.test(key)) {
         setLoading(true);
         console.log('they match')
@@ -144,7 +150,8 @@ function Home() {
       // get the JWT to use for auth
       const authCookie = getCookie('voterToken') || ""; 
       if(authCookie === ""){
-        console.log('need to reauth')
+        console.log('need to reauth');
+        navigate('/confirm'); 
       }
       // get the cookie and set the auth header
       const reqOpts = { 
@@ -173,7 +180,7 @@ function Home() {
 
 
   const registerToVote = async(surveyId)=>{
-    setLoading(true);
+
     try{
 
       // get the JWT to use for auth
@@ -211,10 +218,10 @@ function Home() {
         console.log('no votes returned');
         setValidVoter(false);
       }
-      setLoading(false);
+
     }catch(err){
       setValidVoter(false);
-      setLoading(false);
+
     }
      
   }
@@ -236,13 +243,6 @@ return(
     <p>Welcome to U-Vote. Enter your voter key to see your votes. Register here to get a voter key.</p>
 <hr></hr>
 <Form id="voterForm" className='mb-3'>
-  { (isSaved === true) ? (<Row>
-    <Col lg={{span:4,offset:8}}>
-      <Button variant='danger' className='btn-sm float-end hide-key' onClick={()=>{
-    clearKey();
-  }}>Clear all cookies and re-enter voter key</Button>
-    </Col>
-   </Row>): (<></>)} 
  <Form.Group className='mb-3' as={Col} lg={8}>
   
   { (isSaved === false )? (<> <Form.Label >

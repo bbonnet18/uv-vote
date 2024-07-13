@@ -166,6 +166,9 @@ button{
 
 }
 
+Form input.error{
+  border: 1px solid red;
+}
 
 .hero-image{
   /* background-image: url("vote_here_large2.jpeg"); */
@@ -188,6 +191,10 @@ button{
 
 :invalid .hide-key{
   display:none !important;
+}
+
+.nav .nav-item{
+  border-bottom: 2px solid green;
 }
 
 
@@ -355,6 +362,11 @@ button{
 #textHelp{
   font-weight: 500;
   color:crimson;
+}
+
+.top-nav{
+  border-bottom: 2px solid #0C2D48;
+  padding-bottom: 5px
 }
 .u-vote-blade-grey{
   color:white;

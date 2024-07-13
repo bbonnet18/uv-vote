@@ -9,7 +9,7 @@ export default function App() {
     <>
     <div className="icon-brand"><div className='container'><a><img src='u-vote-logo-new-trans.png' ></img></a>U-Vote<div className='alpha-mark'>0.1 ALPHA</div></div></div>
     <Container fluid className='p-0'>
-      <Container>
+      <Container className='top-nav'>
       <Navbar></Navbar>
       </Container>
     <Outlet />

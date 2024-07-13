@@ -2,7 +2,7 @@ import './App.css';
 import { Col, Row, Button, Container} from "react-bootstrap";
 import { NavLink, useLoaderData } from 'react-router-dom';
 import { useState, useRef, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 function Error({error}) {
 
     const location = useLocation();

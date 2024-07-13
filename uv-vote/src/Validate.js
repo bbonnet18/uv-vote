@@ -1,7 +1,7 @@
 import './App.css';
 import axios from 'axios';
 import config from './config';
-import { Alert, Col, Row, Form, Button, Container, Spinner } from "react-bootstrap";
+import { Col, Row, Form, Button, Container, Spinner } from "react-bootstrap";
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ReCAPTCHA from "react-google-recaptcha";
@@ -11,12 +11,85 @@ function Validate() {
 
     const [loading, setLoading] = useState(false);
     const [disabled, setDisabled] = useState(true);
-
+    const [confirm, setConfirm] = useState(false)
+    const [confirmStatus, setConfirmStatus] = useState(null);
+    const [reason, setReason] = useState(null);
+    const reasons = [
+        {reason:'key already issued in window',description:'U-Vote will issue you a key every quarter. Our records show that you have received a key in this quarter. Locate your latest text message from U-Vote with the key to access your votes',showButton:false},
+        {reason:'not a match',description:'the information you entered does not match your voter record.', showButton:true}
+    ];
 
         // const [registered, setRegistered] = useState(false);//to represent that the voter has not registered
     const navigate = useNavigate();
     // for captcha
     const recaptchaRef = useRef(null);
+
+    const validate = async ()=>{
+
+        const form = document.getElementById('validateForm');
+
+
+        if(form.checkValidity()){
+
+            try{
+                let inputs = form.querySelectorAll('input');
+            inputs.forEach((input)=>{
+                if(input.classList.contains('error')){
+                    input.classList.remove('error');
+                }
+            });
+
+            if(form.classList.contains('error')){
+                form.classList.remove('error');
+            }
+            let idsampleVal = document.getElementById('idsample').value;
+            let phoneVal = document.getElementById('phone').value;
+
+            let payload = {
+                phone:phoneVal,
+                idsample:idsampleVal
+            }
+            setLoading(true);
+            let res = await axios.post(`${config.apiBaseUrl}/validate`,payload);
+            if (res.status === 200 && res.data) {
+                setConfirm(true);
+                setConfirmStatus('success');
+            } else {
+                setConfirm(true);
+                setConfirmStatus('error');
+            }
+
+            setLoading(false);
+            }catch(err){
+                setLoading(false);
+                setConfirm(true);
+                setConfirmStatus('error');
+                if(err && err.response && err.response.data){
+                    setReason(reasons[err.response.data.reason]);
+                }else{
+                    setReason('1');
+                }
+                
+            }
+
+            
+
+
+        }else{
+            let idsampleVal = document.getElementById('idsample')
+            let phoneVal = document.getElementById('phone')
+            
+            if(idsampleVal.checkValidity() === false){
+                idsampleVal.classList.add('error')
+            }
+
+            if(phoneVal.checkValidity() === false){
+                phoneVal.classList.add('error')
+            }
+            
+        }
+    }
+
 
 
      // check captcha val
@@ -29,24 +102,50 @@ function Validate() {
     try{
       let response = await axios.post(`${config.apiBaseUrl}/register/check-bot`, payload);//await axios.post("https://vote.u-vote.us/register", formData);
 
-      if (response.status === 200 && response.data) {
+      if (response.status === 200 && response.data.regToken) {
         // setRegisterToken(response.data.regToken); 
         setDisabled(false);
       } else {
         setDisabled(true);
       }
     }catch(err){
-      setDisabled(true);
+      setDisabled(true);    
     }
    
 
   }
 
   return(<Container fluid="md">
+     <Row className='pt-1'>
+        <Col><span>New to U-Vote? Get a voter key by <a href="/getkey">registering</a>.</span></Col>
+    </Row>
     <hr></hr>
     <h2>Validate to recieve your voter key</h2>
-  {loading ? (<Spinner></Spinner>) : (
-<>
+   
+  {loading ? (<Spinner></Spinner>) : (<>
+    {confirm && confirm === true ? (<Row id="confirmation" className="confirm">
+    <h2 id="confirmMessage">Status: {confirmStatus === 'success' ? 'Confirmed' : 'Error'}</h2>
+    {confirmStatus === 'success' ? (<p id="confirmText">You have been validated. If you were conditionally approved, you are now approved. If you have not received your voter key, you should receive a text message with your voter key very soon. 
+    </p>) : (
+    <Row> 
+        <Row>
+            <p>Reason: {reason.reason}</p>
+            <p id="confirmText">{reason.description}
+            </p>
+            {reason.showButton ? (<Col lg={{span:10,offset:2}}>
+               
+               <Button variant='primary' type="button" class="btn btn-primary" onClick={()=>{
+                   setConfirm(false);
+                   setConfirmStatus(null);
+                   setDisabled(true);
+               }} >Try again</Button>
+               </Col>) : (<></>) }
+            
+        </Row>
+    </Row>
+    )}
+    <Col sm={12} className='confirm-img'></Col>
+</Row>):(<>
 <Form id="validateForm">
     <Row>
     <Col sm={12} lg={10}>
@@ -64,24 +163,18 @@ function Validate() {
     </Row>
     <Row>
     <Col lg={{span:10,offset:2}} >
-    <Button variant='primary' id="validateBtn" type="button" class="btn btn-primary" disabled>Submit</Button>
+    <Button variant='primary' id="validateBtn" type="button" class="btn btn-primary" onClick={() => validate()} disabled={disabled}>Submit</Button>
     </Col>
     
     </Row>
 </Form>
-<Row id="confirmation" className="confirm">
-    <h2 id="confirmMessage">Success</h2>
-    <p id="confirmText">You have been validated. If you were conditionally approved, you are now approved. If you have not received your voter key, you should receive a text message with your voter key very soon. 
-    </p>
-    <Col sm={12} className='confirm-img'></Col>
-</Row>
+
 <Row className='mb-4 mt-4' >
               <ReCAPTCHA ref={recaptchaRef} sitekey={"6Le-QPIoAAAAAJT5-G3P009gn52wZR3TLLSBB3Fj"} onChange={() => checkCaptcha()} />
             </Row>
 
-</>
-
-  )}</Container>)
+</>)}
+  </>)}</Container>)
 }
 
 export default Validate;

@@ -1,11 +1,8 @@
 import './App.css';
 
 import { Accordion, Figure, Container, Col, Row, Card,} from "react-bootstrap";
-import { useNavigate } from 'react-router-dom';
 
 function About() {
-
-    const navigate = useNavigate();
 
 
 return(

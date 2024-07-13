@@ -1,11 +1,9 @@
 import './App.css';
 
 import { Container, Col, Row, Card,} from "react-bootstrap";
-import { useNavigate } from 'react-router-dom';
 
 function Info() {
 
-    const navigate = useNavigate();
 
 
 return(
