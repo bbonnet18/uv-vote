@@ -150,6 +150,7 @@ button{
   background-repeat: no-repeat;
 }
 
+
 .error-img{
   background-position: center;
   background-size: 180px;
@@ -359,13 +360,16 @@ Form input.error{
 }
 
 
+.table-link-col{
+  text-align: center;
+}
+
 #textHelp{
   font-weight: 500;
   color:crimson;
 }
 
 .top-nav{
-  border-bottom: 2px solid #0C2D48;
   padding-bottom: 5px
 }
 .u-vote-blade-grey{
@@ -423,7 +427,7 @@ Form input.error{
 }
 
 .vote-completed div>img{
-  width:50%;
+  width:25px;
 }
 
 
@@ -520,6 +524,10 @@ Form input.error{
 
   .nav-item{
     --bs-nav-link-padding-y: 0;
+  }
+
+  .nav-underline{
+    gap:8px !important;
   }
 
   .centered-img {
