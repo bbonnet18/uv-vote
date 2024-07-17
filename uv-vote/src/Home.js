@@ -16,6 +16,7 @@ function Home() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [isSaved, setIsSaved] = useState(false);// set to false and reset if cookie there
   const [validVoter,setValidVoter] = useState(null);// used to show a message if voter is not valid
+  const [checking,setChecking] = useState(false);// used to stop from multiple gets based on useEffect
   const keyPattern =  /([A-Za-z0-9]){10}v{1}([0-9])+/gi //  /[a-z0-9]+-[a-z0-9]+-[a-z0-9]+-[a-z0-9]+-[a-z0-9]+/g;
   // new key pattern would be something like - ([A-Z0-9]){10}([A-Z]){2}v([0-9])+/gi
   // because it will include the state 
@@ -47,6 +48,7 @@ function Home() {
       // if the token is there, attempt to get votes
       let tokenCookie = getCookie('voterToken');
       if(tokenCookie){
+       
         getVotes();
         setIsSaved(true);
       }else{
@@ -145,6 +147,7 @@ function Home() {
   const getVotes = async()=>{
     
     setLoading(true);
+
     try{
 
       // get the JWT to use for auth

@@ -190,7 +190,7 @@ function Register() {
       {loading ? (<Spinner></Spinner>) : (
         <>
           <h2>Register for a U-Vote Key</h2>
-          <div className='limit-notice'><p>U-Vote is in alpha and currently only available in Arlington Virginia. Please check back soon to see if we've added your neighborhood. </p></div>
+          <div className='limit-notice'><p>U-Vote is in testing in Arlington Virginia. </p></div>
           <hr className='separator'></hr>
 
           <Form id="registerForm">
