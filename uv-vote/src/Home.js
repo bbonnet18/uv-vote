@@ -2,7 +2,7 @@ import './App.css';
 import { useState, useEffect } from 'react';
 import { useSearchParams } from "react-router-dom";
 import axios from "axios";
-import { Form, Col, Row, Button, Container, OverlayTrigger, Popover, Spinner } from "react-bootstrap";
+import { Form, Col, InputGroup, Row, Button, Container, Spinner } from "react-bootstrap";
 import { useNavigate } from 'react-router-dom';
 import VoteList from './VoteList';
 import config from './config';
@@ -10,87 +10,129 @@ import config from './config';
 
 function Home() {
 
-  const [votes,setVotes] = useState([{}]);// to hold votes when we get them from the axios call 
+  const [votes, setVotes] = useState([{}]);// to hold votes when we get them from the axios call 
   const [voterKey, setVoterKey] = useState(null);// holds the voter key the user entered
-  const [loading,setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
   const [isSaved, setIsSaved] = useState(false);// set to false and reset if cookie there
-  const [validVoter,setValidVoter] = useState(null);// used to show a message if voter is not valid
-  const [checking,setChecking] = useState(false);// used to stop from multiple gets based on useEffect
-  const keyPattern =  /([A-Za-z0-9]){10}v{1}([0-9])+/gi //  /[a-z0-9]+-[a-z0-9]+-[a-z0-9]+-[a-z0-9]+-[a-z0-9]+/g;
+  const [showKey, setShowKey] = useState(false);// make key visible for export
+  const [validVoter, setValidVoter] = useState(null);// used to show a message if voter is not valid
+  const [checking, setChecking] = useState(false);// used to stop from multiple gets based on useEffect
+  const [copyHelp, setCopyHelp] = useState("");// shows hints about the copy/paste key process
+  const keyPattern = /([A-Za-z0-9]){10}v{1}([0-9])+/i //  /[a-z0-9]+-[a-z0-9]+-[a-z0-9]+-[a-z0-9]+-[a-z0-9]+/g;
   // new key pattern would be something like - ([A-Z0-9]){10}([A-Z]){2}v([0-9])+/gi
   // because it will include the state 
   const navigate = useNavigate();
   // useEffect(()=>{
-    
+
   // },[searchParams]);
 
   //run to check if there is a cookie and load the votes
-  useEffect(()=>{
-      //check for the cookie 
+  useEffect(() => {
+    //check for the cookie 
     let key = "";
-    if(searchParams && searchParams.size > 0){
-      searchParams.forEach((itm,name)=>{
+    if (searchParams && searchParams.size > 0) {
+      searchParams.forEach((itm, name) => {
         // check the id passed and pattern match to validate format
-        if(name === "id"){
+        if (name === "id") {
           // if the test passes, set the key and load the votes
-          if(keyPattern.test(itm)){
+          if (keyPattern.test(itm)) {
             var keyBox = document.getElementById('voterKey');
             keyBox.value = itm;
             // clear the cookie so user can decide if they want to save this one
             //clearKey();
             checkVoter();
-            
+
           }
         }
       })
-    }else{
+    } else {
       // if the token is there, attempt to get votes
       let tokenCookie = getCookie('voterToken');
-      if(tokenCookie){
-       
+      if (tokenCookie) {
+
         getVotes();
         setIsSaved(true);
-      }else{
+      } else {
         navigate('/validate')
       }
     }
-    
-  },[])
+
+  }, [])
+
   // check the voter's clipboard and paste in the value if it fits the format
 
-    async function getClipboard(){
-      if(window.navigator && window.navigator.clipboard){
+  async function getClipboard() {
+    if (window.navigator && window.navigator.clipboard) {
 
-        const clipboardData = await window.navigator.clipboard.readText();
-        if(clipboardData){
-          // get the key and put it in the key box
-          if(keyPattern.test(clipboardData)){
-            const matches = clipboardData.match(keyPattern); 
-            const key = matches[0];
-            var keyBox = document.getElementById('voterKey');
-            keyBox.value = key;
-            setVoterKey(key);
-            return key;
-          }
-
+      const clipboardData = await window.navigator.clipboard.readText();
+      if (clipboardData) {
+        // get the key and put it in the key box
+        if (keyPattern.test(clipboardData)) {
+          const matches = clipboardData.match(keyPattern);
+          const key = matches[0];
+          var keyBox = document.getElementById('voterKey');
+          keyBox.value = key;
+          setVoterKey(key);
+          return key;
         }
+
       }
     }
-
-   // save the key for next time
-   const clearKey = ()=>{
-      document.cookie = "voterToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-      setIsSaved(false);
-      setVotes([{}])
-    
   }
+
+
+  async function copyToClipboard() {
+    try {
+
+      const keyBox = document.getElementById('voterKey');
+      let key = "";
+      if (keyBox) {
+        key = keyBox.value;
+      }
+
+      if (key.length && keyPattern.test(key)) {
+        if (window.navigator && window.navigator.clipboard) {
+          const cb = window.navigator.clipboard;
+          const isCopied = await cb.writeText(key);
+          setCopyHelp('key copied to the clipboard.')
+
+        }
+
+
+      } else {
+        setCopyHelp('unable to copy key to the clipboard');
+      }
+
+    } catch (err) {
+      setCopyHelp('Error - unable to copy key to the clipboard');
+    }
+
+    let myHelp = document.getElementById('copyHelp');
+    if (myHelp.classList.contains('fadeOut')) {
+      myHelp.classList.remove('fadeOut');
+    }
+    setTimeout(() => {
+      myHelp.classList.add('fadeOut');
+    }, 300)
+
+  }
+
+
+
+  // save the key for next time
+  //  const clearKey = ()=>{
+  //     document.cookie = "voterToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+  //     setIsSaved(false);
+  //     setVotes([{}])
+
+  // }
 
   function getCookie(cname) {
     let name = cname + "=";
     let decodedCookie = decodeURIComponent(document.cookie);
     let ca = decodedCookie.split(';');
-    for(let i = 0; i <ca.length; i++) {
+    for (let i = 0; i < ca.length; i++) {
       let c = ca[i];
       while (c.charAt(0) == ' ') {
         c = c.substring(1);
@@ -103,184 +145,192 @@ function Home() {
   }
 
 
-  const checkVoter = async()=>{
+  const checkVoter = async () => {
 
-    try{
+    try {
       let key = document.getElementById('voterKey').value;
-  
+
       key = key.trim();
       let kp = keyPattern;///[a-z0-9]+-[a-z0-9]+-[a-z0-9]+-[a-z0-9]+-[a-z0-9]+/
 
-      let myres = keyPattern.test(key);
-      console.log('res : ',myres);
-      if(key && kp.test(key)) {
+      let myres = key && kp.test(key);
+      console.log('res : ', myres);
+      if (key && kp.test(key)) {
         setLoading(true);
         console.log('they match')
         const payload = {
-          voterKey:key
+          voterKey: key
         }
-        const resObj = await axios.post(`${config.apiBaseUrl}/votes`,payload,{withCredentials:true});
-        console.log('resObj: ',resObj);
-        
-        if(resObj && resObj.data && resObj.data.isVerified === true){
+        const resObj = await axios.post(`${config.apiBaseUrl}/votes`, payload, { withCredentials: true });
+        console.log('resObj: ', resObj);
+
+        if (resObj && resObj.data && resObj.data.isVerified === true) {
           setIsSaved(true)
           setValidVoter(true);
           getVotes();
-        }else{
+        } else {
           console.error('no voter found');
           setValidVoter(false);
         }
         setLoading(false);
-      }else{
+      } else {
         alert('incorrect voter key')
       }
-    }catch(err){
+    } catch (err) {
 
       setLoading(false);
       setValidVoter(false);
     }
-   
-    
+
+
   }
 
 
-  const getVotes = async()=>{
-    
+  const getVotes = async () => {
+
     setLoading(true);
 
-    try{
+    try {
 
       // get the JWT to use for auth
-      const authCookie = getCookie('voterToken') || ""; 
-      if(authCookie === ""){
+      const authCookie = getCookie('voterToken') || "";
+      if (authCookie === "") {
         console.log('need to reauth');
-        navigate('/confirm'); 
+        navigate('/confirm');
       }
       // get the cookie and set the auth header
-      const reqOpts = { 
-        headers:{
+      const reqOpts = {
+        headers: {
           "Authorization": `Bearer ${authCookie}`
         },
-        withCredentials:true
+        withCredentials: true
       }
 
-      const resObj = await axios.post(`${config.apiBaseUrl}/votes/my-votes`,{},reqOpts);
+      const resObj = await axios.post(`${config.apiBaseUrl}/votes/my-votes`, {}, reqOpts);
       console.log(resObj);
-      
-      if(resObj && resObj.data && resObj.data.votes){
+
+      if (resObj && resObj.data && resObj.data.votes) {
         setVotes(resObj.data.votes);
-      }else{
+      } else {
         console.log('no votes returned');
         setValidVoter(false);
       }
       setLoading(false);
-    }catch(err){
+    } catch (err) {
       setValidVoter(false);
       setLoading(false);
     }
-    
+
   }
 
 
-  const registerToVote = async(surveyId)=>{
+  const registerToVote = async (surveyId) => {
 
-    try{
+    try {
 
       // get the JWT to use for auth
-      const authCookie = getCookie('voterToken') || ""; 
-      if(authCookie === ""){
+      const authCookie = getCookie('voterToken') || "";
+      if (authCookie === "") {
         console.log('need to reauth')
       }
       // get the cookie and set the auth header
-      const reqOpts = { 
-        headers:{
+      const reqOpts = {
+        headers: {
           "Authorization": `Bearer ${authCookie}`
         },
-        withCredentials:true
+        withCredentials: true
       }
 
       const payload = {
-        surveyId:`${surveyId}`
+        surveyId: `${surveyId}`
       }
 
-      const resObj = await axios.post(`${config.apiBaseUrl}/votes/register`,payload,reqOpts);
+      const resObj = await axios.post(`${config.apiBaseUrl}/votes/register`, payload, reqOpts);
       console.log(resObj);
-      
-      if(resObj && resObj.data && resObj.data.surveyLink){
+
+      if (resObj && resObj.data && resObj.data.surveyLink) {
         let myVotes = [...votes]
         // add the survey link for the newly registered item
-        myVotes = myVotes.map((itm)=>{
-          if(itm.surveyId == surveyId){
+        myVotes = myVotes.map((itm) => {
+          if (itm.surveyId == surveyId) {
             itm.link = resObj.data.surveyLink;
           }
-          return itm; 
+          return itm;
         })
 
         setVotes(myVotes);
-      }else{
+      } else {
         console.log('no votes returned');
         setValidVoter(false);
       }
 
-    }catch(err){
+    } catch (err) {
       setValidVoter(false);
 
     }
-     
+
   }
 
-  const popover = (
-    <Popover id="popover-basic">
-      <Popover.Header as="h3">Popover right</Popover.Header>
-      <Popover.Body>
-        And here's some <strong>amazing</strong> content. It's very engaging.
-        right?
-      </Popover.Body>
-    </Popover>
-  );
+  const showKeyBox = () => {
+    setShowKey(!showKey);
+  }
 
 
-return(
-<Container fluid="md" className='mt-2'>
-  
-    <p>Welcome to U-Vote. Enter your voter key to see your votes. Register here to get a voter key.</p>
-<hr></hr>
-<Form id="voterForm" className='mb-3'>
- <Form.Group className='mb-3' as={Col} lg={8}>
-  
-  { (isSaved === false )? (<> <Form.Label >
-  Enter your voter key:
-  </Form.Label><Form.Control id="voterKey" name="voterKey" type="text" pattern="([A-Z0-9]){10}([A-Z]){2}v([0-9])+" placeholder="paste in your voter key"  required /></>) : (<></>)}
-  
- </Form.Group>
-{ (isSaved === false) ? ( <Row>
- <Col lg={8}>
-<Button className='float-start' variant='outline-primary' onClick={async ()=>{
+  return (
+    <Container fluid="md" className='mt-2'>
 
-await getClipboard();
+      <p>Welcome to U-Vote. Enter your voter key to see your votes.</p>
+      <hr></hr>
+      <Form id="voterForm" className='mb-3'>
+        <Row className='mb-1'>
+          <Col lg={{ span: 2, offset: 10 }} xs={{ span: 6, offset: 6 }} className='float-end'>
+            <div class="action-right">
+              <span>Show key entry </span>
+              <Button id="showKeyBtn" variant='outline-light' onClick={() => {
+                showKeyBox();
+              }} ><img src={showKey === true ? "chevron-bar-down.svg" : "chevron-bar-up.svg"} alt='show voter key entry'></img> </Button>
+            </div>
+          </Col>
+        </Row>
 
-}}>Paste in from clipboard</Button>
- <Button variant='primary' className='float-end'  onClick={()=>checkVoter()}>Verify Voter Key</Button>
- </Col>
- </Row>):(<></>)}
+        <Row>
+          <Form.Group className={showKey ? 'mb-1' : 'hide-key-area'} as={Col} lg={4} sm={8}>
+            <Row>
+              <InputGroup className='mb-1'>
+                <Form.Control aria-label='voter key' aria-describedby='voter key' id="voterKey" name="voterKey" type="text" pattern="([A-Za-z0-9]){10}v{1}([0-9])+" placeholder="paste in your voter key" required />
+                {(voterKey && voterKey.length > 0) ? (<Button id="copyBtn" className='float-end' variant='outline-primary' onClick={async () => { await copyToClipboard(); }}>Copy</Button>) : (<Button id="clipboardBtn" className='float-end' variant='outline-primary' onClick={async () => { await getClipboard(); }}>Paste</Button>)}
 
-</Form>
-<Row>
-  { (validVoter === false) ? (<p>No voter found with that voter key. Get started with <a href="/getkey">a voter key</a> or click the 'Get a voter key' option above.</p>): (<></>)}
-</Row>
-<Row className="">
-  <Col lg={12}>
-  {loading ? 
-     <Spinner animation="border" role="status">
-     <span className="visually-hidden">Loading...</span>
-   </Spinner> : <VoteList votes={votes} register={registerToVote}></VoteList>
-} 
-  </Col>
-  
-</Row>
 
-</Container>
-)
+              </InputGroup>
+            </Row>
+            <Row>
+              <Col lg={12} sm={12}>
+
+                <Button id='verifyBtn' variant='outline-primary' onClick={() => checkVoter()}>Verify Key</Button>
+                <div id="copyHelp" className='copy-help'>{copyHelp}</div>
+              </Col>
+            </Row>
+          </Form.Group>
+        </Row>
+
+      </Form>
+      <Row>
+        {(validVoter === false) ? (<p>No voter found with that voter key. Get started with <a href="/getkey">a voter key</a> or click the 'Get a voter key' option above.</p>) : (<></>)}
+      </Row>
+      <Row className="">
+        <Col lg={12}>
+          {loading ?
+            <div className='loading-centered'><Spinner animation="border" role="status">
+              <span className="visually-hidden">Loading...</span>
+            </Spinner></div> : <VoteList votes={votes} register={registerToVote}></VoteList>
+          }
+
+        </Col>
+
+      </Row>
+
+    </Container>
+  )
 }
 
 export default Home;
