@@ -102,7 +102,7 @@ function Register() {
         setAddressOptions([]);
       }
     } catch (err) {
-      alert('unable to register at this time');
+      alert('unable to find addresses');
     }
 
   }

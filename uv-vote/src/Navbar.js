@@ -28,9 +28,6 @@ export default function Navbar() {
         <Nav.Item >
             <Nav.Link eventKey="getkey"  href="/getkey">Get a voter key</Nav.Link>
         </Nav.Item>
-        <Nav.Item >
-            <Nav.Link eventKey="about"  href="/about">About U-Vote</Nav.Link>
-        </Nav.Item>
     </Nav>
   );
 }

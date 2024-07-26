@@ -8,8 +8,6 @@ function About() {
 return(
 <>
 <div className="jumbotron text-center jumbotron-bg jumbotron-short pt-3">
-    <h1>U-Vote</h1> 
-    <p>A modern voting experience</p> 
 </div>
 <Container className='mt-2'>
   <Row>

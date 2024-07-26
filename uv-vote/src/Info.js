@@ -9,12 +9,8 @@ function Info() {
 return(
 <>
 <div className="jumbotron text-center">
-  <img src="statue_of_liberty_banner.jpg"  />
   <div className='banner-text'>
-  <h1>U-Vote</h1> 
-  <p>A modern voting experience</p> 
   </div>
-
 </div>
 <Container className='mt-2'>
  
@@ -34,7 +30,7 @@ return(
         <Card.Text>
           Voting that's convenient and feels like it should for the 21st century. 
         </Card.Text>
-        <Card.Link href="/about">See how we do it</Card.Link>
+        {/* <Card.Link href="/about">See how we do it</Card.Link> */}
       </Card.Body>
     </Card>
     </Col>
@@ -46,7 +42,7 @@ return(
         <Card.Text>
           Voters are unique, we're humans afterall. We value things differently and U-Vote helps bring those values home to policy makers and elected officials.  
         </Card.Text>
-        <Card.Link href="/about">How we amplify your voice</Card.Link>
+        {/* <Card.Link href="/about">How we amplify your voice</Card.Link> */}
       </Card.Body>
     </Card>
     </Col>

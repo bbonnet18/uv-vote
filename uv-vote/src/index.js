@@ -6,7 +6,7 @@ import Confirm from './Confirm';
 import Register from './Register';
 import Home from './Home';
 import Info from './Info';
-import About from './About';
+// import About from './About';
 import ErrorPage from './error-page';
 import Error from "./Error";
 import Validate from "./Validate";
@@ -31,10 +31,6 @@ const router = createBrowserRouter([
       {
         path:"/votes",
         element:<Home />
-      },
-      {
-        path:"/about",
-        element:<About />
       },
       {
         path:"/confirm",

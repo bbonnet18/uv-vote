@@ -155,7 +155,6 @@ button {
 }
 
 .copy-help {
-  display: inline-block;
   position: relative;
   float:right;
   margin-left: 10px;
@@ -323,23 +322,14 @@ Form input.error {
 .jumbotron {
   color: #000;
   padding: 0;
-  font-family: Montserrat, sans-serif;
-  height: 200px;
   overflow: hidden;
-}
-
-.jumbotron img {
-  opacity: 0.6;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: auto;
-
-}
-
-.jumbotron-bg {
-  /* background-color: rgb(88,122,185,0.6) */
-  background-color: #145DA0;
+  background-color: #145DA0;  
+  display: block;
+  background-position: center;
+  background-image: url('statue_of_liberty_banner.jpg') ;
+  background-blend-mode:luminosity;
+  background-repeat: no-repeat;
+  min-height: 200px;
 
 }
 
@@ -591,7 +581,7 @@ Form input.error {
 }
 
 
-@media screen and (max-width:420px) {
+@media screen and (max-width:430px) {
 
   .banner-text {
     position: relative;
@@ -601,14 +591,16 @@ Form input.error {
 
 
   .jumbotron {
-    background-color: rgba(34, 164, 244, 0.4);
-    ;
+    opacity: 0.6;
+    left: 0;
+    top: 0;
+    height: 200px;
+    overflow: hidden;
+    background-position: center;
+    background-image: url('statue_of_liberty_banner_sm.jpg');
+    background-repeat: no-repeat;
+    min-height: 200px;
   }
-
-  /* 
-  .jumbotron img{
-    display: none;
-  }   */
 
   .nav-item {
     --bs-nav-link-padding-y: 0;

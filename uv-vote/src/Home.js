@@ -53,8 +53,10 @@ function Home() {
 
         getVotes();
         setIsSaved(true);
+        setShowKey(false);
       } else {
-        navigate('/validate')
+        setIsSaved(false);
+        setShowKey(true);
       }
     }
 
@@ -165,7 +167,8 @@ function Home() {
         console.log('resObj: ', resObj);
 
         if (resObj && resObj.data && resObj.data.isVerified === true) {
-          setIsSaved(true)
+          setIsSaved(true);
+          setShowKey(false);
           setValidVoter(true);
           getVotes();
         } else {
@@ -196,7 +199,7 @@ function Home() {
       const authCookie = getCookie('voterToken') || "";
       if (authCookie === "") {
         console.log('need to reauth');
-        navigate('/confirm');
+        navigate('/validate');
       }
       // get the cookie and set the auth header
       const reqOpts = {
@@ -279,13 +282,13 @@ function Home() {
   return (
     <Container fluid="md" className='mt-2'>
 
-      <p>Welcome to U-Vote. Enter your voter key to see your votes.</p>
+      <p>Your votes will be presented below.</p>
       <hr></hr>
       <Form id="voterForm" className='mb-3'>
         <Row className='mb-1'>
           <Col lg={{ span: 2, offset: 10 }} xs={{ span: 6, offset: 6 }} className='float-end'>
-            <div class="action-right">
-              <span>Show key entry </span>
+            <div className="action-right">
+              <span>{isSaved === true ? 'Voter key saved ':'Enter a new voter key '}</span>
               <Button id="showKeyBtn" variant='outline-light' onClick={() => {
                 showKeyBox();
               }} ><img src={showKey === true ? "chevron-bar-down.svg" : "chevron-bar-up.svg"} alt='show voter key entry'></img> </Button>
@@ -296,17 +299,19 @@ function Home() {
         <Row>
           <Form.Group className={showKey ? 'mb-1' : 'hide-key-area'} as={Col} lg={4} sm={8}>
             <Row>
+             
               <InputGroup className='mb-1'>
                 <Form.Control aria-label='voter key' aria-describedby='voter key' id="voterKey" name="voterKey" type="text" pattern="([A-Za-z0-9]){10}v{1}([0-9])+" placeholder="paste in your voter key" required />
                 {(voterKey && voterKey.length > 0) ? (<Button id="copyBtn" className='float-end' variant='outline-primary' onClick={async () => { await copyToClipboard(); }}>Copy</Button>) : (<Button id="clipboardBtn" className='float-end' variant='outline-primary' onClick={async () => { await getClipboard(); }}>Paste</Button>)}
-
-
               </InputGroup>
+            </Row>
+            <Row>
+              {isSaved === true ? (<div className='re-entry-warning'><strong>You already have a saved key. Only use this area if you want to clear your current key and re-enter a new key.</strong></div>):(<div>Enter a new voter key. Check your recent text messages from U-Vote to find your latest voter key. If it's been a while, you'll need to re-validate and get a new key.</div>)}
             </Row>
             <Row>
               <Col lg={12} sm={12}>
 
-                <Button id='verifyBtn' variant='outline-primary' onClick={() => checkVoter()}>Verify Key</Button>
+                <Button id='verifyBtn' variant={isSaved === true ? 'outline-danger':'outline-primary'} onClick={() => checkVoter()}>Verify Key</Button>
                 <div id="copyHelp" className='copy-help'>{copyHelp}</div>
               </Col>
             </Row>
@@ -314,9 +319,6 @@ function Home() {
         </Row>
 
       </Form>
-      <Row>
-        {(validVoter === false) ? (<p>No voter found with that voter key. Get started with <a href="/getkey">a voter key</a> or click the 'Get a voter key' option above.</p>) : (<></>)}
-      </Row>
       <Row className="">
         <Col lg={12}>
           {loading ?
