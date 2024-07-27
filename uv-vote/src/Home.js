@@ -2,7 +2,7 @@ import './App.css';
 import { useState, useEffect } from 'react';
 import { useSearchParams } from "react-router-dom";
 import axios from "axios";
-import { Form, Col, InputGroup, Row, Button, Container, Spinner } from "react-bootstrap";
+import { Form, Alert, Col, InputGroup, Row, Button, Container, Spinner } from "react-bootstrap";
 import { useNavigate } from 'react-router-dom';
 import VoteList from './VoteList';
 import config from './config';
@@ -20,6 +20,8 @@ function Home() {
   const [checking, setChecking] = useState(false);// used to stop from multiple gets based on useEffect
   const [copyHelp, setCopyHelp] = useState("");// shows hints about the copy/paste key process
   const keyPattern = /([A-Za-z0-9]){10}v{1}([0-9])+/i //  /[a-z0-9]+-[a-z0-9]+-[a-z0-9]+-[a-z0-9]+-[a-z0-9]+/g;
+  const [showError,setShowError] = useState(false);
+  const [errorMsg,setErrorMsg] = useState("");
   // new key pattern would be something like - ([A-Z0-9]){10}([A-Z]){2}v([0-9])+/gi
   // because it will include the state 
   const navigate = useNavigate();
@@ -169,10 +171,12 @@ function Home() {
         if (resObj && resObj.data && resObj.data.isVerified === true) {
           setIsSaved(true);
           setShowKey(false);
+          setShowError(false);
           setValidVoter(true);
           getVotes();
-        } else {
-          console.error('no voter found');
+        } else { 
+          setShowError(true);
+          setErrorMsg("no voter found");
           setValidVoter(false);
         }
         setLoading(false);
@@ -182,6 +186,8 @@ function Home() {
     } catch (err) {
 
       setLoading(false);
+      setShowError(true);
+      setErrorMsg("error getting voter");
       setValidVoter(false);
     }
 
@@ -213,13 +219,18 @@ function Home() {
       console.log(resObj);
 
       if (resObj && resObj.data && resObj.data.votes) {
+        setShowError(false);
         setVotes(resObj.data.votes);
       } else {
         console.log('no votes returned');
+        setShowError(true);
+        setErrorMsg("no votes returned");
         setValidVoter(false);
       }
       setLoading(false);
     } catch (err) {
+      setShowError(true);
+      setErrorMsg("error retrieving votes");
       setValidVoter(false);
       setLoading(false);
     }
@@ -260,9 +271,11 @@ function Home() {
           }
           return itm;
         })
-
+        setShowError(false);
         setVotes(myVotes);
       } else {
+        setShowError(true);
+        setErrorMsg("no votes returned");
         console.log('no votes returned');
         setValidVoter(false);
       }
@@ -288,7 +301,7 @@ function Home() {
         <Row className='mb-1'>
           <Col lg={{ span: 2, offset: 10 }} xs={{ span: 6, offset: 6 }} className='float-end'>
             <div className="action-right">
-              <span>{isSaved === true ? 'Voter key saved ':'Enter a new voter key '}</span>
+              <span>{isSaved === true ? 'Voter key saved ' : 'Enter a new voter key '}</span>
               <Button id="showKeyBtn" variant='outline-light' onClick={() => {
                 showKeyBox();
               }} ><img src={showKey === true ? "chevron-bar-down.svg" : "chevron-bar-up.svg"} alt='show voter key entry'></img> </Button>
@@ -299,19 +312,19 @@ function Home() {
         <Row>
           <Form.Group className={showKey ? 'mb-1' : 'hide-key-area'} as={Col} lg={4} sm={8}>
             <Row>
-             
+
               <InputGroup className='mb-1'>
                 <Form.Control aria-label='voter key' aria-describedby='voter key' id="voterKey" name="voterKey" type="text" pattern="([A-Za-z0-9]){10}v{1}([0-9])+" placeholder="paste in your voter key" required />
                 {(voterKey && voterKey.length > 0) ? (<Button id="copyBtn" className='float-end' variant='outline-primary' onClick={async () => { await copyToClipboard(); }}>Copy</Button>) : (<Button id="clipboardBtn" className='float-end' variant='outline-primary' onClick={async () => { await getClipboard(); }}>Paste</Button>)}
               </InputGroup>
             </Row>
             <Row>
-              {isSaved === true ? (<div className='re-entry-warning'><strong>You already have a saved key. Only use this area if you want to clear your current key and re-enter a new key.</strong></div>):(<div>Enter a new voter key. Check your recent text messages from U-Vote to find your latest voter key. If it's been a while, you'll need to re-validate and get a new key.</div>)}
+              {isSaved === true ? (<div className='re-entry-warning'><strong>You already have a saved key. Only use this area if you want to clear your current key and re-enter a new key.</strong></div>) : (<div>Enter a new voter key. Check your recent text messages from U-Vote to find your latest voter key. If it's been a while, you'll need to re-validate and get a new key.</div>)}
             </Row>
             <Row>
               <Col lg={12} sm={12}>
 
-                <Button id='verifyBtn' variant={isSaved === true ? 'outline-danger':'outline-primary'} onClick={() => checkVoter()}>Verify Key</Button>
+                <Button id='verifyBtn' variant={isSaved === true ? 'outline-danger' : 'outline-primary'} onClick={() => checkVoter()}>Verify Key</Button>
                 <div id="copyHelp" className='copy-help'>{copyHelp}</div>
               </Col>
             </Row>
@@ -319,6 +332,9 @@ function Home() {
         </Row>
 
       </Form>
+      <Row>
+        {showError ? (<Alert variant='danger'>{ errorMsg }</Alert>) : (<></>)}
+      </Row>
       <Row className="">
         <Col lg={12}>
           {loading ?

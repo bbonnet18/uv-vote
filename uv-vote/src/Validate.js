@@ -3,7 +3,7 @@ import axios from 'axios';
 import config from './config';
 import { Col, Row, Form, Button, Container, Spinner } from "react-bootstrap";
 import { useState, useRef, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+//import { useNavigate } from 'react-router-dom';
 import ReCAPTCHA from "react-google-recaptcha";
 
 function Validate() {
@@ -16,11 +16,13 @@ function Validate() {
     const [reason, setReason] = useState(null);
     const reasons = [
         {reason:'key already issued in window',description:'U-Vote will issue you a key every quarter. Our records show that you have received a key in this quarter. Locate your latest text message from U-Vote with the key to access your votes',showButton:false},
-        {reason:'not a match',description:'the information you entered does not match your voter record.', showButton:true}
+        {reason:'not a match',description:'the information you entered does not match your voter record.', showButton:true},
+        {reason:'unknown error',description:'An unknown error occured when attempting to validate you.', showButton:true}
+
     ];
 
         // const [registered, setRegistered] = useState(false);//to represent that the voter has not registered
-    const navigate = useNavigate();
+    //const navigate = useNavigate();
     // for captcha
     const recaptchaRef = useRef(null);
 
@@ -57,24 +59,19 @@ function Validate() {
             } else {
                 setConfirm(true);
                 setConfirmStatus('error');
+                setReason(reasons[res.data.reason]);
             }
 
-            setLoading(false);
+                setLoading(false);
             }catch(err){
                 setLoading(false);
                 setConfirm(true);
                 setConfirmStatus('error');
                 if(err && err.response && err.response.data){
                     setReason(reasons[err.response.data.reason]);
-                }else{
-                    setReason('1');
                 }
                 
             }
-
-            
-
-
         }else{
             let idsampleVal = document.getElementById('idsample')
             let phoneVal = document.getElementById('phone')

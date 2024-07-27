@@ -30,6 +30,8 @@ function Register() {
   const [normalizedStreet, setNormalizedStreet] = useState("");
   const [verified, setVerified] = useState(false);// used to handle selections and updates to address
   const [registerToken, setRegisterToken] = useState(null);
+  const [showError,setShowError] = useState(false);
+  const [errorMsg,setErrorMsg] = useState("");
 
   // const [registered, setRegistered] = useState(false);//to represent that the voter has not registered
   const navigate = useNavigate();
@@ -72,7 +74,7 @@ function Register() {
       let response = await axios.post(`${config.apiBaseUrl}/register/check-bot`, payload);//await axios.post("https://vote.u-vote.us/register", formData);
 
       if (response.status === 200 && response.data) {
-        // setRegisterToken(response.data.regToken); 
+        setRegisterToken(response.data.regToken); 
         setDisabled(false);
       } else {
         setDisabled(true);
@@ -95,8 +97,8 @@ function Register() {
 
     try {
       const payload = { address: val };
-      let res = await axios.post(`${config.apiBaseUrl}/address`, payload);
-      if (res && res.data && res.data.result) {
+      let res = await axios.post(`${config.apiBaseUrl}/address`, payload, { withCredentials: true });
+      if (res.status === 200) {
         setAddressOptions(res.data.result)
       } else {
         setAddressOptions([]);
@@ -124,10 +126,10 @@ function Register() {
       return;
     }
 
-    // if(!registerToken){
-    //   console.log('answer captcha challenges')
-    //   return; 
-    // }
+    if(!registerToken){
+      console.log('answer captcha challenges')
+      return; 
+    }
 
     if (isValid) {
       form.classList.remove('invalid');
@@ -154,28 +156,28 @@ function Register() {
       formData.append('gender', genderSelect.value);
       formData.append('idFile', idFile.files[0]);
       formData.append('selfyFile', selfyFile.files[0]);
-      //formData.append('regToken', registerToken);// received from captcha challenges
-      console.log('form data');
+      formData.append('regToken', registerToken);// received from captcha challenges
       try {
         setLoading(true)
         let res = await axios.post(`${config.apiBaseUrl}/register`, formData);//await axios.post("https://vote.u-vote.us/register", formData);
-        form.reset();
+
         if (res.status === 200) {
+          form.reset();
+          setShowError(false);
           setLoading(false);
           navigate('/confirm')
         } else {
+          setShowError(true);
+          setErrorMsg(res.data.reason);
           setLoading(false);
-          console.log('res is not a 200, but another: ', res.status);
-          alert('unable to register,please try live validation');
         }
 
       } catch (err) {
         setLoading(false);
-
         navigate('/registration-error', {
           state: {
             message: "Error with the registration",
-            error: err.message
+            error: err.response.data.reason
           }
         })
 
@@ -439,6 +441,10 @@ function Register() {
                 <Button variant='primary' onClick={() => register()} disabled={disabled}>Register</Button>
               </Col>
 
+            </Row>
+           
+            <Row>
+            { showError ? (<Alert variant='danger'>{errorMsg}</Alert>) : (<></>)}
             </Row>
 
 
