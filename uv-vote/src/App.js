@@ -7,7 +7,7 @@ export default function App() {
 
   return (
     <>
-    <div className="icon-brand"><div className='container'><a><img src='u-vote-logo-new-trans.png' ></img></a>U-Vote<div className='alpha-mark'></div></div></div>
+    <div className="icon-brand"><div className='container'><a><img src='u-vote-logo-new-trans.png' ></img></a>U-Vote<div className='alpha-mark'>U-Vote is testing<br></br> in Arlington</div></div></div>
     <Container fluid className='p-0'>
       <Container className='top-nav'>
       <Navbar></Navbar>

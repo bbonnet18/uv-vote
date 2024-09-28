@@ -19,6 +19,7 @@ baby blue: #B1D4E0
   src: url('./fonts/Roboto/Roboto-Medium.ttf');
 }
 
+
 .action-right {
   position: relative;
   float: right;
@@ -63,7 +64,7 @@ body {
 .alpha-mark {
   float: right;
   color: orange;
-  font-size: small;
+  font-size: medium;
 }
 
 
@@ -126,7 +127,10 @@ button {
 }
 
 
-
+.call-out{
+  color:#0C2D48;
+  font-weight:bolder;
+}
 
 .card {
   height: 100% !important;

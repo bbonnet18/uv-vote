@@ -15,12 +15,16 @@ return(
 <Container className='mt-2'>
  
   <h2>Welcome to U-Vote</h2>
-    <p>U-Vote is a voting platform that exists to provide you, the voter, with a direct and convenient way to provide your input to your local, state and federal government. U-Vote votes are non-binding, but address the number one reason we vote - to tell them how we feel!</p>
-    <p><a href="/getkey" alt="get a voter key">Get a voter key</a>   
+    <p>U-Vote is a modern voting platform, built to allow you to be heard all year round, not just on election day. U-Vote is currently in testing in Arlington VA, and we're looking for volunteer voters to work with the system.</p> 
+    <p>U-Vote is <strong>safe, secure and anonymous</strong> - the way voting should be. We're focused on delivering a system that allows you to engage in a fast and convenient way. You can become a test voter today by getting a voter key. Check out the short video below on registration to see how it works. Then get started with a <a href="/getkey" alt="get a voter key">voter key</a>   
     <br></br>
     <br></br>
-    <h4>See how registration works</h4></p>
-    <div><iframe width="560" height="315" src="https://www.youtube.com/embed/v5ZF-8x6C7k?si=gyLEvsXiOfi94ikg" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div>
+   </p>
+   <h4>See how registration works</h4>
+    <div><iframe width="350" height="315" src="https://www.youtube.com/embed/v5ZF-8x6C7k?si=gyLEvsXiOfi94ikg" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen></iframe></div>
+    <br></br>
+  <p className='call-out'>Interested in helping out with U-Vote, we're looking for people to help us build out U-Vote in Arlington. Get in touch - <a href='mailto:benjamin.a.bonnet@u-vote.us' alt="contact u-vote">Contact U-Vote</a></p>
+
 <hr></hr>
 <h2>What is U-Vote?</h2>
 <p>U-Vote is a modern voting system. Our venerable voting system has served us for over 200 years and remains the binding way we make decisions on our leaders and our intentions at the federal, state and local level. But the system has its limitations. For example, we only vote once a year and only on a few issues and candidates. At U-Vote, we think we can do better. We all know that there are far more issues of concern than those that end up on the ballot each year. U-Vote intends to close that gap between the relatively small amount covered on a typical ballot and how voters really feel about issues both on and off the ballot. 

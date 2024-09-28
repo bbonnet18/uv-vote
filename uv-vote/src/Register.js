@@ -159,7 +159,7 @@ function Register() {
       formData.append('regToken', registerToken);// received from captcha challenges
       try {
         setLoading(true)
-        let res = await axios.post(`${config.apiBaseUrl}/register`, formData);//await axios.post("https://vote.u-vote.us/register", formData);
+        let res = await axios.post(`${config.apiBaseUrl}/register`, formData, { withCredentials: true });//await axios.post("https://vote.u-vote.us/register", formData);
 
         if (res.status === 200) {
           form.reset();
