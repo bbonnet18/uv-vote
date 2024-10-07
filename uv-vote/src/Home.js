@@ -158,15 +158,15 @@ function Home() {
       let kp = keyPattern;///[a-z0-9]+-[a-z0-9]+-[a-z0-9]+-[a-z0-9]+-[a-z0-9]+/
 
       let myres = key && kp.test(key);
-      console.log('res : ', myres);
+
       if (key && kp.test(key)) {
         setLoading(true);
-        console.log('they match')
+
         const payload = {
           voterKey: key
         }
         const resObj = await axios.post(`${config.apiBaseUrl}/votes`, payload, { withCredentials: true });
-        console.log('resObj: ', resObj);
+
 
         if (resObj && resObj.data && resObj.data.isVerified === true) {
           setIsSaved(true);
@@ -204,7 +204,7 @@ function Home() {
       // get the JWT to use for auth
       const authCookie = getCookie('voterToken') || "";
       if (authCookie === "") {
-        console.log('need to reauth');
+
         navigate('/validate');
       }
       // get the cookie and set the auth header
@@ -216,13 +216,13 @@ function Home() {
       }
 
       const resObj = await axios.post(`${config.apiBaseUrl}/votes/my-votes`, {}, reqOpts);
-      console.log(resObj);
+
 
       if (resObj && resObj.data && resObj.data.votes) {
         setShowError(false);
         setVotes(resObj.data.votes);
       } else {
-        console.log('no votes returned');
+
         setShowError(true);
         setErrorMsg("no votes returned");
         setValidVoter(false);
@@ -260,7 +260,6 @@ function Home() {
       }
 
       const resObj = await axios.post(`${config.apiBaseUrl}/votes/register`, payload, reqOpts);
-      console.log(resObj);
 
       if (resObj && resObj.data && resObj.data.surveyLink) {
         let myVotes = [...votes]
@@ -276,7 +275,7 @@ function Home() {
       } else {
         setShowError(true);
         setErrorMsg("no votes returned");
-        console.log('no votes returned');
+
         setValidVoter(false);
       }
 

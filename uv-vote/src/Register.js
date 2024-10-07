@@ -113,7 +113,6 @@ function Register() {
   // check fields and attempt to add
   const register = async () => {
 
-    console.log('currentVoter :', currentVoter);
     const form = document.getElementById('registerForm');
     const isValid = form.checkValidity();
     // check the disabled fields to make sure they have real values
@@ -122,12 +121,10 @@ function Register() {
     const zipcode = form.querySelector('#zipcode');
 
     if (city.value.length < 2 || state.value.length < 2 || zipcode.value.length < 5) {
-      console.log('need to select an address');
       return;
     }
 
     if(!registerToken){
-      console.log('answer captcha challenges')
       return; 
     }
 
@@ -142,11 +139,9 @@ function Register() {
       for (let i = 0; i < formFields.length; i++) {
         if (formFields[i].type !== "file") {
           if (formFields[i].name === "address1") {
-            console.log('val: ', formFields[i].value);
             formData.append(formFields[i].name, normalizedStreet);// used to formalize the address so user doesn't enter something else after it's selected. 
             // if they do, it will be ignored. 
           } else {
-            console.log('val: ', formFields[i].value);
             formData.append(formFields[i].name, formFields[i].value);
           }
 
@@ -327,8 +322,6 @@ function Register() {
                 <Form.Select id="address" name="address" lg={6} type="text" minLength={2} placeholder="enter and select your address" onChange={(e) => {
                   
                   setSelectedAddress(addressOptions[e.target.value]);
-                  console.log('value:', e.target.value)
-                  console.log('address: ', addressOptions[e.target.value])
                   if (addressOptions[e.target.value].streetLine) {
                     setSelectedStreet1(addressOptions[e.target.value].streetLine);
                     setNormalizedStreet(addressOptions[e.target.value].streetLine)
@@ -396,7 +389,6 @@ function Register() {
               <Col lg={10}>
                 <Form.Control type="file" id="idFile" accept='.jpeg, .jpg' onChange={(evt) => {
                   let preview = document.getElementById('previewImg');
-                  console.log('received a file - ', URL.createObjectURL(evt.target.files[0]));
                   preview.src = URL.createObjectURL(evt.target.files[0]);
                   preview.onload = function () {
                     URL.revokeObjectURL(preview.src) // free memory
@@ -423,7 +415,6 @@ function Register() {
 
                 <Form.Control type="file" id="selfyFile" accept='.jpeg, .jpg' onChange={(evt) => {
                   let preview = document.getElementById('selfyImg');
-                  console.log('received a file - ', URL.createObjectURL(evt.target.files[0]));
                   preview.src = URL.createObjectURL(evt.target.files[0]);
                   preview.onload = function () {
                     URL.revokeObjectURL(preview.src) // free memory

@@ -38,7 +38,6 @@ export default function Navbar() {
     <Nav variant='underline' activeKey={pathname.substring(1)}
       onSelect={(selectedKey) => {
         //setKey(selectedKey); 
-        console.log('selected key: ', selectedKey)
 
       }}>
       <Nav.Item>

@@ -432,6 +432,12 @@ Form input.error {
 
 .table-link-col {
   text-align: center;
+  width: 15%;
+}
+.table-group-img{
+  width:40px;
+  border-radius: 0 !important;
+  margin-left: 10px;
 }
 
 #textHelp {
