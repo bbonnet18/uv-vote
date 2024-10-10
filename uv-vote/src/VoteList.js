@@ -6,11 +6,13 @@ function VoteList (props){
   
     const [loadingIds,setLoadingIds] = useState({});
     const [groups,setGroups] = useState([]); // holds the voting groups
+    const [loading,setLoading] = useState(true);
 
     useEffect(()=>{
       setLoadingIds({});
       let voteGroups = {};
       if(props.votes && props.votes.length){
+        setLoading(false);
         // create an array within the vote group if one doesn't exist
         props.votes.map((vote)=>{
           if(voteGroups[vote.group]){
@@ -26,8 +28,8 @@ function VoteList (props){
 
     return (
         <Container fluid="md">
-       
-          {groups ? Object.keys(groups).map((itm,ind)=>{
+          {loading ? (<Spinner animation="border" role="status" className='loading-spinner'> <span className="visually-hidden">Loading...</span></Spinner>) : (<></>)}
+          {(loading === false && groups) ? Object.keys(groups).map((itm,ind)=>{
            return (
             <Table striped bordered hover>   
               <>
@@ -40,7 +42,7 @@ function VoteList (props){
               {
                 groups[itm] ? groups[itm].map((itm,ind)=>{
                   return (<tr key={itm} className={itm.link === 'completed' ? 'vote-completed' : ''}> 
-                  <td><img src={"reward_sm.png"} alt='thoughts' title='thoughts'></img> | {itm.title}</td>
+                  <td><img src={itm.description.trim()+"_sm.png"} alt={itm.description + " type vote"} title={itm.description + " type vote"}></img> {itm.title} - {itm.description}</td>
                   <td className='table-link-col'>{ loadingIds && loadingIds[itm.surveyId] ? (
                     <Spinner animation="border" role="status">
                       <span className="visually-hidden">Loading...</span>

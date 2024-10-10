@@ -23,8 +23,34 @@ return(
    <h4>See how registration works</h4>
     <div><iframe width="350" height="315" src="https://www.youtube.com/embed/v5ZF-8x6C7k?si=gyLEvsXiOfi94ikg" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen></iframe></div>
     <br></br>
-  <p className='call-out'>Interested in helping out with U-Vote, we're looking for people to help us build out U-Vote in Arlington. Get in touch - <a href='mailto:benjamin.a.bonnet@u-vote.us' alt="contact u-vote">Contact U-Vote</a></p>
+<Row className='mt-4'>
+  <Col lg={6} sm={12}>
+    <Card>
+    <Card.Body>
+        <Card.Title>Become a test voter!!</Card.Title>
+        <Card.Text>
+          U-Vote is testing in Arlington VA. We'll learn in Arlington and start rolling out to other areas. 
+          Helping is easy, just tap or click the link below to register and you'll recieve a voter key so you can vote.
+        </Card.Text>
+        <Card.Link href="/getkey">Register</Card.Link>
+      </Card.Body>
 
+    </Card>
+  </Col>
+  <Col lg={6} sm={12}>
+    <Card>
+      <Card.Body>
+        <Card.Title>
+        Interested in helping out with U-Vote?
+        </Card.Title>
+        <Card.Text>
+        We're looking for people to help us build out U-Vote in Arlington. U-Vote is a startup, focused on better representation for all. We would love to hear from you.
+        </Card.Text>
+        <Card.Link href='mailto:benjamin.a.bonnet@u-vote.us' alt="contact u-vote">Contact U-Vote</Card.Link>
+      </Card.Body>
+    </Card>
+  </Col>
+</Row>
 <hr></hr>
 <h2>What is U-Vote?</h2>
 <p>U-Vote is a modern voting system. Our venerable voting system has served us for over 200 years and remains the binding way we make decisions on our leaders and our intentions at the federal, state and local level. But the system has its limitations. For example, we only vote once a year and only on a few issues and candidates. At U-Vote, we think we can do better. We all know that there are far more issues of concern than those that end up on the ballot each year. U-Vote intends to close that gap between the relatively small amount covered on a typical ballot and how voters really feel about issues both on and off the ballot. 
