@@ -301,11 +301,14 @@ function Home() {
         <Row className='mb-1'>
           <Col lg={6} xs={6}>
             <Row>
-              <Col lg={6}>
+              <Col lg={3} xs={12}>
               <img src="ballot_sm.png" alt="ballot type vote" title="ballot type vote"></img> <span> - Ballot vote</span>
               </Col>
-              <Col lg={6}>
+              <Col lg={4} xs={12}>
               <img src="perspective_sm.png" alt="perspective type vote" title="perspective type vote"></img><span> - Perspective vote </span>
+              </Col>
+              <Col lg={5} xs={12}>
+              <span><a href="/FAQs" alt="more about vote types">Learn more about vote types</a></span>
               </Col>
             </Row>
           </Col>
