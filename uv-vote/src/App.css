@@ -330,7 +330,7 @@ Form input.error {
   background-color: #145DA0;  
   display: block;
   background-position: center;
-  background-image: url('statue_of_liberty_banner.jpg') ;
+  background-image: url('statue_of_liberty_banner.webp') ;
   background-blend-mode:luminosity;
   background-repeat: no-repeat;
   min-height: 200px;
@@ -461,7 +461,7 @@ Form input.error {
 
 .voter-img {
   height: 300px;
-  background-image: url('woman_megaphone Medium.jpeg');
+  background-image: url('woman_megaphone.webp');
   background-position: top;
   background-repeat: no-repeat;
   background-size: cover;
@@ -534,6 +534,14 @@ Form input.error {
   padding-right: 30px;
 }
 
+.video-box{
+  display:inline-block;
+}
+
+.video-space{
+  margin-left: 20px;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
@@ -558,6 +566,7 @@ Form input.error {
     background-repeat: no-repeat;
     background-size: 100px;
   }
+
 }
 
 
@@ -607,7 +616,7 @@ Form input.error {
     height: 200px;
     overflow: hidden;
     background-position: center;
-    background-image: url('statue_of_liberty_banner_sm.jpg');
+    background-image: url('statue_of_liberty_banner_sm.webp');
     background-repeat: no-repeat;
     min-height: 200px;
   }
@@ -623,7 +632,14 @@ Form input.error {
   .centered-img {
     padding: 0 20%;
   }
-
+  .video-box{
+    display:block;
+    text-align: center;
+  }
+  .video-space{
+    margin-left: auto;
+    margin-right: auto;
+  }
   #voiceImg {
     width: 213px;
     height: 320px;

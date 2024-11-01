@@ -20,8 +20,13 @@ return(
     <br></br>
     <br></br>
    </p>
-   <h4>See how registration works</h4>
-    <div><iframe width="350" height="315" src="https://www.youtube.com/embed/v5ZF-8x6C7k?si=gyLEvsXiOfi94ikg" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen></iframe></div>
+   
+    <div className='video-box'><h4>See how registration works</h4>
+    <iframe width="350" height="315" src="https://www.youtube.com/embed/v5ZF-8x6C7k?si=gyLEvsXiOfi94ikg" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen></iframe>
+    </div>
+    <div className='video-box video-space'><h4>One Minute Overview</h4>
+    <iframe width="350" height="315" src="https://www.youtube.com/embed/bHeLAYnaKD8?si=rvCx4hdymJRkuuwr" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    </div>
     <br></br>
 <Row className='mt-4'>
   <Col lg={6} sm={12}>
@@ -44,7 +49,7 @@ return(
         Interested in helping out with U-Vote?
         </Card.Title>
         <Card.Text>
-        We're looking for people to help us build out U-Vote in Arlington. U-Vote is a startup, focused on better representation for all. We would love to hear from you.
+        We're looking for people to help us build out U-Vote. U-Vote is a startup, focused on better representation for all. We would love to hear from you.
         </Card.Text>
         <Card.Link href='mailto:benjamin.a.bonnet@u-vote.us' alt="contact u-vote">Contact U-Vote</Card.Link>
       </Card.Body>

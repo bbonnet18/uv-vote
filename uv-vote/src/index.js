@@ -10,6 +10,7 @@ import Info from './Info';
 import ErrorPage from './error-page';
 import Error from "./Error";
 import Validate from "./Validate";
+import FAQs from './FAQs';
 import reportWebVitals from './reportWebVitals';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { createBrowserRouter, Router, RouterProvider } from 'react-router-dom';
@@ -43,7 +44,12 @@ const router = createBrowserRouter([
       {
         path:"/validate",
         element: <Validate />
+      },
+      {
+        path:"/FAQs",
+        element: <FAQs />
       }
+
     ]
 
   }

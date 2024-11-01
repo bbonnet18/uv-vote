@@ -59,6 +59,7 @@ function Home() {
       } else {
         setIsSaved(false);
         setShowKey(true);
+
       }
     }
 
@@ -298,7 +299,17 @@ function Home() {
       <hr></hr>
       <Form id="voterForm" className='mb-3'>
         <Row className='mb-1'>
-          <Col lg={{ span: 2, offset: 10 }} xs={{ span: 6, offset: 6 }} className='float-end'>
+          <Col lg={6} xs={6}>
+            <Row>
+              <Col lg={6}>
+              <img src="ballot_sm.png" alt="ballot type vote" title="ballot type vote"></img> <span> - Ballot vote</span>
+              </Col>
+              <Col lg={6}>
+              <img src="perspective_sm.png" alt="perspective type vote" title="perspective type vote"></img><span> - Perspective vote </span>
+              </Col>
+            </Row>
+          </Col>
+          <Col lg={{span:3, offset:3}} xs={6} className='float-end'>
             <div className="action-right">
               <span>{isSaved === true ? 'Voter key saved ' : 'Enter a new voter key '}</span>
               <Button id="showKeyBtn" variant='outline-light' onClick={() => {
@@ -311,7 +322,19 @@ function Home() {
         <Row>
           <Form.Group className={showKey ? 'mb-1' : 'hide-key-area'} as={Col} lg={4} sm={8}>
             <Row>
-
+              <Col lg={12}>
+              <Row>
+              <p>If you haven't received a voter key this quarter, click here to validate and receive a new key</p>
+              </Row>
+              <Row className='mb-2'>
+                <Col sm={4}>
+                <Button variant='info' onClick={(e)=>navigate('/validate')}>Validate</Button>
+                </Col>
+              </Row>
+              </Col>
+              
+            </Row>
+            <Row>
               <InputGroup className='mb-1'>
                 <Form.Control aria-label='voter key' aria-describedby='voter key' id="voterKey" name="voterKey" type="text" pattern="([A-Za-z0-9]){10}v{1}([0-9])+" placeholder="paste in your voter key" required />
                 {(voterKey && voterKey.length > 0) ? (<Button id="copyBtn" className='float-end' variant='outline-primary' onClick={async () => { await copyToClipboard(); }}>Copy</Button>) : (<Button id="clipboardBtn" className='float-end' variant='outline-primary' onClick={async () => { await getClipboard(); }}>Paste</Button>)}
