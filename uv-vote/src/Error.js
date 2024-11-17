@@ -14,7 +14,7 @@ useEffect(()=>{
 return(
 <Container fluid="md" className='mt-2'>
     <p className='error-txt'>Ooops, we had an error with your registration! Please try again.
-    If the problem persists, <a href="mailto:benjamin.a.bonnet@gmail.com">let us know</a>.</p>
+    If the problem persists, <a href="mailto:support@gmail.com">let us know</a>.</p>
     <Row className="img-preview-wrapper" >
         <Col className='error-img' lg={12}>            
         </Col>

@@ -13,7 +13,7 @@ return(
 <Container className='mt-2'>
  
   <h2>FAQs</h2>
-    <p>U-Vote is a new approach to voter representation and civic engagement, so we're sure you will have some questions. We do our best below to provide answers to some anticipated questions. Feel free to reach out with other questions to our support email: <a href="mailto:benjamin.a.bonnet@u-vote.us" alt="U-Vote support">U-Vote Support</a></p> 
+    <p>U-Vote is a new approach to voter representation and civic engagement, so we're sure you will have some questions. We do our best below to provide answers to some anticipated questions. Feel free to reach out with other questions to our support email: <a href="mailto:support@u-vote.us" alt="U-Vote support">U-Vote Support</a></p> 
 <Row className='mt-4'>
   <Col lg={12} >
   <Accordion defaultActiveKey="0" flush>

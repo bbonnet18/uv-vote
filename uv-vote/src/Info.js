@@ -20,13 +20,17 @@ return(
     <br></br>
     <br></br>
    </p>
+   <Row>
+      <div className='video-facade'><a href="https://www.youtube.com/watch?v=bHeLAYnaKD8" target="_blank"><img src="one-min-overview_facade.webp" /></a></div>
+      <div className='video-facade'><a href="https://www.youtube.com/watch?v=v5ZF-8x6C7k" target="_blank"><img src="registration_facade.webp" /></a></div>
+   </Row>
    
-    <div className='video-box'><h4>See how registration works</h4>
+    {/* <div className='video-box'><h4>See how registration works</h4>
     <iframe width="350" height="315" src="https://www.youtube.com/embed/v5ZF-8x6C7k?si=gyLEvsXiOfi94ikg" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen></iframe>
     </div>
     <div className='video-box video-space'><h4>One Minute Overview</h4>
     <iframe width="350" height="315" src="https://www.youtube.com/embed/bHeLAYnaKD8?si=rvCx4hdymJRkuuwr" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-    </div>
+    </div> */}
     <br></br>
 <Row className='mt-4'>
   <Col lg={6} sm={12}>
@@ -51,7 +55,7 @@ return(
         <Card.Text>
         We're looking for people to help us build out U-Vote. U-Vote is a startup, focused on better representation for all. We would love to hear from you.
         </Card.Text>
-        <Card.Link href='mailto:benjamin.a.bonnet@u-vote.us' alt="contact u-vote">Contact U-Vote</Card.Link>
+        <Card.Link href='mailto:support@u-vote.us' alt="contact u-vote">Contact U-Vote</Card.Link>
       </Card.Body>
     </Card>
   </Col>

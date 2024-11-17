@@ -459,6 +459,11 @@ Form input.error {
 
 }
 
+.video-facade{
+  display:inline-block;
+  width:auto !important;
+}
+
 .voter-img {
   height: 300px;
   background-image: url('woman_megaphone.webp');
@@ -468,9 +473,6 @@ Form input.error {
   position: relative;
 }
 
-
-
-
 #voiceImg {
   width: 400px;
 }
@@ -479,7 +481,7 @@ Form input.error {
   border: 1px black;
 }
 
-#voterForm {}
+
 
 #voterKey:invalid {
   border: 2px red inset;
@@ -631,6 +633,13 @@ Form input.error {
 
   .centered-img {
     padding: 0 20%;
+  }
+  .video-facade{
+    display: block;
+    margin:auto;
+  }
+  .video-facade:last-child{
+    margin-top: 10px;
   }
   .video-box{
     display:block;

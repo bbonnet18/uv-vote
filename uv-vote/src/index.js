@@ -46,7 +46,7 @@ const router = createBrowserRouter([
         element: <Validate />
       },
       {
-        path:"/FAQs",
+        path:"/faqs",
         element: <FAQs />
       }
 

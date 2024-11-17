@@ -308,7 +308,7 @@ function Home() {
               <img src="perspective_sm.png" alt="perspective type vote" title="perspective type vote"></img><span> - Perspective vote </span>
               </Col>
               <Col lg={5} xs={12}>
-              <span><a href="/FAQs" alt="more about vote types">Learn more about vote types</a></span>
+              <span><a href="/faqs" alt="more about vote types">Learn more about vote types</a></span>
               </Col>
             </Row>
           </Col>

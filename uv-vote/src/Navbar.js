@@ -2,10 +2,12 @@ import './App.css';
 import { Nav } from 'react-bootstrap';
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
+// import { useNavigate } from 'react-router-dom';
 
 export default function Navbar() {
   const location = useLocation();
   const { pathname } = location;
+  // const navigate = useNavigate();
 
   const [hasKey, setHasKey] = useState(false);
   useEffect(() => {
@@ -52,9 +54,8 @@ export default function Navbar() {
         </Nav.Item>
       )}
       <Nav.Item>
-        <Nav.Link eventKey="faqs" href="/FAQs">FAQs</Nav.Link>
+        <Nav.Link eventKey="faqs" href="/faqs">FAQs</Nav.Link>
       </Nav.Item>
-
     </Nav>
   );
 }
