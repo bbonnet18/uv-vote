@@ -234,8 +234,30 @@ Form input.error {
   display: none !important;
 }
 
-.nav .nav-item {
-  border-bottom: 2px solid green;
+
+.nav ul{
+  margin-bottom: 0;
+  list-style: none;
+  padding-left: 0;
+}
+
+.nav ul li{
+  display: inline-block;
+  margin-right: 20px;
+  padding: 5px 0;
+ 
+}
+
+.nav ul li a{
+  border-bottom: 3px solid rgba(12, 45, 72, 0.4);
+  padding-bottom: 5px;
+  text-decoration: none;
+  color:#000;
+}
+
+.nav ul li a.active{
+  border-bottom: 3px solid #0C2D48;
+  font-weight: 800;
 }
 
 

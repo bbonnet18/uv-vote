@@ -13,47 +13,62 @@ import Validate from "./Validate";
 import FAQs from './FAQs';
 import reportWebVitals from './reportWebVitals';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { createBrowserRouter, Router, RouterProvider } from 'react-router-dom';
+import { createBrowserRouter, Route, RouterProvider, createRoutesFromElements } from 'react-router-dom';
 
-const router = createBrowserRouter([
-  {
-    path:'/',
-    element:<App />,
-    errorElement:<ErrorPage />,
-    children:[
-      {
-        path:'/',
-        element:<Info />
-      },
-      {
-        path:"/getkey",
-        element:<Register />
-      },
-      {
-        path:"/votes",
-        element:<Home />
-      },
-      {
-        path:"/confirm",
-        element: <Confirm />
-      },
-      {
-        path:"/registration-error",
-        element: <Error />
-      },
-      {
-        path:"/validate",
-        element: <Validate />
-      },
-      {
-        path:"/faqs",
-        element: <FAQs />
-      }
 
-    ]
+const router = createBrowserRouter(
+  createRoutesFromElements(
+    <Route path="/" element={<App />}>
+      <Route path="/" element={<Info />}/>
+      <Route path="/getkey" element={<Register />}/>
+      <Route path="/votes" element={<Home />}/>
+      <Route path="/confirm" element={<Confirm />}/>
+      <Route path="/registration-error" element={<Error />}/>
+      <Route path="/validate" element={<Validate />}/>
+      <Route path="/faqs" element={<FAQs />}/>
+    </Route>
+  )
+)
 
-  }
-])
+// const router = createBrowserRouter([
+//   {
+//     path:'/',
+//     element:<App />,
+//     errorElement:<ErrorPage />,
+//     children:[
+//       {
+//         path:'/',
+//         element:<Info />
+//       },
+//       {
+//         path:"/getkey",
+//         element:<Register />
+//       },
+//       {
+//         path:"/votes",
+//         element:<Home />
+//       },
+//       {
+//         path:"/confirm",
+//         element: <Confirm />
+//       },
+//       {
+//         path:"/registration-error",
+//         element: <Error />
+//       },
+//       {
+//         path:"/validate",
+//         element: <Validate />
+//       },
+//       {
+//         path:"/faqs",
+//         element: <FAQs />
+//       }
+
+//     ]
+
+//   }
+// ])
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));

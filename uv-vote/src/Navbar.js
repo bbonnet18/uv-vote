@@ -1,13 +1,8 @@
 import './App.css';
-import { Nav } from 'react-bootstrap';
 import { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
-// import { useNavigate } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 
 export default function Navbar() {
-  const location = useLocation();
-  const { pathname } = location;
-  // const navigate = useNavigate();
 
   const [hasKey, setHasKey] = useState(false);
   useEffect(() => {
@@ -37,25 +32,13 @@ export default function Navbar() {
   }
 
   return (
-    <Nav variant='underline' activeKey={pathname.substring(1)}
-      onSelect={(selectedKey) => {
-        //setKey(selectedKey); 
-
-      }}>
-      <Nav.Item>
-        <Nav.Link eventKey="" href="/">Home</Nav.Link>
-      </Nav.Item>
-      <Nav.Item>
-        <Nav.Link eventKey="votes" href="/votes">Your Votes</Nav.Link>
-      </Nav.Item>
-      {hasKey ? (<></>) : (
-        <Nav.Item >
-          <Nav.Link eventKey="getkey" href="/getkey">Get a voter key</Nav.Link>
-        </Nav.Item>
-      )}
-      <Nav.Item>
-        <Nav.Link eventKey="faqs" href="/faqs">FAQs</Nav.Link>
-      </Nav.Item>
-    </Nav>
-  );
+      <nav className='nav'>
+        <ul>
+          <li className='nav-item'><NavLink to="/">Home</NavLink></li>
+          <li><NavLink to="/votes">Your Votes</NavLink></li>
+          {hasKey ? (<></>) : (<li><NavLink to="/getkey">Get a voter key</NavLink></li>)}
+          <li><NavLink to="/faqs">FAQs</NavLink></li>
+        </ul>
+      </nav>
+  )
 }
