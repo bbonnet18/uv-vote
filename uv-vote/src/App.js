@@ -7,8 +7,8 @@ export default function App() {
 
   return (
     <>
-    <div className="icon-brand"><div className='container'><img src='u-vote-logo-new-trans_white_sm.webp' alt="U-Vote" title="U-Vote"></img>U-Vote<div className='alpha-mark'>U-Vote is testing<br></br> in Arlington</div></div></div>
-    <Container fluid className='p-0'>
+    <div className="icon-brand"><div className='container'><img src='u-vote-vector-base_70.png' alt="U-Vote" title="U-Vote" className='header-img'></img>U-Vote<div className='alpha-mark'>U-Vote is testing<br></br> in Arlington</div></div></div>
+    <Container className='p-0'>
       <Container className='top-nav'>
       <Navbar></Navbar>
       </Container>

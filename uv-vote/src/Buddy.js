@@ -6,7 +6,7 @@ import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ReCAPTCHA from "react-google-recaptcha";
 
-function Register() {
+function Buddy() {
 
   const starterVoter = {
     "lastname": "",
@@ -17,7 +17,9 @@ function Register() {
     "state": "",
     "zipcode" : "",
     "phone": "",
-    "DOB": ""
+    "DOB": "",
+    "idsample": "",
+    "buddycode": ""
   }
   const [loading, setLoading] = useState(false);
   const [disabled, setDisabled] = useState(true);
@@ -29,6 +31,7 @@ function Register() {
   const [selectedStreet2, setSelectedStreet2] = useState("");
   const [normalizedStreet, setNormalizedStreet] = useState("");
   const [verified, setVerified] = useState(false);// used to handle selections and updates to address
+  const [buddyVerified, setBuddyVerified] = useState(false)
   const [registerToken, setRegisterToken] = useState(null);
   const [showError,setShowError] = useState(false);
   const [errorMsg,setErrorMsg] = useState("");
@@ -109,6 +112,29 @@ function Register() {
 
   }
 
+  // check to see if the buddy code is valid
+  const checkBuddyCode = async (val) => {
+    if(val.length === 0){
+      return;
+    }
+    // --- start back up here, copy from above checkAddress ---//
+
+    try{
+
+    const payload = { buddycode:val.trim()};
+
+      let res = await axios.post(`${config.apiBaseUrl}/register/check-code`, payload, { withCredentials: true })
+
+      if (res.status === 200) {
+        setBuddyVerified(true)
+      } else {
+        setAddressOptions(false);
+      }
+    } catch (err) {
+      setBuddyVerified(false);
+    }
+  }
+  
 
   // check fields and attempt to add
   const register = async () => {
@@ -132,8 +158,6 @@ function Register() {
       form.classList.remove('invalid');
       var formFields = form.querySelectorAll('.form-control');
       var genderSelect = form.querySelector('#gender');
-      var idFile = form.querySelector("#idFile")
-      var selfyFile = form.querySelector("#selfyFile")
 
       var formData = new FormData();
       for (let i = 0; i < formFields.length; i++) {
@@ -149,12 +173,10 @@ function Register() {
       }
 
       formData.append('gender', genderSelect.value);
-      formData.append('idFile', idFile.files[0]);
-      formData.append('selfyFile', selfyFile.files[0]);
       formData.append('regToken', registerToken);// received from captcha challenges
       try {
         setLoading(true)
-        let res = await axios.post(`${config.apiBaseUrl}/register`, formData, { withCredentials: true });//await axios.post("https://vote.u-vote.us/register", formData);
+        let res = await axios.post(`${config.apiBaseUrl}/register/buddy`, formData, { withCredentials: true });//await axios.post("https://vote.u-vote.us/register", formData);
 
         if (res.status === 200) {
           form.reset();
@@ -173,7 +195,7 @@ function Register() {
           state: {
             message: "Error with the registration",
             error: err.response.data.reason,
-            retry: 'getkey'
+            retry: "buddy"
           }
         })
 
@@ -187,8 +209,9 @@ function Register() {
     <Container fluid="md">
       {loading ? (<Spinner></Spinner>) : (
         <>
-          <h2>Register for a U-Vote Key</h2>
-          <div className='limit-notice'><p>U-Vote is in testing in Arlington Virginia. </p></div>
+          <h2>Register with a buddy code</h2>
+          <div className='limit-notice'><p>U-Vote is in testing in Arlington Virginia right now. </p></div>
+          <p>Voters who register in-person at one of our events or booths, will automatically get a buddy code. You're here because somebody shared that one of those codes with you. A buddy code will eliminate part of the registration process for you and make things just a little quicker.</p>
           <hr className='separator'></hr>
 
           <Form id="registerForm">
@@ -368,63 +391,44 @@ function Register() {
                 <Form.Control aria-label="Zipcode" name="zipcode" id="zipcode" placeholder='zipcode' type="text" value={selectedAddress && selectedAddress.zipcode ? selectedAddress.zipcode : ""} required disabled />
               </Col>
             </Row>
-            </Container>
-            <hr className='separator'/>
-            <h4>Step 3: ID Check</h4>
-            <Container fluid id="idFormSection" className='formSection'>
-            <Row>
-              <Col lg={12}><Alert className='img-warning' variant='info'><div id="imgBlock"><img src="exclamation-lg.svg" /></div><div id="alertBlock">Images below are used for verification only and will be deleted once you are verified.</div></Alert></Col>
-            </Row>
-            <Row className="img-preview-wrapper" >
-              <Col lg={{ span: 4, offset: 2 }} className='step-one'>
-                <p><strong>First:</strong> Take a picture of your ID</p>
-              </Col>
-              <Col className='img-preview mt-2' lg={{ span: 4, offset: 2 }}>
-                <img id="previewImg" alt="preview of ID" src="" />
-              </Col>
-            </Row>
             <Row className='mb-2'>
               <Col lg={2}>
-                <Form.Label id="aFile">ID File:</Form.Label>
+                <Form.Label id="aIDsample">ID sample</Form.Label>
               </Col>
               <Col lg={10}>
-                <Form.Control type="file" id="idFile" accept='.jpeg, .jpg' onChange={(evt) => {
-                  let preview = document.getElementById('previewImg');
-                  preview.src = URL.createObjectURL(evt.target.files[0]);
-                  preview.onload = function () {
-                    URL.revokeObjectURL(preview.src) // free memory
-                  }
-                  preview.classList.add('showing')
-                }} required />
-              </Col>
-
-            </Row>
-
-            <Row className="img-preview-wrapper" >
-              <Col lg={{ span: 4, offset: 2 }} className='step-two'>
-                <p><strong>Next:</strong>Take a selfy with your ID</p>
-              </Col>
-              <Col className='img-preview selfy mt-2' lg={{ span: 4, offset: 2 }}>
-                <img id="selfyImg" alt="selfy preview" src="" />
-              </Col>
-            </Row>
-            <Row>
-              <Col lg={2}>
-                <Form.Label id="aFile" >Selfy File:</Form.Label>
-              </Col>
-              <Col lg={10}>
-
-                <Form.Control type="file" id="selfyFile" accept='.jpeg, .jpg' onChange={(evt) => {
-                  let preview = document.getElementById('selfyImg');
-                  preview.src = URL.createObjectURL(evt.target.files[0]);
-                  preview.onload = function () {
-                    URL.revokeObjectURL(preview.src) // free memory
-                  }
-                  preview.classList.add('showing')
-                }} required />
+                <Form.Control id="idsample" name="idsample" lg={6} type="text" pattern="[A-z0-9]{4}" min={4} max={4} placeholder="Last 4 characters from your driver's license number" defaultValue={currentVoter.idsample} required  />
+                <Form.Text muted>
+                  Enter the last 4 from your drivers license number
+                </Form.Text>
               </Col>
             </Row>
             </Container>
+            <hr className='separator'/>
+            <h4>Step 3: Redeem Code</h4>
+            <Row className='mb-2'>
+              <Col lg={2}>
+                <Form.Label id="aBuddy" >Buddy Code</Form.Label>
+              </Col>
+              <Col lg={2}>
+                <Form.Control id="buddycode" name="buddycode" maxLength={8} minLength={8} type="text" pattern="[0-9A-Z]{8}" placeholder="buddy code" defaultValue={currentVoter.buddycode}  className={buddyVerified ? 'verified' : ''}  required />
+                <Form.Text id="buddyHelp" muted>
+                  Enter the 6 character code sent to you by a friend
+                </Form.Text>
+              </Col>
+            </Row>
+            <Row>
+            <Col lg={{offset:2,span:3}}>
+                <Button id="verifyBuddy" variant={(buddyVerified) ? 'success' : 'warning'} onClick={() => {
+                  // need to get the value of the current street address field
+                  let buddycode = document.getElementById('buddycode');
+                  if(buddycode){
+                    const buddycodeVal = buddycode.value
+                    checkBuddyCode(`${buddycodeVal}`)
+                  }
+                  
+                }} >{(buddyVerified) ? (<>Verified <img alt="check for buddy code" src="check-square.svg" /></>) : (<span>Verify Buddy Code</span>)} </Button>
+              </Col>
+            </Row>
             <Row className='mb-4 mt-4' >
               <ReCAPTCHA ref={recaptchaRef} sitekey={"6Le-QPIoAAAAAJT5-G3P009gn52wZR3TLLSBB3Fj"} onChange={() => checkCaptcha()} />
             </Row>
@@ -450,4 +454,4 @@ function Register() {
   );
 }
 
-export default Register;
+export default Buddy;

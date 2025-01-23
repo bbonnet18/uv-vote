@@ -26,7 +26,7 @@ return(
         <Col lg={{span:9,offset:2}} ><p>{(location.state.error) ? location.state.error : 'service error'}</p></Col>
     </Row>
     <Row>
-        <p className='confirm-txt'>  <NavLink to="/getkey">Try again</NavLink></p>
+        <p className='confirm-txt'>{location.state.retry === "getkey" ? (<NavLink to="/getkey">Try again</NavLink>): (<NavLink to="/buddy">Try again</NavLink>)}  </p>
     </Row>
 
 </Container>

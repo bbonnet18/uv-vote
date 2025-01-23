@@ -269,8 +269,12 @@ Form input.error {
 
 .icon-brand {
   font-family: 'Roboto';
-  background: #0C2D48;
   color: #fff;
+}
+
+.header-img{
+  width:54px;
+  height:70px; 
 }
 
 .formSection {
@@ -349,7 +353,8 @@ Form input.error {
   color: #000;
   padding: 0;
   overflow: hidden;
-  background-color: #145DA0;  
+  margin: 0 10px;
+  border-radius: 5px;
   display: block;
   background-position: center;
   background-image: url('statue_of_liberty_banner.webp') ;
@@ -468,7 +473,8 @@ Form input.error {
 }
 
 .top-nav {
-  padding-bottom: 5px
+  padding-bottom: 5px;
+  margin-top: 10px;
 }
 
 .u-vote-blade-grey {
@@ -642,6 +648,7 @@ Form input.error {
     background-position: center;
     background-image: url('statue_of_liberty_banner_sm.webp');
     background-repeat: no-repeat;
+    border-radius: 5px;
     min-height: 200px;
   }
 

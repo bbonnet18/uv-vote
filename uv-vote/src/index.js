@@ -4,10 +4,9 @@ import './index.css';
 import App from './App';
 import Confirm from './Confirm';
 import Register from './Register';
+import Buddy from './Buddy';
 import Home from './Home';
 import Info from './Info';
-// import About from './About';
-import ErrorPage from './error-page';
 import Error from "./Error";
 import Validate from "./Validate";
 import FAQs from './FAQs';
@@ -21,6 +20,7 @@ const router = createBrowserRouter(
     <Route path="/" element={<App />}>
       <Route path="/" element={<Info />}/>
       <Route path="/getkey" element={<Register />}/>
+      <Route path="/buddy" element={<Buddy />}/>
       <Route path="/votes" element={<Home />}/>
       <Route path="/confirm" element={<Confirm />}/>
       <Route path="/registration-error" element={<Error />}/>
@@ -29,46 +29,6 @@ const router = createBrowserRouter(
     </Route>
   )
 )
-
-// const router = createBrowserRouter([
-//   {
-//     path:'/',
-//     element:<App />,
-//     errorElement:<ErrorPage />,
-//     children:[
-//       {
-//         path:'/',
-//         element:<Info />
-//       },
-//       {
-//         path:"/getkey",
-//         element:<Register />
-//       },
-//       {
-//         path:"/votes",
-//         element:<Home />
-//       },
-//       {
-//         path:"/confirm",
-//         element: <Confirm />
-//       },
-//       {
-//         path:"/registration-error",
-//         element: <Error />
-//       },
-//       {
-//         path:"/validate",
-//         element: <Validate />
-//       },
-//       {
-//         path:"/faqs",
-//         element: <FAQs />
-//       }
-
-//     ]
-
-//   }
-// ])
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));

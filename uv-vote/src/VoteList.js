@@ -44,7 +44,7 @@ function VoteList (props){
               {
                 groups[itm] ? groups[itm].map((itm,ind)=>{
                   return (<tr key={itm} className={itm.link === 'completed' ? 'vote-completed' : ''}> 
-                  <td><img src={(itm.description && itm.description.length ? itm.description.trim():"ballot")+"_sm.png"} alt={itm.description + " type vote"} title={itm.description + " type vote"}></img> {itm.title} - {itm.description}</td>
+                  <td><img src={(itm.description && itm.description.length ? itm.description.trim():"ballot")+"_sm.png"} alt={itm.description + " type vote"} title={itm.description + " type vote"}></img> {itm.title}</td>
                   <td className='table-link-col'>{ loadingIds && loadingIds[itm.surveyId] ? (
                     <Spinner animation="border" role="status">
                       <span className="visually-hidden">Loading...</span>
