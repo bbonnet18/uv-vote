@@ -445,7 +445,7 @@ function Register() {
 
       )}
 
-
+      <hr></hr>
     </Container>
   );
 }

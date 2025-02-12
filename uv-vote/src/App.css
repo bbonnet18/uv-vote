@@ -62,9 +62,12 @@ body {
 }
 
 .alpha-mark {
-  float: right;
-  color: orange;
+
+  display: inline-block;
+  margin-left: 30px;
+  color: darkgray;
   font-size: medium;
+  /* text-decoration: underline; */
 }
 
 
@@ -168,7 +171,6 @@ button {
   animation-fill-mode: both;
 }
 
-.copy-help .fade {}
 
 #clipboardBtn {
   background-position: left;
@@ -269,12 +271,13 @@ Form input.error {
 
 .icon-brand {
   font-family: 'Roboto';
-  color: #fff;
+}
+.icon-brand .row img{
+  border-radius: 0;
 }
 
 .header-img{
   width:54px;
-  height:70px; 
 }
 
 .formSection {
@@ -430,6 +433,9 @@ Form input.error {
 
 }
 
+#root hr.nav-sep{
+  margin:5px 0;
+}
 
 .row img {
   border-radius: 5px;
@@ -456,6 +462,17 @@ Form input.error {
   display: block;
 }
 
+.support-email{
+  vertical-align: middle;
+  font-size: medium;
+  color:#282c34;
+}
+.support-email div{
+  padding-top: 10px;
+}
+.support-email a{
+  text-decoration: none;
+}
 
 .table-link-col {
   text-align: center;
@@ -631,6 +648,10 @@ Form input.error {
 
 
 @media screen and (max-width:430px) {
+
+  .alpha-mark{
+    margin-left: 30px;
+  }
 
   .banner-text {
     position: relative;

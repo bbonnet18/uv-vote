@@ -69,6 +69,7 @@ return(
     
   </Col>
 </Row>
+<hr></hr>
 </Container>
 </>
 )

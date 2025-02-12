@@ -371,7 +371,7 @@ function Home() {
         </Col>
 
       </Row>
-
+      <hr></hr>
     </Container>
   )
 }

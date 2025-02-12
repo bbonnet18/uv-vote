@@ -33,7 +33,7 @@ function VoteList (props){
           {loading ? (<Spinner animation="border" role="status" className='loading-spinner'> <span className="visually-hidden">Loading...</span></Spinner>) : (<></>)}
           {(loading === false && groups) ? Object.keys(groups).map((itm,ind)=>{
            return (
-            <Table striped bordered hover>   
+            <Table key={ind} striped bordered hover>   
               <>
               <thead>
                 <tr>
@@ -43,7 +43,7 @@ function VoteList (props){
               <tbody>
               {
                 groups[itm] ? groups[itm].map((itm,ind)=>{
-                  return (<tr key={itm} className={itm.link === 'completed' ? 'vote-completed' : ''}> 
+                  return (<tr key={itm.surveyId} className={itm.link === 'completed' ? 'vote-completed' : ''}> 
                   <td><img src={(itm.description && itm.description.length ? itm.description.trim():"ballot")+"_sm.png"} alt={itm.description + " type vote"} title={itm.description + " type vote"}></img> {itm.title}</td>
                   <td className='table-link-col'>{ loadingIds && loadingIds[itm.surveyId] ? (
                     <Spinner animation="border" role="status">

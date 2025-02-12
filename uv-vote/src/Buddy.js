@@ -449,7 +449,7 @@ function Buddy() {
 
       )}
 
-
+      <hr></hr>
     </Container>
   );
 }

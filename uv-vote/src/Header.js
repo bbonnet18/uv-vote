@@ -8,7 +8,7 @@ export default function Header() {
 
   return (
     <Container>
-      <div class="icon-brand"><div className='container'><a><img src='u-vote-vector-base_70.png' ></img></a><div className='alpha-mark'></div></div></div>
+      <div class="icon-brand"><div className='container'><a><img src='u-vote-vector-base_70_notext.webp' ></img></a><div className='alpha-mark'></div></div></div>
     </Container>
   );
 }
