@@ -24,6 +24,7 @@ function Register() {
   const [currentVoter, setCurrentVoter] = useState(starterVoter);
   const [addressOptions, setAddressOptions] = useState([]);// used to show addresses as the user types 
   const [selectedAddress, setSelectedAddress] = useState();// the address the user chose
+  const [addressError,setAddressError] = useState("");// shows if no address was returned or error happens
   const [showSelect, setShowSelect] = useState(false);// controls showing the address select
   const [selectedStreet1, setSelectedStreet1] = useState("");
   const [selectedStreet2, setSelectedStreet2] = useState("");
@@ -62,6 +63,8 @@ function Register() {
     }
   }, [addressOptions])
 
+  // check validity states with a listener on all form element item changes. 
+
 
   // check captcha val
   const checkCaptcha = async () => {
@@ -99,12 +102,21 @@ function Register() {
       const payload = { address: val };
       let res = await axios.post(`${config.apiBaseUrl}/address`, payload, { withCredentials: true });
       if (res.status === 200) {
-        setAddressOptions(res.data.result)
+        const addressArr = res.data.result;
+        if(Array.isArray(addressArr) && addressArr.length > 0){
+          setAddressOptions(addressArr);
+          setAddressError("");
+        }else{
+          setAddressError("No results returned, please try again");
+          setAddressOptions([]);
+        }
       } else {
+        setAddressError("Error finding address")
         setAddressOptions([]);
       }
     } catch (err) {
-      alert('unable to find addresses');
+      setAddressError("Error finding address");
+      
     }
 
   }
@@ -113,16 +125,14 @@ function Register() {
   // check fields and attempt to add
   const register = async () => {
 
+    const formCheck = document.getElementById('formCheck');
+    formCheck.classList.remove('un-checked');
     const form = document.getElementById('registerForm');
     const isValid = form.checkValidity();
     // check the disabled fields to make sure they have real values
-    const city = form.querySelector('#city');
-    const state = form.querySelector('#state');
-    const zipcode = form.querySelector('#zipcode');
-
-    if (city.value.length < 2 || state.value.length < 2 || zipcode.value.length < 5) {
-      return;
-    }
+    // const city = form.querySelector('#city');
+    // const state = form.querySelector('#state');
+    // const zipcode = form.querySelector('#zipcode');
 
     if(!registerToken){
       return; 
@@ -180,6 +190,8 @@ function Register() {
       }
     }else{
       form.classList.add('invalid');
+      setShowError(true);
+      setErrorMsg('Please fill out the items in red')
     }
 
   }
@@ -272,7 +284,7 @@ function Register() {
                 <Form.Label id="aAddress1" >Address</Form.Label>
               </Col>
               <Col lg={8} className='address-check'>
-                <Form.Control id="address1" name="address1" lg={6} type="text" placeholder="enter and select your address" onChange={(e) => {
+                <Form.Control id="address1" name="address1" lg={6} type="text" maxLength={75} placeholder="enter and select your address" onChange={(e) => {
                     
                      if(verified && normalizedStreet !== e.currentTarget.value){
                       setAddressOptions([]);
@@ -283,17 +295,6 @@ function Register() {
                      
                  
                 }} value={selectedStreet1} required /> {(verified) ? <img alt="check mark for verified address" src="check2-square.svg" /> : <></>}
-              </Col>
-            </Row>
-            <Row className='mb-2'>
-              <Col lg={2}>
-                <Form.Label id="aAddress2" >Address Line 2</Form.Label>
-              </Col>
-              <Col lg={8} className='address-check'>
-                <Form.Control id="address2" name="address2" lg={6} type="text" placeholder="optional ex. apt 3a" onChange={(e) => {
-                  setSelectedStreet2(e.target.value);
-
-                }} value={selectedStreet2} />
               </Col>
               <Col lg={2}>
                 <Button id="verifyAddress" variant={(verified) ? 'success' : 'warning'} onClick={() => {
@@ -344,13 +345,25 @@ function Register() {
                 </Form.Select>
               </Col>
             </Row></>) : (<></>)}
+            <Row className='mb-2'>
+              <Col lg={2}>
+                <Form.Label id="aAddress2" >Address Line 2</Form.Label>
+              </Col>
+              <Col lg={8} className='address-check'>
+                <Form.Control id="address2" name="address2" lg={6} type="text" placeholder="optional ex. apt 3a" onChange={(e) => {
+                  setSelectedStreet2(e.target.value);
 
+                }} value={selectedStreet2} disabled />
+              </Col>
+            </Row>
+            
+            <Row><Col lg={{offset:2,span:8}} className='address-error'>{addressError}</Col></Row>
             <Row className='mb-2'>
               <Col lg={2}>
                 <Form.Label id="aCity">City</Form.Label>
               </Col>
               <Col lg={10}>
-                <Form.Control id="city" name="city" lg={6} type="text" placeholder="city" value={selectedAddress && selectedAddress.city ? selectedAddress.city : ""} required disabled />
+                <Form.Control id="city" name="city" lg={6} type="text" placeholder="city" minLength={2} value={selectedAddress && selectedAddress.city ? selectedAddress.city : ""} required disabled />
               </Col>
             </Row>
 
@@ -359,13 +372,13 @@ function Register() {
                 <Form.Label id="aState" >State</Form.Label>
               </Col>
               <Col lg={4} className='mb-2'>
-                <Form.Control aria-label="State" name="state" id="state" placeholder='state' type="text" value={selectedAddress && selectedAddress.state ? selectedAddress.state : ""} required disabled />
+                <Form.Control aria-label="State" name="state" id="state" placeholder='state' minLength={2} type="text" value={selectedAddress && selectedAddress.state ? selectedAddress.state : ""} required disabled />
               </Col>
               <Col lg={2}>
                 <Form.Label id="aZip" >Zipcode</Form.Label>
               </Col>
               <Col lg={4}>
-                <Form.Control aria-label="Zipcode" name="zipcode" id="zipcode" placeholder='zipcode' type="text" value={selectedAddress && selectedAddress.zipcode ? selectedAddress.zipcode : ""} required disabled />
+                <Form.Control aria-label="Zipcode" name="zipcode" id="zipcode" placeholder='zipcode' minLength={5} type="text" value={selectedAddress && selectedAddress.zipcode ? selectedAddress.zipcode : ""} required disabled />
               </Col>
             </Row>
             </Container>
@@ -428,19 +441,18 @@ function Register() {
             <Row className='mb-4 mt-4' >
               <ReCAPTCHA ref={recaptchaRef} sitekey={"6Le-QPIoAAAAAJT5-G3P009gn52wZR3TLLSBB3Fj"} onChange={() => checkCaptcha()} />
             </Row>
+            <Row id="formCheck" className='un-checked all-valid'>
+              <Alert variant='danger'>{errorMsg}</Alert>
+            </Row>
             <Row className='mb-4'>
               <Col lg={3}>
                 <Button variant='primary' onClick={() => register()} disabled={disabled}>Register</Button>
               </Col>
 
             </Row>
-           
-            <Row>
-            { showError ? (<Alert variant='danger'>{errorMsg}</Alert>) : (<></>)}
-            </Row>
-
-
           </Form>
+                     
+ 
         </>
 
       )}

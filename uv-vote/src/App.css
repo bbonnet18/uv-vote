@@ -90,6 +90,11 @@ body {
   margin-left: 40%;
 }
 
+.address-error{
+  color:red;
+  font-weight: bold;
+}
+
 .App-header {
   background-color: #282c34;
   min-height: 100vh;
@@ -421,6 +426,7 @@ Form input.error {
 #registerForm.invalid input[type='text']:invalid,
 #registerForm.invalid input[type='tel']:invalid,
 #registerForm.invalid input[type='checkbox']:invalid,
+#registerForm.invalid input[type='file']:invalid, 
 #registerForm.invalid select:invalid {
   background-color: lightpink;
 }
@@ -428,10 +434,24 @@ Form input.error {
 #registerForm.valid input[type='text']:valid,
 #registerForm.valid input[type='tel']:valid,
 #registerForm.valid input[type='checkbox']:valid,
+#registerForm.valid input[type='file']:valid, 
 #registerForm.valid select:valid {
   background-color: palegreen;
 
 }
+
+#registerForm:invalid .all-valid{
+  display:block;
+}
+
+#registerForm:valid .all-valid{
+  display:none;
+}
+
+#registerForm .un-checked{
+  display:none !important; 
+}
+
 
 #root hr.nav-sep{
   margin:5px 0;

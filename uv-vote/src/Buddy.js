@@ -26,6 +26,7 @@ function Buddy() {
   const [currentVoter, setCurrentVoter] = useState(starterVoter);
   const [addressOptions, setAddressOptions] = useState([]);// used to show addresses as the user types 
   const [selectedAddress, setSelectedAddress] = useState();// the address the user chose
+  const [addressError,setAddressError] = useState("");// shows if no address was returned or error happens
   const [showSelect, setShowSelect] = useState(false);// controls showing the address select
   const [selectedStreet1, setSelectedStreet1] = useState("");
   const [selectedStreet2, setSelectedStreet2] = useState("");
@@ -34,7 +35,7 @@ function Buddy() {
   const [buddyVerified, setBuddyVerified] = useState(false)
   const [registerToken, setRegisterToken] = useState(null);
   const [showError,setShowError] = useState(false);
-  const [errorMsg,setErrorMsg] = useState("");
+  const [errorMsg,setErrorMsg] = useState("some error");
 
   // const [registered, setRegistered] = useState(false);//to represent that the voter has not registered
   const navigate = useNavigate();
@@ -102,12 +103,21 @@ function Buddy() {
       const payload = { address: val };
       let res = await axios.post(`${config.apiBaseUrl}/address`, payload, { withCredentials: true });
       if (res.status === 200) {
-        setAddressOptions(res.data.result)
+        const addressArr = res.data.result;
+        if(Array.isArray(addressArr) && addressArr.length > 0){
+          setAddressOptions(addressArr);
+          setAddressError("");
+        }else{
+          setAddressError("No results returned, please try again");
+          setAddressOptions([]);
+        }
       } else {
+        setAddressError("Error finding address")
         setAddressOptions([]);
       }
     } catch (err) {
-      alert('unable to find addresses');
+      setAddressError("Error finding address");
+
     }
 
   }
@@ -117,7 +127,7 @@ function Buddy() {
     if(val.length === 0){
       return;
     }
-    // --- start back up here, copy from above checkAddress ---//
+    // --- start back up here ---//
 
     try{
 
@@ -295,7 +305,7 @@ function Buddy() {
                 <Form.Label id="aAddress1" >Address</Form.Label>
               </Col>
               <Col lg={8} className='address-check'>
-                <Form.Control id="address1" name="address1" lg={6} type="text" placeholder="enter and select your address" onChange={(e) => {
+                <Form.Control id="address1" name="address1" lg={6} type="text" maxLength={75} placeholder="enter and select your address" onChange={(e) => {
                     
                      if(verified && normalizedStreet !== e.currentTarget.value){
                       setAddressOptions([]);
@@ -367,7 +377,7 @@ function Buddy() {
                 </Form.Select>
               </Col>
             </Row></>) : (<></>)}
-
+            <Row><Col lg={{offset:2,span:8}} className='address-error'>{addressError}</Col></Row>
             <Row className='mb-2'>
               <Col lg={2}>
                 <Form.Label id="aCity">City</Form.Label>
