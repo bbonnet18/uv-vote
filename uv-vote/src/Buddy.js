@@ -35,7 +35,7 @@ function Buddy() {
   const [buddyVerified, setBuddyVerified] = useState(false)
   const [registerToken, setRegisterToken] = useState(null);
   const [showError,setShowError] = useState(false);
-  const [errorMsg,setErrorMsg] = useState("some error");
+  const [errorMsg,setErrorMsg] = useState("");
 
   // const [registered, setRegistered] = useState(false);//to represent that the voter has not registered
   const navigate = useNavigate();
@@ -149,16 +149,20 @@ function Buddy() {
   // check fields and attempt to add
   const register = async () => {
 
+
+    const formCheck = document.getElementById('formCheck');
+    formCheck.classList.remove('un-checked');
+
     const form = document.getElementById('registerForm');
     const isValid = form.checkValidity();
     // check the disabled fields to make sure they have real values
-    const city = form.querySelector('#city');
-    const state = form.querySelector('#state');
-    const zipcode = form.querySelector('#zipcode');
+    // const city = form.querySelector('#city');
+    // const state = form.querySelector('#state');
+    // const zipcode = form.querySelector('#zipcode');
 
-    if (city.value.length < 2 || state.value.length < 2 || zipcode.value.length < 5) {
-      return;
-    }
+    // if (city.value.length < 2 || state.value.length < 2 || zipcode.value.length < 5) {
+    //   return;
+    // }
 
     if(!registerToken){
       return; 
@@ -212,6 +216,8 @@ function Buddy() {
       }
     }else{
       form.classList.add('invalid');
+      setShowError(true);
+      setErrorMsg('Please fill out the items in red')
     }
 
   }
@@ -317,17 +323,6 @@ function Buddy() {
                  
                 }} value={selectedStreet1} required /> {(verified) ? <img alt="check mark for verified address" src="check2-square.svg" /> : <></>}
               </Col>
-            </Row>
-            <Row className='mb-2'>
-              <Col lg={2}>
-                <Form.Label id="aAddress2" >Address Line 2</Form.Label>
-              </Col>
-              <Col lg={8} className='address-check'>
-                <Form.Control id="address2" name="address2" lg={6} type="text" placeholder="optional ex. apt 3a" onChange={(e) => {
-                  setSelectedStreet2(e.target.value);
-
-                }} value={selectedStreet2} />
-              </Col>
               <Col lg={2}>
                 <Button id="verifyAddress" variant={(verified) ? 'success' : 'warning'} onClick={() => {
                   // need to get the value of the current street address field
@@ -377,13 +372,24 @@ function Buddy() {
                 </Form.Select>
               </Col>
             </Row></>) : (<></>)}
+            <Row className='mb-2'>
+              <Col lg={2}>
+                <Form.Label id="aAddress2" >Address Line 2</Form.Label>
+              </Col>
+              <Col lg={8} className='address-check'>
+                <Form.Control id="address2" name="address2" lg={6} type="text" placeholder="optional ex. apt 3a" onChange={(e) => {
+                  setSelectedStreet2(e.target.value);
+
+                }} value={selectedStreet2} disabled />
+              </Col>
+            </Row>
             <Row><Col lg={{offset:2,span:8}} className='address-error'>{addressError}</Col></Row>
             <Row className='mb-2'>
               <Col lg={2}>
                 <Form.Label id="aCity">City</Form.Label>
               </Col>
               <Col lg={10}>
-                <Form.Control id="city" name="city" lg={6} type="text" placeholder="city" value={selectedAddress && selectedAddress.city ? selectedAddress.city : ""} required disabled />
+                <Form.Control id="city" name="city" lg={6} type="text" placeholder="city" minLength={2} value={selectedAddress && selectedAddress.city ? selectedAddress.city : ""} required disabled />
               </Col>
             </Row>
 
@@ -392,13 +398,13 @@ function Buddy() {
                 <Form.Label id="aState" >State</Form.Label>
               </Col>
               <Col lg={4} className='mb-2'>
-                <Form.Control aria-label="State" name="state" id="state" placeholder='state' type="text" value={selectedAddress && selectedAddress.state ? selectedAddress.state : ""} required disabled />
+                <Form.Control aria-label="State" name="state" id="state" placeholder='state' type="text" minLength={2} value={selectedAddress && selectedAddress.state ? selectedAddress.state : ""} required disabled />
               </Col>
               <Col lg={2}>
                 <Form.Label id="aZip" >Zipcode</Form.Label>
               </Col>
               <Col lg={4}>
-                <Form.Control aria-label="Zipcode" name="zipcode" id="zipcode" placeholder='zipcode' type="text" value={selectedAddress && selectedAddress.zipcode ? selectedAddress.zipcode : ""} required disabled />
+                <Form.Control aria-label="Zipcode" name="zipcode" id="zipcode" placeholder='zipcode' type="text" minLength={5} value={selectedAddress && selectedAddress.zipcode ? selectedAddress.zipcode : ""} required disabled />
               </Col>
             </Row>
             <Row className='mb-2'>
@@ -442,18 +448,15 @@ function Buddy() {
             <Row className='mb-4 mt-4' >
               <ReCAPTCHA ref={recaptchaRef} sitekey={"6Le-QPIoAAAAAJT5-G3P009gn52wZR3TLLSBB3Fj"} onChange={() => checkCaptcha()} />
             </Row>
+            <Row id="formCheck" className='un-checked all-valid'>
+              <Alert variant='danger'>{errorMsg}</Alert>
+            </Row>
             <Row className='mb-4'>
               <Col lg={3}>
                 <Button variant='primary' onClick={() => register()} disabled={disabled}>Register</Button>
               </Col>
 
             </Row>
-           
-            <Row>
-            { showError ? (<Alert variant='danger'>{errorMsg}</Alert>) : (<></>)}
-            </Row>
-
-
           </Form>
         </>
 

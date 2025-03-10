@@ -356,7 +356,6 @@ function Register() {
                 }} value={selectedStreet2} disabled />
               </Col>
             </Row>
-            
             <Row><Col lg={{offset:2,span:8}} className='address-error'>{addressError}</Col></Row>
             <Row className='mb-2'>
               <Col lg={2}>
