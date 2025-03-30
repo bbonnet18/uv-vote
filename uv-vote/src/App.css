@@ -51,13 +51,13 @@ body {
   /* width: 25px;
   height: 25px;
   margin-left: -30px;
-  display: inline; */
+  display: inline; 
   position: absolute;
   width: 40px;
   height: 40px;
   margin-left: -42px;
   display: inline;
-  margin-top: 5px;
+  margin-top: 5px;*/
 
 }
 
@@ -312,10 +312,11 @@ Form input.error {
 
 .img-preview {
   background-position: center;
-  background-size: 180px;
+  background-size: 250px;
   /* background-size: 320px; */
-  background-image: url('id_img.png');
+  /* background-image: url('id_img.png'); */
   /* background-image: url('reg_id.gif'); */
+  background-image: url('card.png');
   background-repeat: no-repeat;
   border: 2px solid grey;
   border-radius: 15px;
@@ -325,7 +326,8 @@ Form input.error {
 }
 
 .img-preview.selfy {
-  background-image: url('selfy_id.png');
+  /* background-image: url('selfy_id.png'); */
+  background-image: url('selfie.png');
   /* background-image: url('selfy.gif'); */
 }
 
@@ -448,8 +450,12 @@ Form input.error {
   display:none;
 }
 
-#registerForm .un-checked{
-  display:none !important; 
+#registerForm .un-checked.all-valid{
+  display:none; 
+}
+
+#registerForm .all-valid.address-check{
+  display:block;
 }
 
 

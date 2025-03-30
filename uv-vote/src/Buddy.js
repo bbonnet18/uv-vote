@@ -1,7 +1,7 @@
 import './App.css';
 import axios from 'axios';
 import config from './config';
-import { Alert, Col, Row, Form, Button, Container, Spinner } from "react-bootstrap";
+import { Alert, Col, Row, Form, Button, Container, Spinner, InputGroup } from "react-bootstrap";
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ReCAPTCHA from "react-google-recaptcha";
@@ -36,6 +36,7 @@ function Buddy() {
   const [registerToken, setRegisterToken] = useState(null);
   const [showError,setShowError] = useState(false);
   const [errorMsg,setErrorMsg] = useState("");
+  const [buddyError, setBuddyError] = useState("");
 
   // const [registered, setRegistered] = useState(false);//to represent that the voter has not registered
   const navigate = useNavigate();
@@ -99,6 +100,8 @@ function Buddy() {
 
     setShowSelect(true);
 
+    const formCheck = document.getElementById('formCheck');
+
     try {
       const payload = { address: val };
       let res = await axios.post(`${config.apiBaseUrl}/address`, payload, { withCredentials: true });
@@ -107,6 +110,7 @@ function Buddy() {
         if(Array.isArray(addressArr) && addressArr.length > 0){
           setAddressOptions(addressArr);
           setAddressError("");
+          formCheck.classList.remove('address-check');
         }else{
           setAddressError("No results returned, please try again");
           setAddressOptions([]);
@@ -116,6 +120,7 @@ function Buddy() {
         setAddressOptions([]);
       }
     } catch (err) {
+      formCheck.classList.add('address-check');
       setAddressError("Error finding address");
 
     }
@@ -124,10 +129,12 @@ function Buddy() {
 
   // check to see if the buddy code is valid
   const checkBuddyCode = async (val) => {
-    if(val.length === 0){
+    if(val.length < 8){
+      setBuddyError("Buddy codes are 8 characters.")
       return;
     }
-    // --- start back up here ---//
+
+    setBuddyError("");
 
     try{
 
@@ -136,12 +143,15 @@ function Buddy() {
       let res = await axios.post(`${config.apiBaseUrl}/register/check-code`, payload, { withCredentials: true })
 
       if (res.status === 200) {
-        setBuddyVerified(true)
+        setBuddyVerified(true);
+        setBuddyError("");
       } else {
-        setAddressOptions(false);
+        setBuddyVerified(false);
+        setBuddyError("Code is not correct");
       }
     } catch (err) {
       setBuddyVerified(false);
+      setBuddyError("Code error.");
     }
   }
   
@@ -155,14 +165,18 @@ function Buddy() {
 
     const form = document.getElementById('registerForm');
     const isValid = form.checkValidity();
-    // check the disabled fields to make sure they have real values
-    // const city = form.querySelector('#city');
-    // const state = form.querySelector('#state');
-    // const zipcode = form.querySelector('#zipcode');
 
-    // if (city.value.length < 2 || state.value.length < 2 || zipcode.value.length < 5) {
-    //   return;
-    // }
+    //check the disabled fields to make sure they have real values
+    const city = form.querySelector('#city');
+    const state = form.querySelector('#state');
+    const zipcode = form.querySelector('#zipcode');
+
+    if (city.value.length < 2 || state.value.length < 2 || zipcode.value.length < 5) {
+      setShowError(true);
+      setErrorMsg("enter address and select verify address");
+      formCheck.classList.add('address-check');
+      return;
+    }
 
     if(!registerToken){
       return; 
@@ -227,7 +241,7 @@ function Buddy() {
         <>
           <h2>Register with a buddy code</h2>
           <div className='limit-notice'><p>U-Vote is in testing in Arlington Virginia right now. </p></div>
-          <p>Voters who register in-person at one of our events or booths, will automatically get a buddy code. You're here because somebody shared that one of those codes with you. A buddy code will eliminate part of the registration process for you and make things just a little quicker.</p>
+          <p>Voters who register in-person at one of our events or booths, will automatically get a buddy code. You're here because somebody shared one of those codes with you. A buddy code will eliminate part of the registration process for you and make things just a little quicker.</p>
           <hr className='separator'></hr>
 
           <Form id="registerForm">
@@ -310,7 +324,8 @@ function Buddy() {
               <Col lg={2}>
                 <Form.Label id="aAddress1" >Address</Form.Label>
               </Col>
-              <Col lg={8} className='address-check'>
+              <Col lg={10} className='address-check'>
+                <InputGroup>
                 <Form.Control id="address1" name="address1" lg={6} type="text" maxLength={75} placeholder="enter and select your address" onChange={(e) => {
                     
                      if(verified && normalizedStreet !== e.currentTarget.value){
@@ -321,9 +336,7 @@ function Buddy() {
                      }
                      
                  
-                }} value={selectedStreet1} required /> {(verified) ? <img alt="check mark for verified address" src="check2-square.svg" /> : <></>}
-              </Col>
-              <Col lg={2}>
+                }} value={selectedStreet1} required /> 
                 <Button id="verifyAddress" variant={(verified) ? 'success' : 'warning'} onClick={() => {
                   // need to get the value of the current street address field
                   let streetAddress = document.getElementById('address1');
@@ -332,7 +345,8 @@ function Buddy() {
                     checkAddress(`${myStreet}`)
                   }
                   
-                }} >{(verified) ? (<>Address Verified <img alt="check mark for verified address" src="check-square.svg" /></>) : (<span>Verify Address</span>)} </Button>
+                }} >{(verified) ? (<>Verified <img alt="check mark for verified address" src="check-square.svg" /></>) : (<>Verify <img alt="check mark for verified address" src="exclamation-triangle.svg" /></>)} </Button>
+                </InputGroup>
               </Col>
             </Row>
             {showSelect ? (
@@ -411,8 +425,8 @@ function Buddy() {
               <Col lg={2}>
                 <Form.Label id="aIDsample">ID sample</Form.Label>
               </Col>
-              <Col lg={10}>
-                <Form.Control id="idsample" name="idsample" lg={6} type="text" pattern="[A-z0-9]{4}" min={4} max={4} placeholder="Last 4 characters from your driver's license number" defaultValue={currentVoter.idsample} required  />
+              <Col lg={2}>
+                <Form.Control id="idsample" name="idsample" lg={6} type="text" pattern="[A-z0-9]{4}" min={4} max={4} placeholder="Last 4 from ID" defaultValue={currentVoter.idsample} required  />
                 <Form.Text muted>
                   Enter the last 4 from your drivers license number
                 </Form.Text>
@@ -426,12 +440,23 @@ function Buddy() {
                 <Form.Label id="aBuddy" >Buddy Code</Form.Label>
               </Col>
               <Col lg={2}>
-                <Form.Control id="buddycode" name="buddycode" maxLength={8} minLength={8} type="text" pattern="[0-9A-Z]{8}" placeholder="buddy code" defaultValue={currentVoter.buddycode}  className={buddyVerified ? 'verified' : ''}  required />
+                <Form.Control id="buddycode" name="buddycode" maxLength={8} minLength={8} type="text" pattern="[0-9A-Z]{8}" placeholder="buddy code" defaultValue={currentVoter.buddycode} onChange={(e)=>{
+                    
+                        let currentVal = e.currentTarget.value;
+                        
+                        if(buddyVerified && currentVal.length < 8){
+                          setBuddyVerified(false);
+                        }
+
+                }}  required />
                 <Form.Text id="buddyHelp" muted>
-                  Enter the 6 character code sent to you by a friend
+                  Enter the 8 character code sent to you by a friend
                 </Form.Text>
               </Col>
             </Row>
+            { buddyError ? (<Row>
+                <Alert variant='danger'>{buddyError} Try again.<br/>Having problems? Contact U-Vote <a href="mailto:support@u-vote.us" alt="U-Vote Support">support@u-vote.us</a> if the problem persists.</Alert>
+            </Row>) : (<></>) }
             <Row>
             <Col lg={{offset:2,span:3}}>
                 <Button id="verifyBuddy" variant={(buddyVerified) ? 'success' : 'warning'} onClick={() => {

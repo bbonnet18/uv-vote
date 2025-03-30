@@ -1,7 +1,7 @@
 import './App.css';
 import axios from 'axios';
 import config from './config';
-import { Alert, Col, Row, Form, Button, Container, Spinner } from "react-bootstrap";
+import { Alert, Col, Row, Form, Button, Container, Spinner, InputGroup } from "react-bootstrap";
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ReCAPTCHA from "react-google-recaptcha";
@@ -98,6 +98,8 @@ function Register() {
 
     setShowSelect(true);
 
+    const formCheck = document.getElementById('formCheck');
+
     try {
       const payload = { address: val };
       let res = await axios.post(`${config.apiBaseUrl}/address`, payload, { withCredentials: true });
@@ -106,6 +108,7 @@ function Register() {
         if(Array.isArray(addressArr) && addressArr.length > 0){
           setAddressOptions(addressArr);
           setAddressError("");
+          formCheck.classList.remove('address-check');
         }else{
           setAddressError("No results returned, please try again");
           setAddressOptions([]);
@@ -115,6 +118,7 @@ function Register() {
         setAddressOptions([]);
       }
     } catch (err) {
+      formCheck.classList.add('address-check');
       setAddressError("Error finding address");
       
     }
@@ -127,12 +131,23 @@ function Register() {
 
     const formCheck = document.getElementById('formCheck');
     formCheck.classList.remove('un-checked');
+
     const form = document.getElementById('registerForm');
     const isValid = form.checkValidity();
-    // check the disabled fields to make sure they have real values
-    // const city = form.querySelector('#city');
-    // const state = form.querySelector('#state');
-    // const zipcode = form.querySelector('#zipcode');
+    
+    //check the disabled fields to make sure they have real values
+    const city = form.querySelector('#city');
+    const state = form.querySelector('#state');
+    const zipcode = form.querySelector('#zipcode');
+
+     //check the disabled fields to make sure they have real values
+    if (city.value.length < 2 || state.value.length < 2 || zipcode.value.length < 5) {
+      setShowError(true);
+      setErrorMsg("enter address and select verify address");
+      formCheck.classList.add('address-check');
+      return;
+    }
+
 
     if(!registerToken){
       return; 
@@ -283,7 +298,8 @@ function Register() {
               <Col lg={2}>
                 <Form.Label id="aAddress1" >Address</Form.Label>
               </Col>
-              <Col lg={8} className='address-check'>
+              <Col lg={10} className='address-check'>
+                <InputGroup>
                 <Form.Control id="address1" name="address1" lg={6} type="text" maxLength={75} placeholder="enter and select your address" onChange={(e) => {
                     
                      if(verified && normalizedStreet !== e.currentTarget.value){
@@ -294,9 +310,7 @@ function Register() {
                      }
                      
                  
-                }} value={selectedStreet1} required /> {(verified) ? <img alt="check mark for verified address" src="check2-square.svg" /> : <></>}
-              </Col>
-              <Col lg={2}>
+                }} value={selectedStreet1} required /> 
                 <Button id="verifyAddress" variant={(verified) ? 'success' : 'warning'} onClick={() => {
                   // need to get the value of the current street address field
                   let streetAddress = document.getElementById('address1');
@@ -305,7 +319,8 @@ function Register() {
                     checkAddress(`${myStreet}`)
                   }
                   
-                }} >{(verified) ? (<>Address Verified <img alt="check mark for verified address" src="check-square.svg" /></>) : (<span>Verify Address</span>)} </Button>
+                }} >{(verified) ? (<>Verified <img alt="check mark for verified address" src="check-square.svg" /></>) : (<>Verify <img alt="check mark for verified address" src="exclamation-triangle.svg" /></>)} </Button>
+                </InputGroup>
               </Col>
             </Row>
             {showSelect ? (
@@ -385,11 +400,11 @@ function Register() {
             <h4>Step 3: ID Check</h4>
             <Container fluid id="idFormSection" className='formSection'>
             <Row>
-              <Col lg={12}><Alert className='img-warning' variant='info'><div id="imgBlock"><img src="exclamation-lg.svg" /></div><div id="alertBlock">Images below are used for verification only and will be deleted once you are verified.</div></Alert></Col>
+              <Col lg={12}><Alert className='img-warning' variant='warning'><div id="imgBlock"><img src="exclamation-lg.svg" /></div><div id="alertBlock">Images below are deleted once you are verified.</div></Alert></Col>
             </Row>
             <Row className="img-preview-wrapper" >
               <Col lg={{ span: 4, offset: 2 }} className='step-one'>
-                <p><strong>First:</strong> Take a picture of your ID</p>
+                <h3><strong>First:</strong> Take a picture of your ID</h3>
               </Col>
               <Col className='img-preview mt-2' lg={{ span: 4, offset: 2 }}>
                 <img id="previewImg" alt="preview of ID" src="" />
@@ -414,7 +429,7 @@ function Register() {
 
             <Row className="img-preview-wrapper" >
               <Col lg={{ span: 4, offset: 2 }} className='step-two'>
-                <p><strong>Next:</strong>Take a selfy with your ID</p>
+                <h3><strong>Next:</strong> Take a selfy</h3>
               </Col>
               <Col className='img-preview selfy mt-2' lg={{ span: 4, offset: 2 }}>
                 <img id="selfyImg" alt="selfy preview" src="" />
@@ -434,6 +449,21 @@ function Register() {
                   }
                   preview.classList.add('showing')
                 }} required />
+              </Col>
+            </Row>
+            <Row className='mb-2'>
+              <Col lg={2}>
+                <Form.Label id="aText">Agree to terms of use</Form.Label>
+              </Col>
+              <Col lg={10}>
+                <Form.Check // prettier-ignore
+                  type={'checkbox'}
+                  id={'agree-terms'}
+                  label={'I agree to receive text messages from U-Vote'} required disabled
+                /> <Button variant='primary'>Review Terms</Button>
+                <Form.Text id="agreeHelp">
+                  * You must agree to terms of use to participate in U-Vote
+                </Form.Text>
               </Col>
             </Row>
             </Container>
