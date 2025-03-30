@@ -1,7 +1,8 @@
 import './App.css';
 import axios from 'axios';
 import config from './config';
-import { Alert, Col, Row, Form, Button, Container, Spinner, InputGroup } from "react-bootstrap";
+import Terms from './Terms';
+import { Alert, Col, Row, Form, Modal, Button, Container, Spinner, InputGroup } from "react-bootstrap";
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ReCAPTCHA from "react-google-recaptcha";
@@ -15,7 +16,7 @@ function Register() {
     "address_2": "",
     "city": "",
     "state": "",
-    "zipcode" : "",
+    "zipcode": "",
     "phone": "",
     "DOB": ""
   }
@@ -24,16 +25,17 @@ function Register() {
   const [currentVoter, setCurrentVoter] = useState(starterVoter);
   const [addressOptions, setAddressOptions] = useState([]);// used to show addresses as the user types 
   const [selectedAddress, setSelectedAddress] = useState();// the address the user chose
-  const [addressError,setAddressError] = useState("");// shows if no address was returned or error happens
+  const [addressError, setAddressError] = useState("");// shows if no address was returned or error happens
   const [showSelect, setShowSelect] = useState(false);// controls showing the address select
   const [selectedStreet1, setSelectedStreet1] = useState("");
   const [selectedStreet2, setSelectedStreet2] = useState("");
   const [normalizedStreet, setNormalizedStreet] = useState("");
   const [verified, setVerified] = useState(false);// used to handle selections and updates to address
   const [registerToken, setRegisterToken] = useState(null);
-  const [showError,setShowError] = useState(false);
-  const [errorMsg,setErrorMsg] = useState("");
-
+  const [showError, setShowError] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
+  const [agree, setAgree] = useState(false); 
+  const [modalShow, setModalShow] = useState(false);
   // const [registered, setRegistered] = useState(false);//to represent that the voter has not registered
   const navigate = useNavigate();
   // for captcha
@@ -46,14 +48,14 @@ function Register() {
       setSelectedStreet2(addressOptions[0].secondary);
       setNormalizedStreet(addressOptions[0].streetLine);// this will be the value we use in the registration
       let streetInput = document.getElementById('address1');
-      if(streetInput && streetInput.value){
+      if (streetInput && streetInput.value) {
         streetInput.value = addressOptions[0].streetLine;
       }
       //setShowSelect(false);
       setVerified(true);
     }
 
-    if(addressOptions && addressOptions.length === 0){
+    if (addressOptions && addressOptions.length === 0) {
       setSelectedAddress("")
       setSelectedStreet1("");
       setSelectedStreet2("");
@@ -73,19 +75,19 @@ function Register() {
 
     var payload = {};
     payload['token'] = captchaToken;
-    try{
+    try {
       let response = await axios.post(`${config.apiBaseUrl}/register/check-bot`, payload);//await axios.post("https://vote.u-vote.us/register", formData);
 
       if (response.status === 200 && response.data) {
-        setRegisterToken(response.data.regToken); 
+        setRegisterToken(response.data.regToken);
         setDisabled(false);
       } else {
         setDisabled(true);
       }
-    }catch(err){
+    } catch (err) {
       setDisabled(true);
     }
-   
+
 
   }
 
@@ -105,11 +107,11 @@ function Register() {
       let res = await axios.post(`${config.apiBaseUrl}/address`, payload, { withCredentials: true });
       if (res.status === 200) {
         const addressArr = res.data.result;
-        if(Array.isArray(addressArr) && addressArr.length > 0){
+        if (Array.isArray(addressArr) && addressArr.length > 0) {
           setAddressOptions(addressArr);
           setAddressError("");
           formCheck.classList.remove('address-check');
-        }else{
+        } else {
           setAddressError("No results returned, please try again");
           setAddressOptions([]);
         }
@@ -120,7 +122,7 @@ function Register() {
     } catch (err) {
       formCheck.classList.add('address-check');
       setAddressError("Error finding address");
-      
+
     }
 
   }
@@ -134,13 +136,13 @@ function Register() {
 
     const form = document.getElementById('registerForm');
     const isValid = form.checkValidity();
-    
+
     //check the disabled fields to make sure they have real values
     const city = form.querySelector('#city');
     const state = form.querySelector('#state');
     const zipcode = form.querySelector('#zipcode');
 
-     //check the disabled fields to make sure they have real values
+    //check the disabled fields to make sure they have real values
     if (city.value.length < 2 || state.value.length < 2 || zipcode.value.length < 5) {
       setShowError(true);
       setErrorMsg("enter address and select verify address");
@@ -149,8 +151,8 @@ function Register() {
     }
 
 
-    if(!registerToken){
-      return; 
+    if (!registerToken) {
+      return;
     }
 
     if (isValid) {
@@ -158,7 +160,8 @@ function Register() {
       var formFields = form.querySelectorAll('.form-control');
       var genderSelect = form.querySelector('#gender');
       var idFile = form.querySelector("#idFile")
-      var selfyFile = form.querySelector("#selfyFile")
+      var selfyFile = form.querySelector("#selfyFile");
+      var agreeCheck = form.querySelector("#agree");
 
       var formData = new FormData();
       for (let i = 0; i < formFields.length; i++) {
@@ -177,6 +180,7 @@ function Register() {
       formData.append('idFile', idFile.files[0]);
       formData.append('selfyFile', selfyFile.files[0]);
       formData.append('regToken', registerToken);// received from captcha challenges
+      formData.append('agree',agreeCheck.checked);
       try {
         setLoading(true)
         let res = await axios.post(`${config.apiBaseUrl}/register`, formData, { withCredentials: true });//await axios.post("https://vote.u-vote.us/register", formData);
@@ -203,7 +207,7 @@ function Register() {
         })
 
       }
-    }else{
+    } else {
       form.classList.add('invalid');
       setShowError(true);
       setErrorMsg('Please fill out the items in red')
@@ -212,6 +216,7 @@ function Register() {
   }
   return (
     <Container fluid="md">
+
       {loading ? (<Spinner></Spinner>) : (
         <>
           <h2>Register for a U-Vote Key</h2>
@@ -219,7 +224,7 @@ function Register() {
           <hr className='separator'></hr>
 
           <Form id="registerForm">
-          <h4>Step 1: Enter Your Info</h4>
+            <h4>Step 1: Enter Your Info</h4>
             <Row className='mb-2'>
               <Col lg={2} md={12}>
                 <Form.Label id="aFirst" >First</Form.Label>
@@ -290,183 +295,183 @@ function Register() {
                 </Form.Select>
               </Col>
             </Row>
-            <hr className='separator'/>
-            
+            <hr className='separator' />
+
             <h4>Step 2: Verify Address</h4>
-            <Container fluid  className='formSection'>
-            <Row className='mb-2'>
-              <Col lg={2}>
-                <Form.Label id="aAddress1" >Address</Form.Label>
-              </Col>
-              <Col lg={10} className='address-check'>
-                <InputGroup>
-                <Form.Control id="address1" name="address1" lg={6} type="text" maxLength={75} placeholder="enter and select your address" onChange={(e) => {
-                    
-                     if(verified && normalizedStreet !== e.currentTarget.value){
-                      setAddressOptions([]);
-                     }
-                     else{
-                      setSelectedStreet1(e.currentTarget.value)
-                     }
-                     
-                 
-                }} value={selectedStreet1} required /> 
-                <Button id="verifyAddress" variant={(verified) ? 'success' : 'warning'} onClick={() => {
-                  // need to get the value of the current street address field
-                  let streetAddress = document.getElementById('address1');
-                  if(streetAddress){
-                    const myStreet = streetAddress.value
-                    checkAddress(`${myStreet}`)
-                  }
-                  
-                }} >{(verified) ? (<>Verified <img alt="check mark for verified address" src="check-square.svg" /></>) : (<>Verify <img alt="check mark for verified address" src="exclamation-triangle.svg" /></>)} </Button>
-                </InputGroup>
-              </Col>
-            </Row>
-            {showSelect ? (
-            <><Row>
-              </Row>
-                <Col lg={{span:10,offset:2}}>
-                <Alert id="alertVerified" key={"primary"} variant={"primary"}>
-                  Select a verified address below
-                </Alert>
-                </Col>
+            <Container fluid className='formSection'>
               <Row className='mb-2'>
-              <Col lg={2}>
-                <Form.Label id="verifiedAddress" >Verified Address:</Form.Label>
-              </Col>
-              <Col lg={10}>
-                <Form.Select id="address" name="address" lg={6} type="text" minLength={2} placeholder="enter and select your address" onChange={(e) => {
-                  
-                  setSelectedAddress(addressOptions[e.target.value]);
-                  if (addressOptions[e.target.value].streetLine) {
-                    setSelectedStreet1(addressOptions[e.target.value].streetLine);
-                    setNormalizedStreet(addressOptions[e.target.value].streetLine)
-                    setSelectedStreet2(addressOptions[e.target.value].secondary);
-                    let streetInput = document.getElementById('address1');
-                    if(streetInput && streetInput.value){
-                      streetInput.value = addressOptions[0].streetLine;
-                    }
-                  }
+                <Col lg={2}>
+                  <Form.Label id="aAddress1" >Address</Form.Label>
+                </Col>
+                <Col lg={10} className='address-check'>
+                  <InputGroup>
+                    <Form.Control id="address1" name="address1" lg={6} type="text" maxLength={75} placeholder="enter and select your address" onChange={(e) => {
 
-                  setVerified(true);
+                      if (verified && normalizedStreet !== e.currentTarget.value) {
+                        setAddressOptions([]);
+                      }
+                      else {
+                        setSelectedStreet1(e.currentTarget.value)
+                      }
 
-                  //setShowSelect(false);
-                }}
-                 className={verified ? 'verified' : 'unverified'} required >
-                  {addressOptions.map((itm, ind) => {
-                    return <option key={ind} value={ind}>{itm.streetLine} {itm.secondary}</option>
-                  })}
-                </Form.Select>
-              </Col>
-            </Row></>) : (<></>)}
-            <Row className='mb-2'>
-              <Col lg={2}>
-                <Form.Label id="aAddress2" >Address Line 2</Form.Label>
-              </Col>
-              <Col lg={8} className='address-check'>
-                <Form.Control id="address2" name="address2" lg={6} type="text" placeholder="optional ex. apt 3a" onChange={(e) => {
-                  setSelectedStreet2(e.target.value);
 
-                }} value={selectedStreet2} disabled />
-              </Col>
-            </Row>
-            <Row><Col lg={{offset:2,span:8}} className='address-error'>{addressError}</Col></Row>
-            <Row className='mb-2'>
-              <Col lg={2}>
-                <Form.Label id="aCity">City</Form.Label>
-              </Col>
-              <Col lg={10}>
-                <Form.Control id="city" name="city" lg={6} type="text" placeholder="city" minLength={2} value={selectedAddress && selectedAddress.city ? selectedAddress.city : ""} required disabled />
-              </Col>
-            </Row>
+                    }} value={selectedStreet1} required />
+                    <Button id="verifyAddress" variant={(verified) ? 'success' : 'warning'} onClick={() => {
+                      // need to get the value of the current street address field
+                      let streetAddress = document.getElementById('address1');
+                      if (streetAddress) {
+                        const myStreet = streetAddress.value
+                        checkAddress(`${myStreet}`)
+                      }
 
-            <Row className='mb-2'>
-              <Col lg={2}>
-                <Form.Label id="aState" >State</Form.Label>
-              </Col>
-              <Col lg={4} className='mb-2'>
-                <Form.Control aria-label="State" name="state" id="state" placeholder='state' minLength={2} type="text" value={selectedAddress && selectedAddress.state ? selectedAddress.state : ""} required disabled />
-              </Col>
-              <Col lg={2}>
-                <Form.Label id="aZip" >Zipcode</Form.Label>
-              </Col>
-              <Col lg={4}>
-                <Form.Control aria-label="Zipcode" name="zipcode" id="zipcode" placeholder='zipcode' minLength={5} type="text" value={selectedAddress && selectedAddress.zipcode ? selectedAddress.zipcode : ""} required disabled />
-              </Col>
-            </Row>
+                    }} >{(verified) ? (<>Verified <img alt="check mark for verified address" src="check-square.svg" /></>) : (<>Verify <img alt="check mark for verified address" src="exclamation-triangle.svg" /></>)} </Button>
+                  </InputGroup>
+                </Col>
+              </Row>
+              {showSelect ? (
+                <><Row>
+                </Row>
+                  <Col lg={{ span: 10, offset: 2 }}>
+                    <Alert id="alertVerified" key={"primary"} variant={"primary"}>
+                      Select a verified address below
+                    </Alert>
+                  </Col>
+                  <Row className='mb-2'>
+                    <Col lg={2}>
+                      <Form.Label id="verifiedAddress" >Verified Address:</Form.Label>
+                    </Col>
+                    <Col lg={10}>
+                      <Form.Select id="address" name="address" lg={6} type="text" minLength={2} placeholder="enter and select your address" onChange={(e) => {
+
+                        setSelectedAddress(addressOptions[e.target.value]);
+                        if (addressOptions[e.target.value].streetLine) {
+                          setSelectedStreet1(addressOptions[e.target.value].streetLine);
+                          setNormalizedStreet(addressOptions[e.target.value].streetLine)
+                          setSelectedStreet2(addressOptions[e.target.value].secondary);
+                          let streetInput = document.getElementById('address1');
+                          if (streetInput && streetInput.value) {
+                            streetInput.value = addressOptions[0].streetLine;
+                          }
+                        }
+
+                        setVerified(true);
+
+                        //setShowSelect(false);
+                      }}
+                        className={verified ? 'verified' : 'unverified'} required >
+                        {addressOptions.map((itm, ind) => {
+                          return <option key={ind} value={ind}>{itm.streetLine} {itm.secondary}</option>
+                        })}
+                      </Form.Select>
+                    </Col>
+                  </Row></>) : (<></>)}
+              <Row className='mb-2'>
+                <Col lg={2}>
+                  <Form.Label id="aAddress2" >Address Line 2</Form.Label>
+                </Col>
+                <Col lg={8} className='address-check'>
+                  <Form.Control id="address2" name="address2" lg={6} type="text" placeholder="optional ex. apt 3a" onChange={(e) => {
+                    setSelectedStreet2(e.target.value);
+
+                  }} value={selectedStreet2} disabled />
+                </Col>
+              </Row>
+              <Row><Col lg={{ offset: 2, span: 8 }} className='address-error'>{addressError}</Col></Row>
+              <Row className='mb-2'>
+                <Col lg={2}>
+                  <Form.Label id="aCity">City</Form.Label>
+                </Col>
+                <Col lg={10}>
+                  <Form.Control id="city" name="city" lg={6} type="text" placeholder="city" minLength={2} value={selectedAddress && selectedAddress.city ? selectedAddress.city : ""} required disabled />
+                </Col>
+              </Row>
+
+              <Row className='mb-2'>
+                <Col lg={2}>
+                  <Form.Label id="aState" >State</Form.Label>
+                </Col>
+                <Col lg={4} className='mb-2'>
+                  <Form.Control aria-label="State" name="state" id="state" placeholder='state' minLength={2} type="text" value={selectedAddress && selectedAddress.state ? selectedAddress.state : ""} required disabled />
+                </Col>
+                <Col lg={2}>
+                  <Form.Label id="aZip" >Zipcode</Form.Label>
+                </Col>
+                <Col lg={4}>
+                  <Form.Control aria-label="Zipcode" name="zipcode" id="zipcode" placeholder='zipcode' minLength={5} type="text" value={selectedAddress && selectedAddress.zipcode ? selectedAddress.zipcode : ""} required disabled />
+                </Col>
+              </Row>
             </Container>
-            <hr className='separator'/>
+            <hr className='separator' />
             <h4>Step 3: ID Check</h4>
             <Container fluid id="idFormSection" className='formSection'>
-            <Row>
-              <Col lg={12}><Alert className='img-warning' variant='warning'><div id="imgBlock"><img src="exclamation-lg.svg" /></div><div id="alertBlock">Images below are deleted once you are verified.</div></Alert></Col>
-            </Row>
-            <Row className="img-preview-wrapper" >
-              <Col lg={{ span: 4, offset: 2 }} className='step-one'>
-                <h3><strong>First:</strong> Take a picture of your ID</h3>
-              </Col>
-              <Col className='img-preview mt-2' lg={{ span: 4, offset: 2 }}>
-                <img id="previewImg" alt="preview of ID" src="" />
-              </Col>
-            </Row>
-            <Row className='mb-2'>
-              <Col lg={2}>
-                <Form.Label id="aFile">ID File:</Form.Label>
-              </Col>
-              <Col lg={10}>
-                <Form.Control type="file" id="idFile" accept='.jpeg, .jpg' onChange={(evt) => {
-                  let preview = document.getElementById('previewImg');
-                  preview.src = URL.createObjectURL(evt.target.files[0]);
-                  preview.onload = function () {
-                    URL.revokeObjectURL(preview.src) // free memory
-                  }
-                  preview.classList.add('showing')
-                }} required />
-              </Col>
+              <Row>
+                <Col lg={12}><Alert className='img-warning' variant='warning'><div id="imgBlock"><img src="exclamation-lg.svg" /></div><div id="alertBlock">Images below are deleted once you are verified.</div></Alert></Col>
+              </Row>
+              <Row className="img-preview-wrapper" >
+                <Col lg={{ span: 4, offset: 2 }} className='step-one'>
+                  <h3><strong>First:</strong> Take a picture of your ID</h3>
+                </Col>
+                <Col className='img-preview mt-2' lg={{ span: 4, offset: 2 }}>
+                  <img id="previewImg" alt="preview of ID" src="" />
+                </Col>
+              </Row>
+              <Row className='mb-2'>
+                <Col lg={2}>
+                  <Form.Label id="aFile">ID File:</Form.Label>
+                </Col>
+                <Col lg={10}>
+                  <Form.Control type="file" id="idFile" accept='.jpeg, .jpg' onChange={(evt) => {
+                    let preview = document.getElementById('previewImg');
+                    preview.src = URL.createObjectURL(evt.target.files[0]);
+                    preview.onload = function () {
+                      URL.revokeObjectURL(preview.src) // free memory
+                    }
+                    preview.classList.add('showing')
+                  }} required />
+                </Col>
 
-            </Row>
+              </Row>
 
-            <Row className="img-preview-wrapper" >
-              <Col lg={{ span: 4, offset: 2 }} className='step-two'>
-                <h3><strong>Next:</strong> Take a selfy</h3>
-              </Col>
-              <Col className='img-preview selfy mt-2' lg={{ span: 4, offset: 2 }}>
-                <img id="selfyImg" alt="selfy preview" src="" />
-              </Col>
-            </Row>
-            <Row>
-              <Col lg={2}>
-                <Form.Label id="aFile" >Selfy File:</Form.Label>
-              </Col>
-              <Col lg={10}>
+              <Row className="img-preview-wrapper" >
+                <Col lg={{ span: 4, offset: 2 }} className='step-two'>
+                  <h3><strong>Next:</strong> Take a selfy</h3>
+                </Col>
+                <Col className='img-preview selfy mt-2' lg={{ span: 4, offset: 2 }}>
+                  <img id="selfyImg" alt="selfy preview" src="" />
+                </Col>
+              </Row>
+              <Row>
+                <Col lg={2}>
+                  <Form.Label id="aFile" >Selfy File:</Form.Label>
+                </Col>
+                <Col lg={10}>
 
-                <Form.Control type="file" id="selfyFile" accept='.jpeg, .jpg' onChange={(evt) => {
-                  let preview = document.getElementById('selfyImg');
-                  preview.src = URL.createObjectURL(evt.target.files[0]);
-                  preview.onload = function () {
-                    URL.revokeObjectURL(preview.src) // free memory
-                  }
-                  preview.classList.add('showing')
-                }} required />
-              </Col>
-            </Row>
-            <Row className='mb-2'>
+                  <Form.Control type="file" id="selfyFile" accept='.jpeg, .jpg' onChange={(evt) => {
+                    let preview = document.getElementById('selfyImg');
+                    preview.src = URL.createObjectURL(evt.target.files[0]);
+                    preview.onload = function () {
+                      URL.revokeObjectURL(preview.src) // free memory
+                    }
+                    preview.classList.add('showing')
+                  }} required />
+                </Col>
+              </Row>
+            </Container>
+            <Row className='mt-2'>
               <Col lg={2}>
                 <Form.Label id="aText">Agree to terms of use</Form.Label>
               </Col>
               <Col lg={10}>
                 <Form.Check // prettier-ignore
                   type={'checkbox'}
-                  id={'agree-terms'}
-                  label={'I agree to receive text messages from U-Vote'} required disabled
-                /> <Button variant='primary'>Review Terms</Button>
+                  id={'agree'}
+                  label={'I agree to receive text messages from U-Vote'} onClick={(e)=> setModalShow(true)} checked={agree} required /> 
+                  <Button variant='primary' onClick={(e) => setModalShow(true)}>Review Terms</Button>
                 <Form.Text id="agreeHelp">
                   * You must agree to terms of use to participate in U-Vote
                 </Form.Text>
               </Col>
             </Row>
-            </Container>
             <Row className='mb-4 mt-4' >
               <ReCAPTCHA ref={recaptchaRef} sitekey={"6Le-QPIoAAAAAJT5-G3P009gn52wZR3TLLSBB3Fj"} onChange={() => checkCaptcha()} />
             </Row>
@@ -480,14 +485,28 @@ function Register() {
 
             </Row>
           </Form>
-                     
- 
         </>
 
       )}
+      <div
+        className="modal show"
+        style={{ display: 'block', position: 'initial' }}
+      >
+        <Modal show={modalShow}>
+          <Modal.Dialog>
+            <Modal.Header closeButton>
+              <Modal.Title>Terms of use</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <Terms setAgree={setAgree} setShow={setModalShow}></Terms>
+            </Modal.Body>
+          </Modal.Dialog>
+        </Modal>
+      </div>
 
       <hr></hr>
     </Container>
+
   );
 }
 
