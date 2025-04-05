@@ -36,6 +36,8 @@ function Register() {
   const [errorMsg, setErrorMsg] = useState("");
   const [agree, setAgree] = useState(false); 
   const [modalShow, setModalShow] = useState(false);
+
+  const handleClose = () => setModalShow(false);
   // const [registered, setRegistered] = useState(false);//to represent that the voter has not registered
   const navigate = useNavigate();
   // for captcha
@@ -492,7 +494,7 @@ function Register() {
         className="modal show"
         style={{ display: 'block', position: 'initial' }}
       >
-        <Modal show={modalShow}>
+        <Modal show={modalShow} onHide={handleClose}>
           <Modal.Dialog>
             <Modal.Header closeButton>
               <Modal.Title>Terms of use</Modal.Title>

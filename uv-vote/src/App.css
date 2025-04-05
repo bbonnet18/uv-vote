@@ -106,6 +106,7 @@ body {
   color: white;
 }
 
+
 .App-link {
   color: #61dafb;
 }
@@ -509,6 +510,15 @@ Form input.error {
   border-radius: 0 !important;
   margin-left: 10px;
 }
+.terms{
+  font-size: small;
+  
+}
+
+.terms-btn{
+  margin-left: 10px;
+}
+
 
 #textHelp {
   font-weight: 500;
