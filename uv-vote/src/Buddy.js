@@ -1,7 +1,8 @@
 import './App.css';
 import axios from 'axios';
 import config from './config';
-import { Alert, Col, Row, Form, Button, Container, Spinner, InputGroup } from "react-bootstrap";
+import Terms from './Terms';
+import { Alert, Col, Row, Form, Modal, Button, Container, Spinner, InputGroup } from "react-bootstrap";
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ReCAPTCHA from "react-google-recaptcha";
@@ -37,7 +38,10 @@ function Buddy() {
   const [showError,setShowError] = useState(false);
   const [errorMsg,setErrorMsg] = useState("");
   const [buddyError, setBuddyError] = useState("");
+  const [agree, setAgree] = useState(false); 
+  const [modalShow, setModalShow] = useState(false);
 
+  const handleClose = () => setModalShow(false);
   // const [registered, setRegistered] = useState(false);//to represent that the voter has not registered
   const navigate = useNavigate();
   // for captcha
@@ -186,6 +190,7 @@ function Buddy() {
       form.classList.remove('invalid');
       var formFields = form.querySelectorAll('.form-control');
       var genderSelect = form.querySelector('#gender');
+      var agreeCheck = form.querySelector("#agree");
 
       var formData = new FormData();
       for (let i = 0; i < formFields.length; i++) {
@@ -202,6 +207,7 @@ function Buddy() {
 
       formData.append('gender', genderSelect.value);
       formData.append('regToken', registerToken);// received from captcha challenges
+      formData.append('agree',agreeCheck.checked);
       try {
         setLoading(true)
         let res = await axios.post(`${config.apiBaseUrl}/register/buddy`, formData, { withCredentials: true });//await axios.post("https://vote.u-vote.us/register", formData);
@@ -470,6 +476,21 @@ function Buddy() {
                 }} >{(buddyVerified) ? (<>Verified <img alt="check for buddy code" src="check-square.svg" /></>) : (<span>Verify Buddy Code</span>)} </Button>
               </Col>
             </Row>
+            <Row className='mt-2'>
+              <Col lg={2}>
+                <Form.Label id="aText">Agree to terms of use</Form.Label>
+              </Col>
+              <Col lg={10}>
+                <Form.Check // prettier-ignore
+                  type={'checkbox'}
+                  id={'agree'}
+                  label={'I agree to receive text messages from U-Vote'} onClick={(e)=> setModalShow(true)} checked={agree} required /> 
+                  <Button variant='primary' onClick={(e) => setModalShow(true)}>Review Terms</Button>
+                <Form.Text id="agreeHelp">
+                  * You must agree to terms of use to participate in U-Vote
+                </Form.Text>
+              </Col>
+            </Row>
             <Row className='mb-4 mt-4' >
               <ReCAPTCHA ref={recaptchaRef} sitekey={"6Le-QPIoAAAAAJT5-G3P009gn52wZR3TLLSBB3Fj"} onChange={() => checkCaptcha()} />
             </Row>
@@ -486,6 +507,22 @@ function Buddy() {
         </>
 
       )}
+       <div
+        className="modal show"
+        style={{ display: 'block', position: 'initial' }}
+      >
+        <Modal show={modalShow} onHide={handleClose}>
+          <Modal.Dialog>
+            <Modal.Header closeButton>
+              <Modal.Title>Terms of use</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <Terms setAgree={setAgree} setShow={setModalShow}></Terms>
+            </Modal.Body>
+          </Modal.Dialog>
+        </Modal>
+      </div>
+
 
       <hr></hr>
     </Container>
