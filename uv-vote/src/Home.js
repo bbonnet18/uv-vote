@@ -16,6 +16,7 @@ function Home() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [isSaved, setIsSaved] = useState(false);// set to false and reset if cookie there
   const [showKey, setShowKey] = useState(false);// make key visible for export
+  const [showKeyEntry, setShowKeyEntry] = useState(false);// to show the actual key entry and validate box
   const [validVoter, setValidVoter] = useState(null);// used to show a message if voter is not valid
   const [checking, setChecking] = useState(false);// used to stop from multiple gets based on useEffect
   const [copyHelp, setCopyHelp] = useState("");// shows hints about the copy/paste key process
@@ -291,6 +292,10 @@ function Home() {
     setShowKey(!showKey);
   }
 
+  const toggleKeyEntry = () => {
+    setShowKeyEntry(!showKeyEntry);
+  }
+
 
   return (
     <Container fluid="md" className='mt-2'>
@@ -314,10 +319,10 @@ function Home() {
           </Col>
           <Col lg={{span:3, offset:3}} xs={6} className='float-end'>
             <div className="action-right">
-              <span>{isSaved === true ? 'Voter key saved ' : 'Enter a new voter key '}</span>
+              <span>Manage Voter Key </span>
               <Button id="showKeyBtn" variant='outline-light' onClick={() => {
                 showKeyBox();
-              }} ><img src={showKey === true ? "chevron-bar-down.svg" : "chevron-bar-up.svg"} alt='show voter key entry'></img> </Button>
+              }} ><img src={"key.svg"} alt='show voter key entry'></img> </Button>
             </div>
           </Col>
         </Row>
@@ -326,33 +331,24 @@ function Home() {
           <Form.Group className={showKey ? 'mb-1' : 'hide-key-area'} as={Col} lg={4} sm={8}>
             <Row>
               <Col lg={12}>
+              {isSaved === false ? (<h4>No Voter Key Found</h4>) : (<></>)}
               <Row>
-              <p>If you haven't received a voter key this quarter, click here to validate and receive a new key</p>
+              {isSaved === false ? (<p><strong>First time voting this quarter?</strong> Go to <a href="/validate" alt="validate to receive voter key">validate</a> and receive a new key.</p>) : (<></>)}
+              {isSaved === true ? (<div className='re-entry-warning'><strong>You already have a saved key. Only use this area if you want to clear your current key and re-enter a new key.</strong></div>) : (<div>Enter a new voter key. Check your recent text messages from U-Vote to find your latest voter key. If it's been a while, you'll need to re-validate and get a new key.</div>)}
+              <p><strong>Already have a current voter key?</strong> Click to enter it <Button id="showKeyEntry" variant='outline-info' className='btn-sm' onClick={() => {
+                toggleKeyEntry();
+              }}>enter key</Button></p>
               </Row>
-              <Row className='mb-2'>
-                <Col sm={4}>
-                <Button variant='info' onClick={(e)=>navigate('/validate')}>Validate</Button>
-                </Col>
-              </Row>
+              {showKeyEntry ? (  <Row>
+              <InputGroup className='mb-1'>
+                <Form.Control aria-label='voter key' aria-describedby='voter key' id="voterKey" name="voterKey" type="text" pattern="([A-Za-z0-9]){10}v{1}([0-9])+" placeholder="paste in your voter key" required />
+                <Button id="verifyBtn" className='float-end' variant='outline-primary' onClick={() => checkVoter()}>Verify Key</Button>
+              </InputGroup>
+            </Row>):(<></>)}
               </Col>
               
             </Row>
-            <Row>
-              <InputGroup className='mb-1'>
-                <Form.Control aria-label='voter key' aria-describedby='voter key' id="voterKey" name="voterKey" type="text" pattern="([A-Za-z0-9]){10}v{1}([0-9])+" placeholder="paste in your voter key" required />
-                {(voterKey && voterKey.length > 0) ? (<Button id="copyBtn" className='float-end' variant='outline-primary' onClick={async () => { await copyToClipboard(); }}>Copy</Button>) : (<Button id="clipboardBtn" className='float-end' variant='outline-primary' onClick={async () => { await getClipboard(); }}>Paste</Button>)}
-              </InputGroup>
-            </Row>
-            <Row>
-              {isSaved === true ? (<div className='re-entry-warning'><strong>You already have a saved key. Only use this area if you want to clear your current key and re-enter a new key.</strong></div>) : (<div>Enter a new voter key. Check your recent text messages from U-Vote to find your latest voter key. If it's been a while, you'll need to re-validate and get a new key.</div>)}
-            </Row>
-            <Row>
-              <Col lg={12} sm={12}>
-
-                <Button id='verifyBtn' variant={isSaved === true ? 'outline-danger' : 'outline-primary'} onClick={() => checkVoter()}>Verify Key</Button>
-                <div id="copyHelp" className='copy-help'>{copyHelp}</div>
-              </Col>
-            </Row>
+           
           </Form.Group>
         </Row>
 

@@ -1,6 +1,6 @@
 import './App.css';
 
-import { Container, Col, Row, Card,} from "react-bootstrap";
+import { Container, Col, Row, Card} from "react-bootstrap";
 
 function Info() {
 

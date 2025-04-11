@@ -287,7 +287,7 @@ function Buddy() {
                 <Form.Label id="aDOB">DOB</Form.Label>
               </Col>
               <Col lg={10}>
-                <Form.Control id="DOB" name="DOB" size="lg" type="text" pattern='(0[1-9]|1[1,2,0])\/(0[1-9]|[12][0-9]|3[01])\/(19|20)\d{2}' min={18} placeholder="MM/DD/YYYY" defaultValue={currentVoter.DOB} required />
+                <Form.Control id="DOB" name="DOB" size="lg" type="text" pattern='(0[1-9]|1[1,2,0])\/(0[1-9]|[12][0-9]|3[01])\/(19|20)\d{2}' maxLength={10} minLength={10} placeholder="MM/DD/YYYY" defaultValue={currentVoter.DOB} required />
                 <Form.Text muted>
                   You must be 18 or older
                 </Form.Text>
@@ -484,7 +484,10 @@ function Buddy() {
                 <Form.Check // prettier-ignore
                   type={'checkbox'}
                   id={'agree'}
-                  label={'I agree to receive text messages from U-Vote'} onClick={(e)=> setModalShow(true)} checked={agree} required /> 
+                  label={'I agree to receive text messages from U-Vote'} onClick={(e)=> setModalShow(true)} checked={agree} onChange={(e) => {
+                    let checkbox = e.currentTarget;
+                    checkbox.checked = agree; 
+                  }}  required /> 
                   <Button variant='primary' onClick={(e) => setModalShow(true)}>Review Terms</Button>
                 <Form.Text id="agreeHelp">
                   * You must agree to terms of use to participate in U-Vote

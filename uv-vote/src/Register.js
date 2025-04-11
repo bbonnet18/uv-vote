@@ -262,7 +262,7 @@ function Register() {
                 <Form.Label id="aDOB">DOB</Form.Label>
               </Col>
               <Col lg={10}>
-                <Form.Control id="DOB" name="DOB" size="lg" type="text" pattern='(0[1-9]|1[1,2,0])\/(0[1-9]|[12][0-9]|3[01])\/(19|20)\d{2}' min={18} placeholder="MM/DD/YYYY" defaultValue={currentVoter.DOB} required />
+                <Form.Control id="DOB" name="DOB" size="lg" type="text" pattern='(0[1-9]|1[1,2,0])\/(0[1-9]|[12][0-9]|3[01])\/(19|20)\d{2}' maxLength={10} minLength={10} placeholder="MM/DD/YYYY" defaultValue={currentVoter.DOB} required />
                 <Form.Text muted>
                   You must be 18 or older
                 </Form.Text>

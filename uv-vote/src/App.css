@@ -24,6 +24,9 @@ baby blue: #B1D4E0
   position: relative;
   float: right;
 }
+.action-right button{
+  padding:5px !important;
+}
 
 #alertVerified {
   padding: 5px 15px;
