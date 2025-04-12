@@ -467,10 +467,10 @@ function Register() {
                 <Form.Check // prettier-ignore
                   type={'checkbox'}
                   id={'agree'}
-                  label={'I agree to receive text messages from U-Vote'} onClick={(e)=> setModalShow(true)} checked={agree} required /> 
+                  label={'I agree to the U-Vote terms of service'} onClick={(e)=> setModalShow(true)} checked={agree} required /> 
                   <Button variant='primary' onClick={(e) => setModalShow(true)}>Review Terms</Button>
                 <Form.Text id="agreeHelp">
-                  * You must agree to terms of use to participate in U-Vote
+                  * You must agree to terms of service to participate in U-Vote
                 </Form.Text>
               </Col>
             </Row>
@@ -497,7 +497,7 @@ function Register() {
         <Modal show={modalShow} onHide={handleClose}>
           <Modal.Dialog>
             <Modal.Header closeButton>
-              <Modal.Title>Terms of use</Modal.Title>
+              <Modal.Title>Terms of Service</Modal.Title>
             </Modal.Header>
             <Modal.Body>
               <Terms setAgree={setAgree} setShow={setModalShow}></Terms>

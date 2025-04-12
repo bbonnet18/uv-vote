@@ -50,8 +50,8 @@ body {
   display: inline-block;
 }
 
-.address-check img {
-  /* width: 25px;
+/*.address-check img {
+   width: 25px;
   height: 25px;
   margin-left: -30px;
   display: inline; 
@@ -60,9 +60,9 @@ body {
   height: 40px;
   margin-left: -42px;
   display: inline;
-  margin-top: 5px;*/
+  margin-top: 5px;
 
-}
+}*/
 
 .alpha-mark {
 
@@ -134,9 +134,10 @@ body {
   background-color: #f6f6f6;
 }
 
-button {
-  border-radius: 0;
+button, .btn {
+  border-radius: 0 !important;
 }
+
 
 
 .call-out{
@@ -161,6 +162,27 @@ button {
   margin-left: auto;
   margin-right: auto;
 }
+
+.cookies{
+  padding: 1em 5em;
+  background-color: rgb(216, 216, 216, 0.95);
+  position: fixed;
+  bottom: 0;
+  z-index: 9999;
+}
+.cookies p{
+  margin-bottom: 5px;
+}
+
+.cookie-action{
+  display: inline-block;
+}
+
+.cookie-title{
+  height:20px; 
+  
+}
+
 
 #copyBtn {
   background-position: left;
@@ -243,32 +265,6 @@ Form input.error {
 
 :invalid .hide-key {
   display: none !important;
-}
-
-
-.nav ul{
-  margin-bottom: 0;
-  list-style: none;
-  padding-left: 0;
-}
-
-.nav ul li{
-  display: inline-block;
-  margin-right: 20px;
-  padding: 5px 0;
- 
-}
-
-.nav ul li a{
-  border-bottom: 3px solid rgba(12, 45, 72, 0.4);
-  padding-bottom: 5px;
-  text-decoration: none;
-  color:#000;
-}
-
-.nav ul li a.active{
-  border-bottom: 3px solid #0C2D48;
-  font-weight: 800;
 }
 
 
@@ -416,6 +412,41 @@ Form input.error {
 .nav-link {
   color: #000 !important;
 }
+.nav ul{
+  margin-bottom: 0;
+  list-style: none;
+  padding-left: 0;
+}
+
+.nav ul li{
+  display: inline-block;
+  margin-right: 20px;
+  padding: 5px 0;
+ 
+}
+
+.nav ul li a{
+  border-bottom: 3px solid rgba(12, 45, 72, 0.4);
+  padding-bottom: 5px;
+  text-decoration: none;
+  color:#000;
+}
+
+.nav ul li a.active{
+  border-bottom: 3px solid #0C2D48;
+  font-weight: 800;
+}
+
+.no-voter{
+  border-bottom: 1px solid red;
+  text-align: center;
+  padding-bottom: 5px;
+}
+
+.no-voter img{
+  width:30px;
+  margin-right: 10px;
+}
 
 #registerForm label {
   font-size: large;
@@ -486,6 +517,12 @@ Form input.error {
 #showKeyBtn img {
   width: 25px;
   height: 25px;
+}
+
+#showKeyEntry{
+  padding: 0 !important;
+  margin-top: 0 !important;
+  font-weight: bold;
 }
 
 .show-captcha {
@@ -563,6 +600,11 @@ Form input.error {
 
 #voterKey {
   border: 1px black;
+}
+
+.voter-key{
+  background-color: antiquewhite;
+  padding: 10px;
 }
 
 

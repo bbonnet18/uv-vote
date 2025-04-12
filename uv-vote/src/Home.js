@@ -2,8 +2,9 @@ import './App.css';
 import { useState, useEffect } from 'react';
 import { useSearchParams } from "react-router-dom";
 import axios from "axios";
-import { Form, Alert, Col, InputGroup, Row, Button, Container, Spinner } from "react-bootstrap";
+import { Form, Alert, Col, InputGroup, Row, Button, Link, Container, Spinner } from "react-bootstrap";
 import { useNavigate } from 'react-router-dom';
+import cookies from './cookies';
 import VoteList from './VoteList';
 import config from './config';
 
@@ -18,8 +19,6 @@ function Home() {
   const [showKey, setShowKey] = useState(false);// make key visible for export
   const [showKeyEntry, setShowKeyEntry] = useState(false);// to show the actual key entry and validate box
   const [validVoter, setValidVoter] = useState(null);// used to show a message if voter is not valid
-  const [checking, setChecking] = useState(false);// used to stop from multiple gets based on useEffect
-  const [copyHelp, setCopyHelp] = useState("");// shows hints about the copy/paste key process
   const keyPattern = /([A-Za-z0-9]){10}v{1}([0-9])+/i //  /[a-z0-9]+-[a-z0-9]+-[a-z0-9]+-[a-z0-9]+-[a-z0-9]+/g;
   const [showError,setShowError] = useState(false);
   const [errorMsg,setErrorMsg] = useState("");
@@ -51,7 +50,7 @@ function Home() {
       })
     } else {
       // if the token is there, attempt to get votes
-      let tokenCookie = getCookie('voterToken');
+      let tokenCookie = cookies.getCookie('voterToken');
       if (tokenCookie) {
 
         getVotes();
@@ -66,89 +65,6 @@ function Home() {
 
   }, [])
 
-  // check the voter's clipboard and paste in the value if it fits the format
-
-  async function getClipboard() {
-    if (window.navigator && window.navigator.clipboard) {
-
-      const clipboardData = await window.navigator.clipboard.readText();
-      if (clipboardData) {
-        // get the key and put it in the key box
-        if (keyPattern.test(clipboardData)) {
-          const matches = clipboardData.match(keyPattern);
-          const key = matches[0];
-          var keyBox = document.getElementById('voterKey');
-          keyBox.value = key;
-          setVoterKey(key);
-          return key;
-        }
-
-      }
-    }
-  }
-
-
-  async function copyToClipboard() {
-    try {
-
-      const keyBox = document.getElementById('voterKey');
-      let key = "";
-      if (keyBox) {
-        key = keyBox.value;
-      }
-
-      if (key.length && keyPattern.test(key)) {
-        if (window.navigator && window.navigator.clipboard) {
-          const cb = window.navigator.clipboard;
-          const isCopied = await cb.writeText(key);
-          setCopyHelp('key copied to the clipboard.')
-
-        }
-
-
-      } else {
-        setCopyHelp('unable to copy key to the clipboard');
-      }
-
-    } catch (err) {
-      setCopyHelp('Error - unable to copy key to the clipboard');
-    }
-
-    let myHelp = document.getElementById('copyHelp');
-    if (myHelp.classList.contains('fadeOut')) {
-      myHelp.classList.remove('fadeOut');
-    }
-    setTimeout(() => {
-      myHelp.classList.add('fadeOut');
-    }, 300)
-
-  }
-
-
-
-  // save the key for next time
-  //  const clearKey = ()=>{
-  //     document.cookie = "voterToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-  //     setIsSaved(false);
-  //     setVotes([{}])
-
-  // }
-
-  function getCookie(cname) {
-    let name = cname + "=";
-    let decodedCookie = decodeURIComponent(document.cookie);
-    let ca = decodedCookie.split(';');
-    for (let i = 0; i < ca.length; i++) {
-      let c = ca[i];
-      while (c.charAt(0) == ' ') {
-        c = c.substring(1);
-      }
-      if (c.indexOf(name) == 0) {
-        return c.substring(name.length, c.length);
-      }
-    }
-    return "";
-  }
 
 
   const checkVoter = async () => {
@@ -204,7 +120,7 @@ function Home() {
     try {
 
       // get the JWT to use for auth
-      const authCookie = getCookie('voterToken') || "";
+      const authCookie = cookies.getCookie('voterToken') || "";
       if (authCookie === "") {
 
         navigate('/validate');
@@ -245,7 +161,7 @@ function Home() {
     try {
 
       // get the JWT to use for auth
-      const authCookie = getCookie('voterToken') || "";
+      const authCookie = cookies.getCookie('voterToken') || "";
       if (authCookie === "") {
         console.log('need to reauth')
       }
@@ -328,23 +244,28 @@ function Home() {
         </Row>
 
         <Row>
-          <Form.Group className={showKey ? 'mb-1' : 'hide-key-area'} as={Col} lg={4} sm={8}>
+          <Form.Group className={showKey ? 'mb-1' : 'hide-key-area'} as={Col} lg={12}>
             <Row>
-              <Col lg={12}>
-              {isSaved === false ? (<h4>No Voter Key Found</h4>) : (<></>)}
+              <Col lg={12} className="voter-key">
+              {isSaved === false ? (<h4 class="no-voter"><img src='exclamation-mark.png' alt="error -no voter"/>No Voter Key Found</h4>) : (<></>)}
               <Row>
-              {isSaved === false ? (<p><strong>First time voting this quarter?</strong> Go to <a href="/validate" alt="validate to receive voter key">validate</a> and receive a new key.</p>) : (<></>)}
-              {isSaved === true ? (<div className='re-entry-warning'><strong>You already have a saved key. Only use this area if you want to clear your current key and re-enter a new key.</strong></div>) : (<div>Enter a new voter key. Check your recent text messages from U-Vote to find your latest voter key. If it's been a while, you'll need to re-validate and get a new key.</div>)}
-              <p><strong>Already have a current voter key?</strong> Click to enter it <Button id="showKeyEntry" variant='outline-info' className='btn-sm' onClick={() => {
+              {isSaved === false ? (<><div><strong>New to U-Vote?</strong> Get a voter key by <a href="/getkey">registering</a>.</div><p><strong>First time voting this quarter?</strong> Go to <a href="/validate" alt="validate to receive voter key">validate</a> and receive a new key.</p></>) : (<></>)}
+              {isSaved === true ? (<div className='re-entry-warning'><strong>You already have a saved key. Only use this area if you want to clear your current key and re-enter a new key.</strong></div>) : (<div><p><strong>Already have a current voter key?</strong></p> <div>Check your recent text messages from U-Vote to find your latest voter key. If it's been a while, you'll need to <a href="/validate" alt="validate to receive voter key">validate</a> and get a new key.</div></div>)}
+             <div>If you have your key, click <Button id="showKeyEntry" variant='link' className='btn-sm mt-1' onClick={() => {
                 toggleKeyEntry();
-              }}>enter key</Button></p>
+              }}>here</Button> to enter it </div>
               </Row>
-              {showKeyEntry ? (  <Row>
+              <Row>
+                <Col lg={4} sm={8}>
+                {showKeyEntry ? (  <Row>
               <InputGroup className='mb-1'>
                 <Form.Control aria-label='voter key' aria-describedby='voter key' id="voterKey" name="voterKey" type="text" pattern="([A-Za-z0-9]){10}v{1}([0-9])+" placeholder="paste in your voter key" required />
                 <Button id="verifyBtn" className='float-end' variant='outline-primary' onClick={() => checkVoter()}>Verify Key</Button>
               </InputGroup>
             </Row>):(<></>)}
+                </Col>
+              </Row>
+              
               </Col>
               
             </Row>
@@ -356,14 +277,15 @@ function Home() {
       <Row>
         {showError ? (<Alert variant='danger'>{ errorMsg }</Alert>) : (<></>)}
       </Row>
-      <Row className="">
+      <Row>
         <Col lg={12}>
+        <>
           {loading ?
-            <div className='loading-centered'><Spinner animation="border" role="status">
+            (<div className='loading-centered'><Spinner animation="border" role="status">
               <span className="visually-hidden">Loading...</span>
-            </Spinner></div> : <VoteList votes={votes} register={registerToVote}></VoteList>
+            </Spinner></div>) : (isSaved === true  ? (<VoteList votes={votes} register={registerToVote}></VoteList>):(<></>))
           }
-
+        </>
         </Col>
 
       </Row>
