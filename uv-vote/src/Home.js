@@ -17,7 +17,7 @@ function Home() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [isSaved, setIsSaved] = useState(false);// set to false and reset if cookie there
   const [showKey, setShowKey] = useState(false);// make key visible for export
-  const [showKeyEntry, setShowKeyEntry] = useState(false);// to show the actual key entry and validate box
+  const [showKeyEntry, setShowKeyEntry] = useState(true);// to show the actual key entry and validate box
   const [validVoter, setValidVoter] = useState(null);// used to show a message if voter is not valid
   const keyPattern = /([A-Za-z0-9]){10}v{1}([0-9])+/i //  /[a-z0-9]+-[a-z0-9]+-[a-z0-9]+-[a-z0-9]+-[a-z0-9]+/g;
   const [showError,setShowError] = useState(false);

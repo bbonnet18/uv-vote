@@ -113,11 +113,10 @@ function Validate() {
   }
 
   return(<Container fluid="md">
-     <Row className='pt-1'>
-        <Col><span>New to U-Vote? Get a voter key by <a href="/getkey">registering</a>.</span></Col>
+    <h2 className='mt-1'>Validate to recieve your voter key</h2>
+    <Row className='pt-1'>
+        <p>Voters validate each quarter to receive a new voter key. If you're new to U-Vote, get started by <a href="/getkey">registering</a> for a voter key.</p>
     </Row>
-    <hr></hr>
-    <h2>Validate to recieve your voter key</h2>
    
   {loading ? (<Spinner></Spinner>) : (<>
     {confirm && confirm === true ? (<Row id="confirmation" className="confirm">
@@ -148,7 +147,7 @@ function Validate() {
     <Col sm={12} lg={10}>
         <Form.Label for="idsample">Last 4 of ID:</Form.Label>
         <Form.Control type="text" pattern="[A-Z0-9]{4,4}" maxlength="4" class="form-control" id="idsample" name="idsample"  aria-describedby="emailHelp" required /> 
-        <Form.Text id="idsampleHelp" class="form-text">This is the last <strong>4 characters</strong> the ID you used during registration</Form.Text>
+        <Form.Text id="idsampleHelp" class="form-text">This is the last <strong>4 characters</strong> of the ID you used during registration</Form.Text>
     </Col>
     </Row>
     <Row>
