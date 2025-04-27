@@ -364,7 +364,6 @@ Form input.error {
   padding: 0;
   overflow: hidden;
   margin: 0 10px;
-  border-radius: 5px;
   display: block;
   background-position: center;
   background-image: url('statue_of_liberty_banner.webp') ;
@@ -750,7 +749,6 @@ Form input.error {
     background-position: center;
     background-image: url('statue_of_liberty_banner_sm.webp');
     background-repeat: no-repeat;
-    border-radius: 5px;
     min-height: 200px;
   }
 

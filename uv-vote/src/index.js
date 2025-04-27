@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
+import About from './About';
 import Confirm from './Confirm';
 import Register from './Register';
 import Buddy from './Buddy';
@@ -26,6 +27,7 @@ const router = createBrowserRouter(
       <Route path="/registration-error" element={<Error />}/>
       <Route path="/validate" element={<Validate />}/>
       <Route path="/faqs" element={<FAQs />}/>
+      <Route path="/about" element={<About />}/>
     </Route>
   )
 )

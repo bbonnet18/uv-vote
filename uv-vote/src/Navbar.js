@@ -38,6 +38,7 @@ export default function Navbar() {
           <li><NavLink to="/votes">Your Votes</NavLink></li>
           {hasKey ? (<></>) : (<li><NavLink to="/getkey">Get a voter key</NavLink></li>)}
           <li><NavLink to="/faqs">FAQs</NavLink></li>
+          <li><NavLink to="/about">About</NavLink></li>
         </ul>
       </nav>
   )
