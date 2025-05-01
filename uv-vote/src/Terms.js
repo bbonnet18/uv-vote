@@ -37,7 +37,7 @@ function Terms({setAgree,setShow}){
 
         <h4>Creating Accounts</h4> 
 
-        <p>When you create an account or use another service to log in to the Service, you agree to maintain the security of your password and accept all risks of unauthorized access to any data or other information you provide to the Service.</p>
+        <p>When you create an account or use another service to log in to the Service, you agree to maintain the security of your voter key (i.e. your password) and accept all risks of unauthorized access to any data or other information you provide to the Service.</p>
 
         <p>If you discover or suspect any Service security breaches, please let us know as soon as possible.</p>
 

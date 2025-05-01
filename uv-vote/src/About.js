@@ -7,54 +7,33 @@ function About() {
 
 return(
 <>
-<div className="jumbotron text-center jumbotron-bg jumbotron-short pt-3">
+<div className="jumbotron text-center jumbotron-bg jumbotron-short jumbotron-about pt-3">
 </div>
 <Container className='mt-2'>
   <Row>
   
     <h2>About U-Vote</h2>
-    <p>U-Vote is a voting platform that exists to provide you, the <strong>Voter</strong>, with a direct and convenient way to engage with your elected officials at the local, state and federal level. U-Vote votes are non-binding, but address the number one reason we vote - to tell them how we feel!</p>
+    <p>U-Vote is for voters! We exist to bring value to you as a voter, no matter how you vote. The way we see it, there’s a big gap between all the issues we care about and the few we actually get to vote on, and we intend to shrink that gap! We want to empower voters, by flipping the script and letting you vote on lots of issues, then taking those results to your elected officials and the public. While votes in U-Vote are non-binding, they do send a big message on your behalf to your elected officials and the public. And, we keep it simple. Vote on your schedule, from your devices, and be heard on lots of topics all year.</p>
    
-  </Row>
-  
- <Row id="u-vote" className='pb-3 mb-2 alt-grey'> 
-    <Col lg={4} sm={12} className='mt-4'>
-    
-      <img id="modernPhone" src="to-do-list-736_640.png" /> 
-     
-    </Col>
-    <Col lg={8} sm={12}  className='mt-4'>
-    <h2>U-Vote is...</h2>
-    <p>While U-Vote helps in a lot of ways, there are a few that set it apart from the way we currently vote.</p>
-
-        <ul className='u-vote-description'>
-          <li>Convenient, you can do everything from any of your devices</li>
-          <li>Anonymous, like you would vote in a normal election, just online</li>
-          <li>Representative, we take voting data to your elected officials to make sure you are heard</li>
-          <li>Continuous, you don’t have to wait for a once-a-year election to be heard</li>
-        </ul>
-
-    <p>We can unlock true voter sentiment by making things easy and more widely reflective of voter positions on issues. We can then tap into vote results and provide a more complete picture, including where voters draw the line on certain policies and where we find common ground. With this data, we hope to improve the ability of elected officials to provide productive policies for the American People.</p>
-    </Col>
-
-</Row>
+  </Row>    
+  <h2>How we got started</h2>
 <Row id="elevate" className='mt-3'>
-  <Col sm={8}>
-    <h2>How we elevate your voice</h2>
-    <p>Imagine you only get once a year to make your voice heard by your elected officials. Now imagine that in that once a year moment, you can ony express yourself through yes or no answers or by checking a box for one candidate or another. Going further, now imagine that there are only a couple of issues or races, so you have to limit yourself to whatever is on the ballot.</p>
-    <p>Wow, that's pretty restrictive... but that's the reality we live in.</p> 
-    <ul>
-      <li>What if you wanted to provide some additonal feedback other than yes or no?</li>
-      <li>What if you didn't want any of the candidates that were on the ballot?</li>
-      <li>What if you wanted to express your voice on something that wasn't on the ballot at all?</li>
-    </ul>
-    <p>With U-Vote, you can make your voice heard on a range of issues over the course of the year. We also allow you to express yourself beyond the simple binary choices you see on a typical ballot. We can take the feedback you provide and bring it directly to elected officials and policy makers to make sure you're heard on the issues you care about.</p>
+  <Col lg={6} sm={12}>
+  <div className="mb-2 centered-img"><img id="voiceImg" src="ben-selfy.webp" /><figcaption>U-Vote booth at Arlington Courthouse Farmer's market</figcaption></div>
   </Col>
-  <Col sm={4}>
-    <div className="centered-img"><img id="voiceImg" src="interviewer_sm.jpeg" /></div>
+    <Col lg={6} sm={12}>
+    <p>Do problems like gerrymandering, term limits and money in politics frustrate you? Me too. I started my journey to create U-Vote out of frustration. It just didn’t seem right to me that issues with broad public support, like gerrymandering reform, campaign finance reform and term limits, never really get a vote. So I originally set out to tackle those specific issues.</p>
+    </Col>
+</Row>
+<Row>
+  <Col lg={6} sm={12}>
+  <p>Along the way, I recognized the ‘voting gap’ - i.e. we really don’t get to vote on much each year, but we care about a lot. I realized that we could give people the ability to vote all year long on those issues that never end up on the ballot. And with a software development and user experience background, I thought we could create a system that was simple, convenient and impactful for voters. And here we are, kicking off U-Vote beta testing!</p>
+  </Col>
+  <Col lg={6} sm={12}>
+  <div><img id="votingGap" src="voting_gap.png" /></div>
   </Col>
 </Row>
-<Row className='mt-3 alt-grey'>
+{/* <Row className='mt-3 alt-grey'>
   <Col lg={8} sm={12} className='mt-4'>
   <h3>How we handle your anonymity</h3>
   <Row>
@@ -82,11 +61,18 @@ return(
     </Figure.Caption>
   </Figure>
   </Col>
-</Row>
+</Row> */}
 <Row>
- 
+Issues like gerrymandering 
+Frustrations with current mechanisms to make voice heard
+Creating a system that’s easy, dynamic and powerful
+
+No special interests, no parties, no money
+
+All that’s missing is you
+
 </Row>
-<Row className='mt-3 mb-3'>
+{/* <Row className='mt-3 mb-3'>
 <Accordion>
         <Accordion.Item eventKey="0">
           <Accordion.Header>What's a voter key?</Accordion.Header>
@@ -111,7 +97,7 @@ return(
         </Accordion.Item>
       </Accordion>
 
-</Row>
+</Row> */}
 
 </Container>
 </>

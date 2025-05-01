@@ -159,8 +159,8 @@ button, .btn {
 }
 
 .centered-img {
-  margin-left: auto;
-  margin-right: auto;
+  width: 400px;
+  text-align: left;
 }
 
 .cookies{
@@ -375,6 +375,10 @@ Form input.error {
 
 .jumbotron-short {
   max-height: 120px;
+}
+
+.jumbotron-about{
+  background-image: url('voting-location-2.webp') !important;
 }
 
 
@@ -594,7 +598,7 @@ Form input.error {
 }
 
 #voiceImg {
-  width: 400px;
+  width: 300px;
 }
 
 #voterKey {
@@ -605,8 +609,6 @@ Form input.error {
   background-color: antiquewhite;
   padding: 10px;
 }
-
-
 
 #voterKey:invalid {
   border: 2px red inset;
@@ -632,7 +634,10 @@ Form input.error {
   width: 25px;
 }
 
-
+#votingGap{
+  width:500px;
+  min-width: 400px;
+}
 
 #verifyAddress {
   color: white;
@@ -762,6 +767,8 @@ Form input.error {
 
   .centered-img {
     padding: 0 20%;
+    margin:auto;
+    text-align: center;
   }
   .video-facade{
     display: block;
@@ -779,8 +786,8 @@ Form input.error {
     margin-right: auto;
   }
   #voiceImg {
-    width: 213px;
-    height: 320px;
+    width: 300px;
+    /* height: 320px; */
   }
 }
 
