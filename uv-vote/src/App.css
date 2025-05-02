@@ -159,7 +159,7 @@ button, .btn {
 }
 
 .centered-img {
-  width: 400px;
+  width: 80%;
   text-align: left;
 }
 
@@ -237,6 +237,11 @@ button, .btn {
   display: block;
   margin-left: auto;
   margin-right: auto;
+
+}
+
+.figure-caption{
+  font-size: small;
 
 }
 
@@ -496,6 +501,10 @@ Form input.error {
   display:block;
 }
 
+#repGap{
+  text-align: center;
+  width: 80%
+}
 
 #root hr.nav-sep{
   margin:5px 0;
@@ -634,11 +643,6 @@ Form input.error {
   width: 25px;
 }
 
-#votingGap{
-  width:500px;
-  min-width: 400px;
-}
-
 #verifyAddress {
   color: white;
 }
@@ -672,6 +676,9 @@ Form input.error {
 
 .video-space{
   margin-left: 20px;
+}
+#votingGap{
+  width: auto;
 }
 
 @keyframes App-logo-spin {
@@ -766,7 +773,6 @@ Form input.error {
   }
 
   .centered-img {
-    padding: 0 20%;
     margin:auto;
     text-align: center;
   }
@@ -785,9 +791,8 @@ Form input.error {
     margin-left: auto;
     margin-right: auto;
   }
-  #voiceImg {
-    width: 300px;
-    /* height: 320px; */
+  #votingGap{
+    width: 100%;
   }
 }
 

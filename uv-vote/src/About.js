@@ -13,24 +13,30 @@ return(
   <Row>
   
     <h2>About U-Vote</h2>
-    <p>U-Vote is for voters! We exist to bring value to you as a voter, no matter how you vote. The way we see it, there’s a big gap between all the issues we care about and the few we actually get to vote on, and we intend to shrink that gap! We want to empower voters, by flipping the script and letting you vote on lots of issues, then taking those results to your elected officials and the public. While votes in U-Vote are non-binding, they do send a big message on your behalf to your elected officials and the public. And, we keep it simple. Vote on your schedule, from your devices, and be heard on lots of topics all year.</p>
+    <p>U-Vote is for voters! We exist to bring value to you as a voter, no matter how you vote. The way we see it, there’s a big gap between all the issues we care about and the few we actually get to vote on, and we intend to shrink that gap! We want to empower voters, by flipping the script and letting you vote on lots of issues, then taking those results to your elected officials and the public. While votes in U-Vote are non-binding, they do send a big message on your behalf. And, we keep it simple. Vote on your schedule, from your devices, and be heard on lots of topics all year.</p>
    
   </Row>    
   <h2>How we got started</h2>
 <Row id="elevate" className='mt-3'>
-  <Col lg={6} sm={12}>
-  <div className="mb-2 centered-img"><img id="voiceImg" src="ben-selfy.webp" /><figcaption>U-Vote booth at Arlington Courthouse Farmer's market</figcaption></div>
-  </Col>
-    <Col lg={6} sm={12}>
+ 
+  <div className="mb-2 centered-img"><img id="voiceImg" src="ben-selfy.webp" /><figcaption class="figure-caption">Founder Ben Bonnet at U-Vote booth <br/>at Arlington Courthouse Farmer's market</figcaption></div>
     <p>Do problems like gerrymandering, term limits and money in politics frustrate you? Me too. I started my journey to create U-Vote out of frustration. It just didn’t seem right to me that issues with broad public support, like gerrymandering reform, campaign finance reform and term limits, never really get a vote. So I originally set out to tackle those specific issues.</p>
-    </Col>
 </Row>
+<h2>The 'Representation Gap'</h2>
 <Row>
   <Col lg={6} sm={12}>
-  <p>Along the way, I recognized the ‘voting gap’ - i.e. we really don’t get to vote on much each year, but we care about a lot. I realized that we could give people the ability to vote all year long on those issues that never end up on the ballot. And with a software development and user experience background, I thought we could create a system that was simple, convenient and impactful for voters. And here we are, kicking off U-Vote beta testing!</p>
+  <p>Along the way, I recognized the <strong>'representation gap’</strong> - i.e. we really don’t get to vote on much each year, but we care about a lot. I realized that we could give people the ability to vote all year long on those issues that never end up on the ballot. And with a software development and user experience background, I thought we could create a system that was simple, convenient and impactful for voters. And here we are, kicking off U-Vote beta testing!</p>
+  <p>U-Vote is a response to the representation gap. We want to enable you to make your voice heard through <strong>simple, convenient and powerful actions</strong>.</p>
+  <p>Creating a system that’s easy, dynamic and driven to give voters more of a voice is what we're all about!</p>
+  <ul>
+    <li>No special interests,</li>
+    <li>no parties,</li> 
+    <li>no money</li>
+  </ul>
+  <p>All that’s missing is you</p>
   </Col>
   <Col lg={6} sm={12}>
-  <div><img id="votingGap" src="voting_gap.png" /></div>
+  <div><img id="votingGap" src="voting_gap.png" /><figcaption id='repGap' class="figure-caption">Diagram showing the 'representation gap'</figcaption></div>
   </Col>
 </Row>
 {/* <Row className='mt-3 alt-grey'>
@@ -62,16 +68,6 @@ return(
   </Figure>
   </Col>
 </Row> */}
-<Row>
-Issues like gerrymandering 
-Frustrations with current mechanisms to make voice heard
-Creating a system that’s easy, dynamic and powerful
-
-No special interests, no parties, no money
-
-All that’s missing is you
-
-</Row>
 {/* <Row className='mt-3 mb-3'>
 <Accordion>
         <Accordion.Item eventKey="0">
