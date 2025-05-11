@@ -1,0 +1,25 @@
+.threshold{
+    height: 100%;
+    background-image: url('./clock.png');
+    background-position-y: 15vh;
+    background-position-x: center;
+    /* background-color: #CCC; */
+    background-repeat: no-repeat;
+}
+
+@media screen and (max-width: 430px)  {
+    .threshold{
+        font-size: larger;
+        margin: 0;
+    }
+
+    canvas{
+        display:none !important;
+    }
+   
+    table{
+        font-size: medium !important;
+    }
+
+    
+}

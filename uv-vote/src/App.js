@@ -27,7 +27,7 @@ export default function App() {
 
   return (
     <>
-    <div className="icon-brand"><div className='container'><img src='u-vote-vector-base_70_notext.webp' alt="U-Vote" title="U-Vote" className='header-img'></img>U-Vote<div className='alpha-mark'>BETA</div></div></div>
+    <div className="icon-brand"><div className='container'><img src='logo64.webp' alt="U-Vote" title="U-Vote" className='header-img'></img>U-Vote<div className='alpha-mark'>BETA</div></div></div>
     <hr className='nav-sep'></hr>
     <Container className='p-0'>
       <Container className='top-nav'>

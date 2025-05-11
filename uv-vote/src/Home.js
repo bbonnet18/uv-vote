@@ -247,7 +247,7 @@ function Home() {
           <Form.Group className={showKey ? 'mb-1' : 'hide-key-area'} as={Col} lg={12}>
             <Row>
               <Col lg={12} className="voter-key">
-              {isSaved === false ? (<h4 class="no-voter"><img src='exclamation-mark.png' alt="error -no voter"/>No Voter Key Found</h4>) : (<></>)}
+              {isSaved === false ? (<h4 className="no-voter"><img src='exclamation-mark.png' alt="error -no voter"/>No Voter Key Found</h4>) : (<></>)}
               <Row>
               {isSaved === false ? (<><div><strong>New to U-Vote?</strong> Get a voter key by <a href="/getkey">registering</a>.</div><p><strong>First time voting this quarter?</strong> Go to <a href="/validate" alt="validate to receive voter key">validate</a> and receive a new key.</p></>) : (<></>)}
               {isSaved === true ? (<div className='re-entry-warning'><strong>You already have a saved key. Only use this area if you want to clear your current key and re-enter a new key.</strong></div>) : (<div><p><strong>Already have a current voter key?</strong></p> <div>Check your recent text messages from U-Vote to find your latest voter key. If it's been a while, you'll need to <a href="/validate" alt="validate to receive voter key">validate</a> and get a new key.</div></div>)}

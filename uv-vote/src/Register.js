@@ -467,7 +467,7 @@ function Register() {
                 <Form.Check // prettier-ignore
                   type={'checkbox'}
                   id={'agree'}
-                  label={'I agree to the U-Vote terms of service'} onClick={(e)=> setModalShow(true)} checked={agree} required /> 
+                  label={'I agree to the U-Vote terms of service'} onClick={(e)=> setModalShow(true)} checked={agree} onChange={(e)=>{}} required /> 
                   <Button variant='primary' onClick={(e) => setModalShow(true)}>Review Terms</Button>
                 <Form.Text id="agreeHelp">
                   * You must agree to terms of service to participate in U-Vote
