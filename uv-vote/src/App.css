@@ -456,6 +456,14 @@ Form input.error {
   margin-right: 10px;
 }
 
+.no-votes{
+  text-align: center;
+}
+.no-votes img{
+  width: 35px;
+  margin-right: 20px;
+}
+
 #registerForm label {
   font-size: large;
 }

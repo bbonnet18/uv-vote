@@ -31,6 +31,7 @@ function VoteList (props){
         setGroupLabels(groupLabelsObj); 
         
       }
+      
       setGroups(voteGroups);
       setLoading(false);
     },[props.votes])
@@ -51,7 +52,7 @@ function VoteList (props){
                 </tr></thead>
               <tbody>
               {
-                groups[itm] ? groups[itm].map((itm,ind)=>{
+               groups[itm] && groups[itm].length ? groups[itm].map((itm,ind)=>{
                   return (<tr key={itm.surveyId} className={itm.link === 'completed' ? 'vote-completed' : ''}> 
                   <td><img src={(itm.description && itm.description.length ? itm.description.trim():"ballot")+"_sm.png"} alt={itm.description + " type vote"} title={itm.description + " type vote"}></img> {itm.title}</td>
                   <td className='table-link-col'>{ loadingIds && loadingIds[itm.surveyId] ? (
@@ -69,14 +70,14 @@ function VoteList (props){
                     props.register(itm.surveyId)}
                   } alt='click or tap to register' title='click or tap to register' >Register</Button></span>)}</td>
                 </tr>)
-              }) : (<></>)}
+              }) : (<tr><td className='no-votes'><img src='./emoji-frown.svg' alt='no votes available' />No votes available - check back soon!</td><td></td></tr>)}
               </tbody>
               </>
               </Table>
               </Tab>
             )
           }):(<></>)}
-
+          
           </Tabs>
         </Container>
       );

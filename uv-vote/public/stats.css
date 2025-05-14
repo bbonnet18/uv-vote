@@ -7,6 +7,13 @@
     background-repeat: no-repeat;
 }
 
+.brand{
+    background-image: url('./logo64.webp');
+    background-position-y: 20px;
+    background-position-x: 20px; 
+    background-repeat: no-repeat;
+}
+
 @media screen and (max-width: 430px)  {
     .threshold{
         font-size: larger;
