@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import About from './About';
+import Conduit from './Conduit';
 import Confirm from './Confirm';
 import Register from './Register';
 import Buddy from './Buddy';
@@ -23,6 +24,7 @@ const router = createBrowserRouter(
       <Route path="/getkey" element={<Register />}/>
       <Route path="/buddy" element={<Buddy />}/>
       <Route path="/votes" element={<Home />}/>
+      <Route path="/actions" element={<Conduit />} />
       <Route path="/confirm" element={<Confirm />}/>
       <Route path="/registration-error" element={<Error />}/>
       <Route path="/validate" element={<Validate />}/>
