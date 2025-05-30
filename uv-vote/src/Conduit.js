@@ -38,8 +38,37 @@ const getGroups = async () => {
 }
 
 
+const getTopics = async () => {
+
+    try {
+
+        // get the JWT to use for auth
+        const authCookie = cookies.getCookie('voterToken') || "";
+        if (authCookie === "") {
+    
+          navigate('/validate');
+        }
+        // get the cookie and set the auth header
+        const reqOpts = {
+          headers: {
+            "Authorization": `Bearer ${authCookie}`
+          },
+          withCredentials: true
+        }
+    
+        const resObj = await axios.post(`${config.apiBaseUrl}/votes/my-topics`, {groupId:10}, reqOpts);
+        return resObj;
+    }catch(err){
+        return {}; 
+    }
+
+}
+
+
+
 return (<Container>
         <Button variant='success' onClick={async()=>await getGroups()}>Check Groups</Button>
+        <Button variant='success' onClick={async()=>await getTopics()}>Check Topics</Button>
     </Container>)
 
 
