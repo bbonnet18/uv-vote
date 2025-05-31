@@ -2,7 +2,9 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
+import Actions from './Actions';
 import About from './About';
+import Choices from './Choices';
 import Conduit from './Conduit';
 import Confirm from './Confirm';
 import Register from './Register';
@@ -24,7 +26,10 @@ const router = createBrowserRouter(
       <Route path="/getkey" element={<Register />}/>
       <Route path="/buddy" element={<Buddy />}/>
       <Route path="/votes" element={<Home />}/>
-      <Route path="/actions" element={<Conduit />} />
+      <Route path="/actions" element={<Actions />}>
+        <Route index element={<Choices />} />
+        <Route path="conduit" element={<Conduit/>} />
+      </Route>
       <Route path="/confirm" element={<Confirm />}/>
       <Route path="/registration-error" element={<Error />}/>
       <Route path="/validate" element={<Validate />}/>

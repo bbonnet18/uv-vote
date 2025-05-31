@@ -6,7 +6,7 @@ function VoteList (props){
   
     const [loadingIds,setLoadingIds] = useState({});
     const [groups,setGroups] = useState([]); // holds the voting groups
-    const [loading,setLoading] = useState(true);
+    const [loading,setLoading] = useState(false);
     const [groupLabels,setGroupLabels] = useState({});// holds the currently selected group
 
     useEffect(()=>{
@@ -42,7 +42,7 @@ function VoteList (props){
   {loading ? (<Spinner animation="border" role="status" className='loading-spinner'> <span className="visually-hidden">Loading...</span></Spinner>) : (<></>)}
           {(loading === false && groups) ? Object.keys(groups).map((itm,ind)=>{
            return (
-              <Tab eventKey={itm} title={itm}> 
+              <Tab eventKey={itm} title={itm} key={ind}> 
                 <Table key={ind} striped bordered hover>   
               <>
               <thead>
