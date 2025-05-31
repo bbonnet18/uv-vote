@@ -106,7 +106,9 @@ const getTopics = async () => {
 
 
 return (<Container fluid="md">
-        <Tabs>
+        <Tabs onSelect={(e)=>{
+          console.log('changed: ',e);
+        }}>
         {loading ? (<Spinner animation="border" role="status" className='loading-spinner'> <span className="visually-hidden">Loading...</span></Spinner>) : (<></>)}
           {(loading === false && groups) ? Object.keys(groups).map((itm,ind)=>{
            return (
