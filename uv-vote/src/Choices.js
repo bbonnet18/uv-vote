@@ -5,11 +5,11 @@ import { Button, Container, Row, Col, Card } from "react-bootstrap";
 function Choices() {
 
     return (
-        <Container>
+        <Container className='choices'>
             <Row>
-                <Col lg={3} xs={6}>
-                    <Card >
-                        <Card.Img variant="top" src="holder.js/100px180" />
+                <Col lg={3} xs={6} className='mt-2'>
+                    <Card className='conduit' >
+                        <Card.Img className="conduit-img" variant="top" src="conduit.png" />
                         <Card.Body>
                             <Card.Title>Conduit</Card.Title>
                             <Card.Text>
@@ -19,25 +19,25 @@ function Choices() {
                         </Card.Body>
                     </Card>
                 </Col>
-                <Col lg={3} xs={6}>
-                    <Card >
-                        <Card.Img variant="top" src="holder.js/100px180" />
+                <Col lg={3} xs={6} className='mt-2'>
+                <Card className='conduit' >
+                        <Card.Img className="conduit-img" variant="top" src="connect.png" />
                         <Card.Body>
                             <Card.Title>Connect</Card.Title>
                             <Card.Text>
-                                Connect with candidates
+                                Connect with others 
                             </Card.Text>
-                            <NavLink to="/actions/conduit">Start connecting</NavLink>
+                            <NavLink to="/actions/conduit">Learn more</NavLink>
                         </Card.Body>
                     </Card>
                 </Col>
-                <Col lg={3} xs={6}>
-                    <Card >
-                        <Card.Img variant="top" src="holder.js/100px180" />
+                <Col lg={3} xs={6} className='mt-2'>
+                <Card className='conduit' >
+                        <Card.Img className="conduit-img" variant="top" src="solutions.png" />
                         <Card.Body>
                             <Card.Title>U-Vote Solutions Teams</Card.Title>
                             <Card.Text>
-                               Engage with other voters to solve problems in your community.
+                                Connect with others so we can solve problems 
                             </Card.Text>
                             <NavLink to="/actions/conduit">Learn more</NavLink>
                         </Card.Body>

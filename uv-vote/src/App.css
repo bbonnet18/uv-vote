@@ -163,6 +163,30 @@ button, .btn {
   text-align: left;
 }
 
+.choices{
+
+}
+
+.choices .card{
+  margin-top: 20px; 
+}
+
+.conduit{
+  background-color: #282c34;
+}
+.conduit.card .card-img-top{
+  background-color: #fff !important;
+}
+.conduit .card-body{
+  background-color: #f6f6f6;
+}
+
+.conduit .conduit-img{
+  width: 65% !important;
+  margin:auto;
+  padding: 10px;
+}
+
 .cookies{
   padding: 1em 5em;
   background-color: rgb(216, 216, 216, 0.95);
