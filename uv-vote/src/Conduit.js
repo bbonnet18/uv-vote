@@ -27,23 +27,29 @@ function Conduit() {
       };
 
       setLoading(true)
-      let checkGroups = await getGroups();
-      if (checkGroups) {
-        let keys = Object.keys(checkGroups.data);
-        keys.map((key) => {
-          if (key === 'state') {
-            conduitGroups.State = checkGroups.data[key];
+      try {
+        let checkGroups = await getGroups();
+        if (checkGroups) {
+          let keys = Object.keys(checkGroups.data);
+          keys.map((key) => {
+            if (key === 'state') {
+              conduitGroups.State = checkGroups.data[key];
+            }
+            if (key === 'city') {
+              conduitGroups.Local = checkGroups.data[key];
+            }
+            if (key === 'national') {
+              conduitGroups.National = checkGroups.data[key];
+            }
           }
-          if (key === 'city') {
-            conduitGroups.Local = checkGroups.data[key];
-          }
-          if (key === 'national') {
-            conduitGroups.National = checkGroups.data[key];
-          }
+          )
         }
-        )
+        setGroups(conduitGroups);
+        setLoading(false);
+      } catch (err) {
+        setLoading(false); 
       }
-      setGroups(conduitGroups);
+
       setLoading(false);
     }
 
@@ -51,14 +57,14 @@ function Conduit() {
 
   }, []);
 
-  useEffect(()=>{
-    const checkTopics = async ()=>{
+  useEffect(() => {
+    const checkTopics = async () => {
       await getTopics('Local');
     }
 
     checkTopics();
 
-  },[groups])
+  }, [groups])
 
 
   const getGroups = async () => {
@@ -113,10 +119,10 @@ function Conduit() {
         }
 
         const resObj = await axios.post(`${config.apiBaseUrl}/votes/my-topics`, { groupId: groups[group].gsid }, reqOpts);
-        if(resObj && resObj.data.Items){
-          let groupObj = {...groups};// set a new object to replace groups
+        if (resObj && resObj.data.Items) {
+          let groupObj = { ...groups };// set a new object to replace groups
           // unescape the topic if it was escaped
-          groupObj[group].topics = resObj.data.Items.map((itm)=>{
+          groupObj[group].topics = resObj.data.Items.map((itm) => {
             let unescapedTopic = unescape(itm.topic);
             itm.topic = unescapedTopic;
             return itm;
@@ -126,7 +132,7 @@ function Conduit() {
       }
 
     } catch (err) {
-      return; 
+      return;
     }
 
   }
@@ -172,7 +178,7 @@ function Conduit() {
       let groupName = e; 
       setCurrentGroup(groupName);
       let group = groups[groupName] || "";
-      if(group && group.hasOwnProperty('topics') === false){
+      if (group && group.hasOwnProperty('topics') === false) {
         await getTopics(groupName);
       }
       return;
