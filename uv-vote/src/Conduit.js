@@ -11,6 +11,7 @@ function Conduit() {
 
   const [groups, setGroups] = useState({});
   const [loading, setLoading] = useState(false);
+  const [currentGroup,setCurrentGroup] = useState("Local");
   const navigate = useNavigate();
 
   // get the set of groups if not already there
@@ -130,11 +131,46 @@ function Conduit() {
 
   }
 
+  const checkComment = async (groupId,topicId) => {
+    if(!groupId || !topicId){
+      return;
+    }
+    try{
+      const authCookie = cookies.getCookie('voterToken') || "";
+      if (authCookie === "") {
+
+        navigate('/validate');
+      }
+      // get the cookie and set the auth header
+      const reqOpts = {
+        headers: {
+          "Authorization": `Bearer ${authCookie}`
+        },
+        withCredentials: true
+      }
+
+      const resObj = await axios.post(`${config.apiBaseUrl}/votes/check-comment`, {
+        groupId:groupId,
+        topicId:topicId,
+      }, reqOpts);
+
+      if(resObj && resObj.data && resObj.data.hasCommented === true){
+        console.log('has commented');
+      }else{
+        console.log('no comments yet'); 
+      }
+
+    }catch(err){
+      console.error('Error: ',err); 
+    }
+  }
+
 
 
   return (<Container fluid="md">
     <Tabs onSelect={async (e) => {
       let groupName = e; 
+      setCurrentGroup(groupName);
       let group = groups[groupName] || "";
       if(group && group.hasOwnProperty('topics') === false){
         await getTopics(groupName);
@@ -152,7 +188,13 @@ function Conduit() {
              <><div>We have topics:</div>
              <ul>
              {groups[itm].topics.map((itm,ind) => {
-              return (<li key={ind}>{decodeURIComponent(itm.topic)}</li>)
+              return (<li key={ind}>{decodeURIComponent(itm.topic)} - <Button onClick={async (e)=>{
+                let topicId = itm.topicId;
+                let groupId = groups[currentGroup].gsid;
+                console.log('Group: ', groupId, ' Topic: ', topicId); 
+                let hasCommented = await checkComment(groupId,topicId);
+
+              }}>Check for comment</Button></li>)
              })}
              </ul>
              </>
