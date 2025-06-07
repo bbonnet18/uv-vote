@@ -181,10 +181,28 @@ button, .btn {
   background-color: #f6f6f6;
 }
 
+
 .conduit .conduit-img{
   width: 65% !important;
   margin:auto;
   padding: 10px;
+}
+.modal-body{
+  width:100%;
+  padding: 0 .5em !important;
+
+}
+.modal-body .comment{
+  width: 100%;
+  box-sizing: content-box;
+  padding: 0;
+}
+.modal-body  .danger{
+  color:red;
+}
+.modal-body .comment textarea{
+  width:100%;
+  min-height: 6em;
 }
 
 .cookies{
