@@ -1,7 +1,7 @@
 import './App.css';
 import { useState, useEffect } from 'react';
 import axios from "axios";
-import { Col, Row, Button, Container, Tab, Tabs, Spinner } from "react-bootstrap";
+import { Col, Alert, Row, Button, Container, Tab, Tabs, Spinner } from "react-bootstrap";
 import Comment from './Comment';
 import { useNavigate } from 'react-router-dom';
 import cookies from './cookies';
@@ -15,6 +15,16 @@ function Conduit() {
   const [currentGroup,setCurrentGroup] = useState("Local");
   const [currentTopic,setCurrentTopic] = useState(null);
   const [tryComment, setTryComment] = useState(false);
+  const [show, setShow] = useState(false); 
+  const [alertTitle, setAlertTitle] = useState('Success!')
+  const [alertMsg, setAlertMsg] = useState("");
+  const [alertType, setAlertType] = useState('success')
+  const [completedIds, setCompletedIds] = useState({}); 
+  const reason = {
+    'success' : 'Your comment was created successfully.',
+    'error':'There was an error creating your comment, please try again.',
+    'duplicate':'We already have a comment from this voter on this topic.'
+  }
   const navigate = useNavigate();
 
   // get the set of groups if not already there
@@ -62,7 +72,8 @@ function Conduit() {
 
   useEffect(() => {
     const checkTopics = async () => {
-      await getTopics('Local');
+      await getTopics();
+     
     }
 
     checkTopics();
@@ -121,6 +132,7 @@ function Conduit() {
           withCredentials: true
         }
 
+        let voterTopics = [];
         const resObj = await axios.post(`${config.apiBaseUrl}/votes/my-topics`, { groupId: groups[group].gsid }, reqOpts);
         if (resObj && resObj.data.Items) {
           let groupObj = { ...groups };// set a new object to replace groups
@@ -130,14 +142,55 @@ function Conduit() {
             itm.topic = unescapedTopic;
             return itm;
           });
+          voterTopics = groupObj[group].topics; 
           setGroups(groupObj);
         }
+        await checkComments(voterTopics);
       }
 
     } catch (err) {
       return;
     }
 
+  }
+
+
+  const checkComments = async (topics) => {
+     try{
+      
+      if(!topics){
+        return; 
+      }
+      let checkCompleted = [];// to hold array of promises 
+      // create promises for each 
+      if(topics && topics.length){
+        checkCompleted = topics.map(async (itm)=>{
+          return await checkComment(itm.groupId, itm.topicId);
+        })
+      }
+      if(checkCompleted.length){
+        let didComplete = await Promise.all(checkCompleted);
+
+
+        if(didComplete && didComplete.length){
+          let idMap = {};// to be filled with the completed Ids
+          didComplete.map((itm)=>{
+            if(itm && itm.groupId){
+              if(idMap[`group${itm.groupId}`]){
+                  idMap[`group${itm.groupId}`][`topic${itm.topicId}`] = itm.hasCommented;
+              }else{
+                idMap[`group${itm.groupId}`] = {};
+                idMap[`group${itm.groupId}`][`topic${itm.topicId}`] = itm.hasCommented;
+              }
+            }
+          })
+          setCompletedIds(idMap);
+        }
+      }
+
+      }catch(err){
+        console.log('no topics ')
+      }
   }
 
   const checkComment = async (groupId,topicId) => {
@@ -163,14 +216,14 @@ function Conduit() {
         topicId:topicId,
       }, reqOpts);
 
-      if(resObj && resObj.data && resObj.data.hasCommented === true){
-        console.log('has commented');
+      if(resObj && resObj.data){
+       return resObj.data;
       }else{
-        console.log('no comments yet'); 
+        return {};
       }
 
     }catch(err){
-      console.error('Error: ',err); 
+      return {};
     }
   }
 
@@ -202,16 +255,24 @@ function Conduit() {
       }, reqOpts);
 
       if(resObj && resObj.status === 200){
-        alert('completed: ',resObj.data.status);
+        setAlertType('success');
+        setAlertTitle('Success!');
+        setAlertMsg(reason.success);
       }else{
-        alert('error: ',resObj.data.status);
+        setAlertType('danger');
+        setAlertTitle('Voter already commented');
+        setAlertMsg(reason.duplicate);
       }
-      setTryComment(false)
+     
+      setTryComment(false);
+      setShow(true);
 
     }catch(err){
-      console.error('Error: ',err); 
-      alert('ERROR');
-      setTryComment(false)
+      setAlertType('danger');
+      setAlertTitle('Error');
+      setAlertMsg(reason.error);
+      setTryComment(false);
+      setShow(true);
     }
   }
 
@@ -252,6 +313,14 @@ function Conduit() {
              </ul>  
              <Button onClick={()=>setTryComment(!tryComment)}>Show Commment</Button>
              {tryComment ? (<Comment show={tryComment} hide={setTryComment} send={sendComment}></Comment>):("")}
+             {show ? (
+              <Alert className='mt-2' variant={alertType} onClose={() => setShow(false)} dismissible>
+        <Alert.Heading>{alertTitle}</Alert.Heading>
+        <p>
+          {alertMsg}
+        </p>
+      </Alert>
+             ):(<></>)}
              </>
             ):(<div>No topics yet</div>)}
           </Tab>
