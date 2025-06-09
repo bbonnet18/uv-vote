@@ -19,7 +19,7 @@ function Conduit() {
   const [alertTitle, setAlertTitle] = useState('Success!')
   const [alertMsg, setAlertMsg] = useState("");
   const [alertType, setAlertType] = useState('success')
-  const [completedIds, setCompletedIds] = useState({}); 
+  //const [completedIds, setCompletedIds] = useState({}); 
   const reason = {
     'success' : 'Your comment was created successfully.',
     'error':'There was an error creating your comment, please try again.',
@@ -72,8 +72,7 @@ function Conduit() {
 
   useEffect(() => {
     const checkTopics = async () => {
-      await getTopics();
-     
+      await getTopics('Local');
     }
 
     checkTopics();
@@ -132,20 +131,27 @@ function Conduit() {
           withCredentials: true
         }
 
-        let voterTopics = [];
         const resObj = await axios.post(`${config.apiBaseUrl}/votes/my-topics`, { groupId: groups[group].gsid }, reqOpts);
         if (resObj && resObj.data.Items) {
           let groupObj = { ...groups };// set a new object to replace groups
           // unescape the topic if it was escaped
-          groupObj[group].topics = resObj.data.Items.map((itm) => {
+          let voterTopics = resObj.data.Items.map((itm) => {
             let unescapedTopic = unescape(itm.topic);
             itm.topic = unescapedTopic;
             return itm;
           });
-          voterTopics = groupObj[group].topics; 
+          
+          let checkedTopics = await checkComments(voterTopics);
+
+          //voterTopics = groupObj[group].topics; 
+
+          groupObj[group].topics = checkedTopics;
+          
+
+
           setGroups(groupObj);
         }
-        await checkComments(voterTopics);
+        
       }
 
     } catch (err) {
@@ -161,33 +167,22 @@ function Conduit() {
       if(!topics){
         return; 
       }
-      let checkCompleted = [];// to hold array of promises 
+      let checkedTopics = [];// to hold array of promises 
       // create promises for each 
-      if(topics && topics.length){
-        checkCompleted = topics.map(async (itm)=>{
-          return await checkComment(itm.groupId, itm.topicId);
-        })
+      let topicCount = 0;
+      
+      while(topicCount < topics.length){
+        let itm = topics[topicCount]; 
+        let hasCompleted = await checkComment(itm.groupId, itm.topicId);
+        if(hasCompleted && hasCompleted.groupId){
+          
+            itm.hasCommented = hasCompleted.hasCommented;
+        } 
+        checkedTopics.push(itm); 
+        topicCount += 1; 
       }
-      if(checkCompleted.length){
-        let didComplete = await Promise.all(checkCompleted);
-
-
-        if(didComplete && didComplete.length){
-          let idMap = {};// to be filled with the completed Ids
-          didComplete.map((itm)=>{
-            if(itm && itm.groupId){
-              if(idMap[`group${itm.groupId}`]){
-                  idMap[`group${itm.groupId}`][`topic${itm.topicId}`] = itm.hasCommented;
-              }else{
-                idMap[`group${itm.groupId}`] = {};
-                idMap[`group${itm.groupId}`][`topic${itm.topicId}`] = itm.hasCommented;
-              }
-            }
-          })
-          setCompletedIds(idMap);
-        }
-      }
-
+     
+        return checkedTopics;
       }catch(err){
         console.log('no topics ')
       }
@@ -279,7 +274,9 @@ function Conduit() {
 
 
   return (<Container fluid="md">
-    <Tabs onSelect={async (e) => {
+     {loading ? (<div className="comment-loading loading-centered"><Spinner animation="border" role="status" className='loading-spinner'> <span className="visually-hidden">Loading...</span></Spinner></div>) : (
+
+      <Tabs onSelect={async (e) => {
       let groupName = e; 
       setCurrentGroup(groupName);
       let group = groups[groupName] || "";
@@ -289,7 +286,7 @@ function Conduit() {
       return;
 
     }}>
-      {loading ? (<Spinner animation="border" role="status" className='loading-spinner'> <span className="visually-hidden">Loading...</span></Spinner>) : (<></>)}
+     
       {(loading === false && groups) ? Object.keys(groups).map((itm, ind) => {
         return (
           <Tab eventKey={itm} title={itm} key={ind}>
@@ -301,14 +298,11 @@ function Conduit() {
              <><div>We have topics:</div>
              <ul>
              {groups[itm].topics.map((itm,ind) => {
-              return (<li key={ind}>{decodeURIComponent(itm.topic)} - <Button onClick={async (e)=>{
+              return (<li key={ind}>{decodeURIComponent(itm.topic)} - {itm.hasCommented ? (<img src='../check-square.svg' alt='comment completed' title='comment completed'></img>):(<Button variant='primary' onClick={(e)=>{
                 let topicId = itm.topicId;
-                let groupId = groups[currentGroup].gsid;
-                console.log('Group: ', groupId, ' Topic: ', topicId); 
                 setCurrentTopic(topicId);
-                let hasCommented = await checkComment(groupId,topicId);
-
-              }}>Check for comment</Button></li>)
+                setTryComment(true);
+              }}>Comment</Button>)}</li>)
              })}
              </ul>  
              <Button onClick={()=>setTryComment(!tryComment)}>Show Commment</Button>
@@ -328,9 +322,24 @@ function Conduit() {
       }) : (<></>)
       }
     </Tabs>
+
+     )}
+    
   </Container>)
 
 
 }
 
 export default Conduit;
+
+
+/**
+ * <Button onClick={async (e)=>{
+                let topicId = itm.topicId;
+                let groupId = groups[currentGroup].gsid;
+                console.log('Group: ', groupId, ' Topic: ', topicId); 
+                setCurrentTopic(topicId);
+                let hasCommented = await checkComment(groupId,topicId);
+
+              }}>Check for comment</Button>
+ */
