@@ -131,7 +131,7 @@ function Conduit() {
           withCredentials: true
         }
 
-        const resObj = await axios.post(`${config.apiBaseUrl}/votes/my-topics`, { groupId: groups[group].gsid }, reqOpts);
+        const resObj = await axios.post(`${config.apiBaseUrl}/votes/my-topics`, { groupId: groups[group].gsid, active:true }, reqOpts);
         if (resObj && resObj.data.Items) {
           let groupObj = { ...groups };// set a new object to replace groups
           // unescape the topic if it was escaped
