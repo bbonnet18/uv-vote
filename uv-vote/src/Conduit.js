@@ -274,6 +274,9 @@ function Conduit() {
 
 
   return (<Container fluid="md">
+      <h2>Conduit <img src="../conduit.png" className='conduit-title' alt="conduit" title="conduit" /></h2>
+      <p>Conduit is a service that allows you to make a comment on a specific topic. Your comment goes directly to a feed that we publish specifically for your elected officials, candidates and public officials.</p>
+      <hr></hr>
      {loading ? (<div className="comment-loading loading-centered"><Spinner animation="border" role="status" className='loading-spinner'> <span className="visually-hidden">Loading...</span></Spinner></div>) : (
 
       <Tabs onSelect={async (e) => {
@@ -290,9 +293,8 @@ function Conduit() {
       {(loading === false && groups) ? Object.keys(groups).map((itm, ind) => {
         return (
           <Tab eventKey={itm} title={itm} key={ind}>
-            <div>Current Group: {groups[currentGroup].gsid}</div>
-            <div>Title: {groups[itm].title}</div>
-            <div>Description: {groups[itm].description}</div>
+            <h4 className='mt-1'>{groups[itm].title}  <img src={`../${groups[itm].name}.png`} alt={groups[itm].name} title={groups[itm].name} className='table-group-img'></img></h4>
+            <p>Description: {groups[itm].description}</p>
             <div>Current Topic: {currentTopic}</div>
             {groups[itm] && groups[itm].topics ? (
              <><div>We have topics:</div>

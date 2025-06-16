@@ -179,6 +179,9 @@ button, .btn {
 .conduit{
   background-color: #282c34;
 }
+.conduit-title{
+  width:25px;
+}
 .conduit.card .card-img-top{
   background-color: #fff !important;
 }
