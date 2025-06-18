@@ -1,7 +1,7 @@
 import './App.css';
 import { useState, useEffect } from 'react';
 import axios from "axios";
-import { Col, Alert, Row, Button, Container, Tab, Tabs, Spinner } from "react-bootstrap";
+import { Col, Alert, Row, Button, Container, Table, Tab, Tabs, Spinner } from "react-bootstrap";
 import Comment from './Comment';
 import { useNavigate } from 'react-router-dom';
 import cookies from './cookies';
@@ -297,7 +297,14 @@ function Conduit() {
             <p>Description: {groups[itm].description}</p>
             <div>Current Topic: {currentTopic}</div>
             {groups[itm] && groups[itm].topics ? (
-             <><div>We have topics:</div>
+             <>
+             <Table key={ind} striped bordered hover>
+             <thead>
+                <tr>
+                  <th>{groups[itm].title} <img src={`../${groups[itm].name}.png`} alt={groups[itm].name} title={groups[itm].name}  className='table-group-img'></img></th>
+                  <th className='table-link-col'>Link</th>
+                </tr></thead>
+            </Table> 
              <ul>
              {groups[itm].topics.map((itm,ind) => {
               return (<li key={ind}>{decodeURIComponent(itm.topic)} - {itm.hasCommented ? (<img src='../check-square.svg' alt='comment completed' title='comment completed'></img>):(<Button variant='primary' onClick={(e)=>{
