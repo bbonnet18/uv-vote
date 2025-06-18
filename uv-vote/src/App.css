@@ -171,7 +171,12 @@ button, .btn {
   margin-top: 20px; 
 }
 
-.comment-loading{
+.comment-dialog{
+  width: 100% !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+.comment-dialog .comment-loading{
   min-height:250px;
   padding-top: 100px
 }

@@ -295,25 +295,35 @@ function Conduit() {
           <Tab eventKey={itm} title={itm} key={ind}>
             <h4 className='mt-1'>{groups[itm].title}  <img src={`../${groups[itm].name}.png`} alt={groups[itm].name} title={groups[itm].name} className='table-group-img'></img></h4>
             <p>Description: {groups[itm].description}</p>
-            <div>Current Topic: {currentTopic}</div>
             {groups[itm] && groups[itm].topics ? (
              <>
              <Table key={ind} striped bordered hover>
              <thead>
                 <tr>
-                  <th>{groups[itm].title} <img src={`../${groups[itm].name}.png`} alt={groups[itm].name} title={groups[itm].name}  className='table-group-img'></img></th>
-                  <th className='table-link-col'>Link</th>
-                </tr></thead>
-            </Table> 
-             <ul>
-             {groups[itm].topics.map((itm,ind) => {
-              return (<li key={ind}>{decodeURIComponent(itm.topic)} - {itm.hasCommented ? (<img src='../check-square.svg' alt='comment completed' title='comment completed'></img>):(<Button variant='primary' onClick={(e)=>{
+                  <th>Topics</th>
+                  <th className='table-link-col'>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {groups[itm].topics.map((itm,ind) => {
+              return (
+              <tr key={ind} className={itm.hasCommented ? 'vote-completed' : ''}>
+                <td>{decodeURIComponent(itm.topic)}</td>
+                <td>{itm.hasCommented ? (<div><img src='../check-square.svg' alt='comment completed' title='comment completed'></img></div>):(
+                  <Button variant='primary' onClick={(e)=>{
                 let topicId = itm.topicId;
                 setCurrentTopic(topicId);
                 setTryComment(true);
-              }}>Comment</Button>)}</li>)
-             })}
-             </ul>  
+              }}>Comment</Button>
+                )}</td>
+              </tr>
+             )
+             }
+             )
+             }
+              </tbody>
+              
+            </Table> 
              <Button onClick={()=>setTryComment(!tryComment)}>Show Commment</Button>
              {tryComment ? (<Comment show={tryComment} hide={setTryComment} send={sendComment}></Comment>):("")}
              {show ? (

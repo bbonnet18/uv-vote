@@ -31,7 +31,7 @@ function Comment(props) {
     return (
         <Modal show={props.show} onHide={props.hide}>
 
-            <Modal.Dialog>
+            <Modal.Dialog className="comment-dialog">
 
                 {loading ? (
                     <div className="comment-loading loading-centered">
