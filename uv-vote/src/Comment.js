@@ -39,9 +39,10 @@ function Comment(props) {
                     </div>) : (
                     <><Modal.Header closeButton>
                         <Modal.Title>Enter Comment</Modal.Title>
+                       
                     </Modal.Header>
                         <Modal.Body>
-                            <p>Modal body text goes here.</p>
+                             <h4>Topic: {props.topic}</h4>
                             <span>Text remaining: </span><span id="charLimit" >{currText}</span>
                             <div className='comment'><textarea id="conduitComment" onChange={(e) => {
                                 let val = e.currentTarget.value;

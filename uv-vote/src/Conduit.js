@@ -13,6 +13,7 @@ function Conduit() {
   const [groups, setGroups] = useState({});
   const [loading, setLoading] = useState(false);
   const [currentGroup,setCurrentGroup] = useState("Local");
+  const [currentTopics,setCurrentTopics] = useState([]);
   const [currentTopic,setCurrentTopic] = useState(null);
   const [tryComment, setTryComment] = useState(false);
   const [show, setShow] = useState(false); 
@@ -72,7 +73,7 @@ function Conduit() {
 
   useEffect(() => {
     const checkTopics = async () => {
-      await getTopics('Local');
+      await getTopics(currentGroup || 'Local');
     }
 
     checkTopics();
@@ -116,7 +117,7 @@ function Conduit() {
         return;
       }
       // check for topics first and if not there, go get them 
-      if (groups[group] && groups[group].hasOwnProperty('topics') === false) {
+       if (groups[group] && groups[group].hasOwnProperty('topics') === false) {
         // get the JWT to use for auth
         const authCookie = cookies.getCookie('voterToken') || "";
         if (authCookie === "") {
@@ -143,14 +144,12 @@ function Conduit() {
           
           let checkedTopics = await checkComments(voterTopics);
 
-          //voterTopics = groupObj[group].topics; 
-
           groupObj[group].topics = checkedTopics;
-          
+          setCurrentTopics(checkedTopics);
 
 
           setGroups(groupObj);
-        }
+       }
         
       }
 
@@ -225,7 +224,7 @@ function Conduit() {
   // sends the comment to be posted 
   const sendComment = async (comment)=>{
     let groupId = groups[currentGroup].gsid;
-    let topicId = currentTopic;
+    let topicId = currentTopic.topicId;
     if(!groupId || !topicId || !comment){
       return;
     }
@@ -309,10 +308,10 @@ function Conduit() {
               return (
               <tr key={ind} className={itm.hasCommented ? 'vote-completed' : ''}>
                 <td>{decodeURIComponent(itm.topic)}</td>
-                <td>{itm.hasCommented ? (<div><img src='../check-square.svg' alt='comment completed' title='comment completed'></img></div>):(
+                <td className='table-link-col'>{itm.hasCommented ? (<div><img src='../check-square.svg' alt='comment completed' title='comment completed'></img></div>):(
                   <Button variant='primary' onClick={(e)=>{
-                let topicId = itm.topicId;
-                setCurrentTopic(topicId);
+                let topic = itm;
+                setCurrentTopic(topic);
                 setTryComment(true);
               }}>Comment</Button>
                 )}</td>
@@ -325,7 +324,8 @@ function Conduit() {
               
             </Table> 
              <Button onClick={()=>setTryComment(!tryComment)}>Show Commment</Button>
-             {tryComment ? (<Comment show={tryComment} hide={setTryComment} send={sendComment}></Comment>):("")}
+
+             {tryComment && currentTopic ? (<Comment show={tryComment} hide={setTryComment} send={sendComment} topic={currentTopic.topic}></Comment>):("")}
              {show ? (
               <Alert className='mt-2' variant={alertType} onClose={() => setShow(false)} dismissible>
         <Alert.Heading>{alertTitle}</Alert.Heading>
@@ -333,6 +333,7 @@ function Conduit() {
           {alertMsg}
         </p>
       </Alert>
+      
              ):(<></>)}
              </>
             ):(<div>No topics yet</div>)}
@@ -340,7 +341,9 @@ function Conduit() {
         )
       }) : (<></>)
       }
+   
     </Tabs>
+   
 
      )}
     
