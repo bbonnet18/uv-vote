@@ -20,26 +20,26 @@ function Choices() {
                     </Card>
                 </Col>
                 <Col lg={3} xs={12} className='mt-2'>
-                <Card className='conduit' >
+                <Card className='conduit inactive' >
                         <Card.Img className="conduit-img" variant="top" src="connect.png" />
                         <Card.Body>
                             <Card.Title>Connect</Card.Title>
                             <Card.Text>
-                                Connect with others 
+                                Connect with candidates.
                             </Card.Text>
-                            <NavLink to="/actions/conduit">Learn more</NavLink>
+                            <Card.Subtitle>Coming Soon!</Card.Subtitle>
                         </Card.Body>
                     </Card>
                 </Col>
                 <Col lg={3} xs={12} className='mt-2'>
-                <Card className='conduit' >
+                <Card className='conduit inactive' >
                         <Card.Img className="conduit-img" variant="top" src="solutions.png" />
                         <Card.Body>
                             <Card.Title>U-Vote Solutions Teams</Card.Title>
                             <Card.Text>
-                                Connect with others so we can solve problems 
+                                Connect with others so we can solve problems.
                             </Card.Text>
-                            <NavLink to="/actions/conduit">Learn more</NavLink>
+                            <Card.Subtitle>Coming Soon!</Card.Subtitle>
                         </Card.Body>
                     </Card>
                 </Col>

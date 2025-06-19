@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import Table from "react-bootstrap/Table";
-import  { Button, Container, Tab, Tabs, Spinner}   from "react-bootstrap";
+import  { Button, Container, OverlayTrigger, Tab, Tabs, Tooltip, Spinner}   from "react-bootstrap";
 
 function VoteList (props){
   
@@ -62,13 +62,13 @@ function VoteList (props){
                       if(itm && itm.link){
                         window.location=itm.link;
                       }
-                    }}>Vote</Button> ):(itm.link === 'completed') ? <div ><img src='./check-square.svg' alt='vote completed' title='vote completed'></img></div> : <span><Button variant="primary" onClick={(e)=>{
+                    }}>Vote</Button> ):(itm.link === 'completed') ? (<OverlayTrigger overlay={<Tooltip id={`tooltip${ind}`}>You Voted</Tooltip>}><div><img src='../check-square.svg' alt='comment completed' title='comment completed'></img></div></OverlayTrigger>) : (<span><Button variant="primary" onClick={(e)=>{
                     e.preventDefault();
                     let myLid = {...loadingIds};
                     myLid[itm.surveyId] = 'loading';
                     setLoadingIds(myLid)
                     props.register(itm.surveyId)}
-                  } alt='click or tap to register' title='click or tap to register' >Register</Button></span>)}</td>
+                  } alt='click or tap to register' title='click or tap to register' >Register</Button></span>))}</td>
                 </tr>)
               }) : (<tr><td className='no-votes'><img src='./emoji-frown.svg' alt='no votes available' />No votes available - check back soon!</td><td></td></tr>)}
               </tbody>

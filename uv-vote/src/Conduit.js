@@ -1,7 +1,7 @@
 import './App.css';
 import { useState, useEffect } from 'react';
 import axios from "axios";
-import { Col, Alert, Row, Button, Container, Table, Tab, Tabs, Toast, Spinner } from "react-bootstrap";
+import { Col, Alert, Row, Button, Container, OverlayTrigger, Table, Tab, Tabs, Toast, Tooltip, Spinner } from "react-bootstrap";
 import Comment from './Comment';
 import { useNavigate } from 'react-router-dom';
 import cookies from './cookies';
@@ -326,8 +326,11 @@ function Conduit() {
                 {currentTopics.map((itm,ind) => {
               return (
               <tr key={ind} className={itm.hasCommented ? 'vote-completed' : ''}>
-                <td>{decodeURIComponent(itm.topic)}</td>
-                <td className='table-link-col'>{itm.hasCommented ? (<div><img src='../check-square.svg' alt='comment completed' title='comment completed'></img></div>):(
+                <td>
+                  <div className='topic'>{decodeURIComponent(itm.topic)}</div>
+                  <div className='tags'>{itm.tags}</div>
+                </td>
+                <td className='table-link-col'>{itm.hasCommented ? (<OverlayTrigger overlay={<Tooltip id={`tooltip${ind}`}>You Commented</Tooltip>}><div><img src='../check-square.svg' alt='comment completed' title='comment completed'></img></div></OverlayTrigger>):(
                   <Button variant='primary' onClick={(e)=>{
                 let topic = itm;
                 setCurrentTopic(topic);

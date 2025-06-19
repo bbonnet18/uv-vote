@@ -184,6 +184,10 @@ button, .btn {
 .conduit{
   background-color: #282c34;
 }
+
+.conduit.inactive{
+  opacity: .5;
+}
 .conduit-title{
   width:25px;
 }
@@ -700,6 +704,13 @@ Form input.error {
 
 .vote-completed {
   color: gray;
+}
+
+.vote-completed .topic{
+  text-align: left;
+}
+.vote-completed .tags{
+  text-align: left;
 }
 
 .vote-completed div {
