@@ -199,6 +199,11 @@ button, .btn {
   margin:auto;
   padding: 10px;
 }
+
+.conduit-toast{
+  float:right;
+  position:relative;
+}
 .modal-body{
   width:100%;
   padding: 0 .5em !important;

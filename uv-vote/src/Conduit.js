@@ -1,7 +1,7 @@
 import './App.css';
 import { useState, useEffect } from 'react';
 import axios from "axios";
-import { Col, Alert, Row, Button, Container, Table, Tab, Tabs, Spinner } from "react-bootstrap";
+import { Col, Alert, Row, Button, Container, Table, Tab, Tabs, Toast, Spinner } from "react-bootstrap";
 import Comment from './Comment';
 import { useNavigate } from 'react-router-dom';
 import cookies from './cookies';
@@ -73,12 +73,12 @@ function Conduit() {
 
   useEffect(() => {
     const checkTopics = async () => {
-      await getTopics(currentGroup || 'Local');
+      await getTopics(currentGroup);
     }
 
     checkTopics();
 
-  }, [groups])
+  }, [groups,currentGroup])
 
 
   const getGroups = async () => {
@@ -111,13 +111,15 @@ function Conduit() {
   const getTopics = async (group) => {
 
     try {
+
       // check if groups have been established and if the group 
       // exists first
       if (!groups && !groups[group]) {
         return;
       }
+      let thisGroup = groups[group]
       // check for topics first and if not there, go get them 
-       if (groups[group] && groups[group].hasOwnProperty('topics') === false) {
+       //if (groups[group] && groups[group].hasOwnProperty('topics') === false) {
         // get the JWT to use for auth
         const authCookie = cookies.getCookie('voterToken') || "";
         if (authCookie === "") {
@@ -132,9 +134,9 @@ function Conduit() {
           withCredentials: true
         }
 
-        const resObj = await axios.post(`${config.apiBaseUrl}/votes/my-topics`, { groupId: groups[group].gsid, active:true }, reqOpts);
+        const resObj = await axios.post(`${config.apiBaseUrl}/votes/my-topics`, { groupId: thisGroup.gsid, active:true }, reqOpts);
         if (resObj && resObj.data.Items) {
-          let groupObj = { ...groups };// set a new object to replace groups
+          //let groupObj = { ...groups };// set a new object to replace groups
           // unescape the topic if it was escaped
           let voterTopics = resObj.data.Items.map((itm) => {
             let unescapedTopic = unescape(itm.topic);
@@ -144,14 +146,14 @@ function Conduit() {
           
           let checkedTopics = await checkComments(voterTopics);
 
-          groupObj[group].topics = checkedTopics;
+          //groupObj[group].topics = checkedTopics;
           setCurrentTopics(checkedTopics);
 
 
-          setGroups(groupObj);
+          //setGroups(groupObj);
        }
         
-      }
+      //}
 
     } catch (err) {
       return;
@@ -257,9 +259,11 @@ function Conduit() {
         setAlertTitle('Voter already commented');
         setAlertMsg(reason.duplicate);
       }
-     
+      
       setTryComment(false);
       setShow(true);
+
+      await getTopics(currentGroup);
 
     }catch(err){
       setAlertType('danger');
@@ -292,9 +296,24 @@ function Conduit() {
       {(loading === false && groups) ? Object.keys(groups).map((itm, ind) => {
         return (
           <Tab eventKey={itm} title={itm} key={ind}>
+            
             <h4 className='mt-1'>{groups[itm].title}  <img src={`../${groups[itm].name}.png`} alt={groups[itm].name} title={groups[itm].name} className='table-group-img'></img></h4>
-            <p>Description: {groups[itm].description}</p>
-            {groups[itm] && groups[itm].topics ? (
+            <Row>
+              <Col lg={6} xs={12}><p>Description: {groups[itm].description}</p></Col>
+               {show ? (
+              <Col lg={6} xs={12}>
+                <Toast className='conduit-toast' bg={alertType} onClose={() => setShow(false)} show={show} delay={3000} autohide>
+                  <Toast.Header>
+                    <strong className="me-auto">{alertTitle}</strong>
+                  </Toast.Header>
+                  <Toast.Body>{alertTitle} {alertMsg}</Toast.Body>
+                </Toast>
+              </Col>
+             ):(<></>)}
+            </Row>
+            
+            
+            {currentTopics ? (
              <>
              <Table key={ind} striped bordered hover>
              <thead>
@@ -304,7 +323,7 @@ function Conduit() {
                 </tr>
               </thead>
               <tbody>
-                {groups[itm].topics.map((itm,ind) => {
+                {currentTopics.map((itm,ind) => {
               return (
               <tr key={ind} className={itm.hasCommented ? 'vote-completed' : ''}>
                 <td>{decodeURIComponent(itm.topic)}</td>
@@ -321,20 +340,10 @@ function Conduit() {
              )
              }
               </tbody>
-              
             </Table> 
-             <Button onClick={()=>setTryComment(!tryComment)}>Show Commment</Button>
 
              {tryComment && currentTopic ? (<Comment show={tryComment} hide={setTryComment} send={sendComment} topic={currentTopic.topic}></Comment>):("")}
-             {show ? (
-              <Alert className='mt-2' variant={alertType} onClose={() => setShow(false)} dismissible>
-        <Alert.Heading>{alertTitle}</Alert.Heading>
-        <p>
-          {alertMsg}
-        </p>
-      </Alert>
-      
-             ):(<></>)}
+            
              </>
             ):(<div>No topics yet</div>)}
           </Tab>
