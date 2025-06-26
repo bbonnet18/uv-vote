@@ -15,6 +15,7 @@ function Conduit() {
   const [currentGroup,setCurrentGroup] = useState("Local");
   const [currentTopics,setCurrentTopics] = useState([]);
   const [currentTopic,setCurrentTopic] = useState(null);
+  const [receivers,setReceivers] = useState([]);
   const [tryComment, setTryComment] = useState(false);
   const [show, setShow] = useState(false); 
   const [alertTitle, setAlertTitle] = useState('Success!')
@@ -66,8 +67,13 @@ function Conduit() {
 
       setLoading(false);
     }
+    const checkReceivers  = async ()=>{
+      let receivers = await getReceivers();
+      setReceivers(receivers); 
+    }
 
     checkGroups();
+    checkReceivers();
 
   }, []);
 
@@ -141,6 +147,7 @@ function Conduit() {
           let voterTopics = resObj.data.Items.map((itm) => {
             let unescapedTopic = unescape(itm.topic);
             itm.topic = unescapedTopic;
+            itm.tags = createTags(itm.tags); 
             return itm;
           });
           
@@ -161,6 +168,40 @@ function Conduit() {
 
   }
 
+  const getReceivers = async ()=>{
+      try {
+
+        const authCookie = cookies.getCookie('voterToken') || "";
+        if (authCookie === "") {
+
+          navigate('/validate');
+        }
+        // get the cookie and set the auth header
+        const reqOpts = {
+          headers: {
+            "Authorization": `Bearer ${authCookie}`
+          },
+          withCredentials: true
+        }
+
+        const resObj = await axios.post(`${config.apiBaseUrl}/votes/get-receivers`,{}, reqOpts);
+        if (resObj && resObj.data.Items) {
+          //let groupObj = { ...groups };// set a new object to replace groups
+          // unescape the topic if it was escaped
+          let receivers = resObj.data.Items.map((itm) => {
+            console.log('receiver: ', itm);
+            return itm
+          });
+
+          setReceivers(receivers);
+       }
+        
+      //}
+
+    } catch (err) {
+      return;
+    }
+  }
 
   const checkComments = async (topics) => {
      try{
@@ -274,7 +315,27 @@ function Conduit() {
     }
   }
 
+  // takes the string representation of the tags
+  // breaks them up and turns them into links
+  const createTags = (tags)=>{
 
+      let tagsArr = [];
+
+      try{
+          let tagsColl = tags.split("|");
+          tagsColl.map((itm,ind)=>{  
+              let tag = itm.split("-");
+              let tagId = tag[0];
+              let lastname = tag[1]; 
+              if(tagId){
+                tagsArr.push({receiverId:tagId,lastname:lastname});
+              }
+          });
+      }catch(err){
+        return [];   
+      }
+      return tagsArr; 
+  }
 
   return (<Container fluid="md">
       <h2>Conduit <img src="../conduit.png" className='conduit-title' alt="conduit" title="conduit" /></h2>
@@ -327,8 +388,10 @@ function Conduit() {
               return (
               <tr key={ind} className={itm.hasCommented ? 'vote-completed' : ''}>
                 <td>
-                  <div className='topic'>{decodeURIComponent(itm.topic)}</div>
-                  <div className='tags'>{itm.tags}</div>
+                  <div className='topic'>{itm.topic}</div>
+                  <div className='tags'>{itm.tags && Array.isArray(itm.tags) ? (itm.tags.map((itm,ind)=>{
+                    return (<>{ind && ind > 0 ? (" | "):(<></>)}<Button key={ind}>{itm.lastname}</Button> </> );
+                    })):(<></>)}</div>
                 </td>
                 <td className='table-link-col'>{itm.hasCommented ? (<OverlayTrigger overlay={<Tooltip id={`tooltip${ind}`}>You Commented</Tooltip>}><div><img src='../check-square.svg' alt='comment completed' title='comment completed'></img></div></OverlayTrigger>):(
                   <Button variant='primary' onClick={(e)=>{
