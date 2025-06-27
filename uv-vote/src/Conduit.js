@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import axios from "axios";
 import { Col, Alert, Row, Button, Container, OverlayTrigger, Table, Tab, Tabs, Toast, Tooltip, Spinner } from "react-bootstrap";
 import Comment from './Comment';
+import Receiver from './Receiver';
 import { useNavigate } from 'react-router-dom';
 import cookies from './cookies';
 import config from './config';
@@ -15,8 +16,10 @@ function Conduit() {
   const [currentGroup,setCurrentGroup] = useState("Local");
   const [currentTopics,setCurrentTopics] = useState([]);
   const [currentTopic,setCurrentTopic] = useState(null);
+  const [receiver,currentReceiver] = useState(null); 
   const [receivers,setReceivers] = useState([]);
   const [tryComment, setTryComment] = useState(false);
+  const [tryReceiver,setTryReceiver] = useState(false); 
   const [show, setShow] = useState(false); 
   const [alertTitle, setAlertTitle] = useState('Success!')
   const [alertMsg, setAlertMsg] = useState("");
@@ -189,7 +192,6 @@ function Conduit() {
           //let groupObj = { ...groups };// set a new object to replace groups
           // unescape the topic if it was escaped
           let receivers = resObj.data.Items.map((itm) => {
-            console.log('receiver: ', itm);
             return itm
           });
 
@@ -337,6 +339,21 @@ function Conduit() {
       return tagsArr; 
   }
 
+  const getReceiver = (tag) => {
+    try{
+      let receiver = {};
+      let receivers = receivers.map((itm,ind)=>{
+        if(itm.receiverId.S === tag){
+          receiver = itm; 
+        }
+      })
+      console.log("Receiver set: ", receiver.lastname.S);
+    }catch(err){
+      console.error("Couldn't set receiver");
+    }
+      
+  }
+
   return (<Container fluid="md">
       <h2>Conduit <img src="../conduit.png" className='conduit-title' alt="conduit" title="conduit" /></h2>
       <p>Conduit is a service that allows you to make a comment on a specific topic. Your comment goes directly to a feed that we publish specifically for your elected officials, candidates and public officials.</p>
@@ -390,7 +407,9 @@ function Conduit() {
                 <td>
                   <div className='topic'>{itm.topic}</div>
                   <div className='tags'>{itm.tags && Array.isArray(itm.tags) ? (itm.tags.map((itm,ind)=>{
-                    return (<>{ind && ind > 0 ? (" | "):(<></>)}<Button key={ind}>{itm.lastname}</Button> </> );
+                    return (<>{ind && ind > 0 ? (" | "):(<></>)}<Button value={itm.receiverId} onClick={(e)=>{
+                      console.log(e.currentTarget.value); 
+                    }} key={ind}>{itm.lastname}</Button> </> );
                     })):(<></>)}</div>
                 </td>
                 <td className='table-link-col'>{itm.hasCommented ? (<OverlayTrigger overlay={<Tooltip id={`tooltip${ind}`}>You Commented</Tooltip>}><div><img src='../check-square.svg' alt='comment completed' title='comment completed'></img></div></OverlayTrigger>):(
@@ -409,7 +428,7 @@ function Conduit() {
             </Table> 
 
              {tryComment && currentTopic ? (<Comment show={tryComment} hide={setTryComment} send={sendComment} topic={currentTopic.topic}></Comment>):("")}
-            
+             {tryReceiver && currentReceiver ? (<Comment show={tryComment} hide={setTryComment} send={sendComment} topic={currentTopic.topic}></Comment>):("")}
              </>
             ):(<div>No topics yet</div>)}
           </Tab>
