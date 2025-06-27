@@ -16,7 +16,7 @@ function Conduit() {
   const [currentGroup,setCurrentGroup] = useState("Local");
   const [currentTopics,setCurrentTopics] = useState([]);
   const [currentTopic,setCurrentTopic] = useState(null);
-  const [receiver,currentReceiver] = useState(null); 
+  const [currentReceiver,setCurrentReceiver] = useState(null); 
   const [receivers,setReceivers] = useState([]);
   const [tryComment, setTryComment] = useState(false);
   const [tryReceiver,setTryReceiver] = useState(false); 
@@ -195,7 +195,7 @@ function Conduit() {
             return itm
           });
 
-          setReceivers(receivers);
+          return receivers;
        }
         
       //}
@@ -342,12 +342,15 @@ function Conduit() {
   const getReceiver = (tag) => {
     try{
       let receiver = {};
-      let receivers = receivers.map((itm,ind)=>{
+      receivers.map((itm,ind)=>{
         if(itm.receiverId.S === tag){
           receiver = itm; 
         }
       })
-      console.log("Receiver set: ", receiver.lastname.S);
+      if(receiver){
+        setCurrentReceiver(receiver); 
+      }
+      
     }catch(err){
       console.error("Couldn't set receiver");
     }
@@ -406,9 +409,10 @@ function Conduit() {
               <tr key={ind} className={itm.hasCommented ? 'vote-completed' : ''}>
                 <td>
                   <div className='topic'>{itm.topic}</div>
-                  <div className='tags'>{itm.tags && Array.isArray(itm.tags) ? (itm.tags.map((itm,ind)=>{
+                  <div className='tags'>Receivers: {itm.tags && Array.isArray(itm.tags) ? (itm.tags.map((itm,ind)=>{
                     return (<>{ind && ind > 0 ? (" | "):(<></>)}<Button value={itm.receiverId} onClick={(e)=>{
-                      console.log(e.currentTarget.value); 
+                      getReceiver(e.currentTarget.value);
+                      setTryReceiver(true); 
                     }} key={ind}>{itm.lastname}</Button> </> );
                     })):(<></>)}</div>
                 </td>
@@ -428,7 +432,7 @@ function Conduit() {
             </Table> 
 
              {tryComment && currentTopic ? (<Comment show={tryComment} hide={setTryComment} send={sendComment} topic={currentTopic.topic}></Comment>):("")}
-             {tryReceiver && currentReceiver ? (<Comment show={tryComment} hide={setTryComment} send={sendComment} topic={currentTopic.topic}></Comment>):("")}
+             {tryReceiver && currentReceiver ? (<Receiver show={tryReceiver} hide={setTryReceiver} receiver={currentReceiver}></Receiver>):("")}
              </>
             ):(<div>No topics yet</div>)}
           </Tab>
