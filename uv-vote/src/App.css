@@ -208,6 +208,11 @@ button, .btn {
   float:right;
   position:relative;
 }
+
+.modal-dialog .modal-content{
+  border-radius: 0;
+}
+
 .modal-body{
   width:100%;
   padding: 0 .5em !important;
@@ -527,6 +532,25 @@ Form input.error {
 .no-votes img{
   width: 35px;
   margin-right: 20px;
+}
+
+
+
+.modal-dialog.receiver-dialog{
+  width: 100% !important;
+  margin: 0 auto;
+}
+
+.receiver-dialog{
+  font-size: small;
+}
+
+.receiver-dialog .modal-header{
+  padding: 10px; 
+}
+
+.receiver-title{
+  /* font-size: 1em !important; */
 }
 
 #registerForm label {

@@ -344,6 +344,14 @@ function Conduit() {
       let receiver = {};
       receivers.map((itm,ind)=>{
         if(itm.receiverId.S === tag){
+          if(itm && itm.website && itm.website.S){
+            itm.website.S = unescape(itm.website.S);
+          }
+          if(itm && itm.social && itm.social.S){
+            itm.social.S = unescape(itm.social.S);
+          }
+          
+          
           receiver = itm; 
         }
       })

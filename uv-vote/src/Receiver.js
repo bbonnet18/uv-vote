@@ -7,16 +7,18 @@ import { useState } from 'react';
 // and the check is made for the existing comment
 function Receiver(props) {
     return (
-        <Modal show={props.show} onHide={props.hide}>
+        <Modal show={props.show} onHide={props.hide} className='receiver-dialog'>
 
             <Modal.Dialog className="receiver-dialog">
                     <><Modal.Header closeButton>
-                        <Modal.Title>Receiver</Modal.Title>
-                       
+                        <Modal.Title className='receiver-title'>Receiver</Modal.Title>
                     </Modal.Header>
                         <Modal.Body>
-                             <h4>Name: {props.receiver.firstname.S} {props.receiver.lastname.S}</h4>
-
+                             <div className='receiver-info'>Name: <span>{props.receiver.firstname.S} {props.receiver.lastname.S}</span></div>
+                            <div className='receiver-info'>Office: <span>{props.receiver.office.S}</span></div>
+                            <div className='receiver-info'>Status: <span>{props.receiver.status.S}</span></div>
+                            <div className='receiver-info'>Website: <span>{props.receiver.website && props.receiver.website.S ? props.receiver.website.S:""}</span></div>
+                            <div className='receiver-info'>Social Media: <span>{props.receiver.social && props.receiver.social.S ? props.receiver.social.S : ""}</span></div>
                         </Modal.Body>
 
                         <Modal.Footer>
