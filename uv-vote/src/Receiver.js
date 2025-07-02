@@ -14,8 +14,9 @@ function Receiver(props) {
                         <Modal.Title className='receiver-title'>Receiver</Modal.Title>
                     </Modal.Header>
                         <Modal.Body>
-                             <div className='receiver-info'>Name: <span>{props.receiver.firstname.S} {props.receiver.lastname.S}</span></div>
+                            <div className='receiver-info'>Name: <span>{props.receiver.firstname.S} {props.receiver.lastname.S}</span></div>
                             <div className='receiver-info'>Office: <span>{props.receiver.office.S}</span></div>
+                            <div className='receiver-info'>Level: <span>{props.receiver.level.S}</span></div>
                             <div className='receiver-info'>Status: <span>{props.receiver.status.S}</span></div>
                             <div className='receiver-info'>Website: <span>{props.receiver.website && props.receiver.website.S ? props.receiver.website.S:""}</span></div>
                             <div className='receiver-info'>Social Media: <span>{props.receiver.social && props.receiver.social.S ? props.receiver.social.S : ""}</span></div>

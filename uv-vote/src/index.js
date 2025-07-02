@@ -12,17 +12,19 @@ import Buddy from './Buddy';
 import Home from './Home';
 import Info from './Info';
 import Error from "./Error";
+import NotFound from './NotFound';
 import Validate from "./Validate";
 import FAQs from './FAQs';
 import reportWebVitals from './reportWebVitals';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import ErrorView from "./ErrorView";
 import { createBrowserRouter, Route, RouterProvider, createRoutesFromElements } from 'react-router-dom';
 
 
 const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route path="/" element={<App />}>
-      <Route path="/" element={<Info />}/>
+    <Route path="/" element={<App />} errorElement={<ErrorView></ErrorView>}>
+      <Route path="/" element={<Info />} />
       <Route path="/getkey" element={<Register />}/>
       <Route path="/buddy" element={<Buddy />}/>
       <Route path="/votes" element={<Home />}/>
@@ -35,6 +37,7 @@ const router = createBrowserRouter(
       <Route path="/validate" element={<Validate />}/>
       <Route path="/faqs" element={<FAQs />}/>
       <Route path="/about" element={<About />}/>
+      <Route path="*" element={<NotFound></NotFound>} />
     </Route>
   )
 )

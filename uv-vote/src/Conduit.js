@@ -87,7 +87,7 @@ function Conduit() {
 
     checkTopics();
 
-  }, [groups,currentGroup])
+  }, [groups,receivers,currentGroup])
 
 
   const getGroups = async () => {
@@ -322,15 +322,23 @@ function Conduit() {
   const createTags = (tags)=>{
 
       let tagsArr = [];
-
+      // create a map of the receivers to get their level
+     
       try{
+         let receiverMap = {}
+      if(receivers && receivers.length){
+        receivers.map((itm,ind)=>{
+          receiverMap[itm.receiverId.S] = itm.level.S;
+        });
+      }
           let tagsColl = tags.split("|");
           tagsColl.map((itm,ind)=>{  
               let tag = itm.split("-");
               let tagId = tag[0];
               let lastname = tag[1]; 
+              let receiverLevel = receiverMap[tagId];
               if(tagId){
-                tagsArr.push({receiverId:tagId,lastname:lastname});
+                tagsArr.push({receiverId:tagId,lastname:lastname, level:receiverLevel});
               }
           });
       }catch(err){
@@ -418,7 +426,7 @@ function Conduit() {
                 <td>
                   <div className='topic'>{itm.topic}</div>
                   <div className='tags'>Receivers: {itm.tags && Array.isArray(itm.tags) ? (itm.tags.map((itm,ind)=>{
-                    return (<>{ind && ind > 0 ? (" | "):(<></>)}<Button value={itm.receiverId} onClick={(e)=>{
+                    return (<>{ind && ind > 0 ? (" | "):(<></>)}<Button className={`conduit-receivers ${itm && itm.level ? itm.level:''}`} value={itm.receiverId}  onClick={(e)=>{
                       getReceiver(e.currentTarget.value);
                       setTryReceiver(true); 
                     }} key={ind}>{itm.lastname}</Button> </> );

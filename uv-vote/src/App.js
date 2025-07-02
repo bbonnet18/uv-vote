@@ -29,6 +29,7 @@ export default function App() {
     <>
     <div className="icon-brand"><div className='container'><img src='logo64.webp' alt="U-Vote" title="U-Vote" className='header-img'></img>U-Vote<div className='alpha-mark'>BETA</div></div></div>
     <hr className='nav-sep'></hr>
+    
     <Container className='p-0'>
       <Container className='top-nav'>
       <Navbar></Navbar>
