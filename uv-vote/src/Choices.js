@@ -8,8 +8,8 @@ function Choices() {
         <Container className='choices'>
             <Row>
                 <Col lg={3} xs={12} className='mt-2'>
-                    <Card className='conduit' >
-                        <Card.Img className="conduit-img" variant="top" src="conduit.png" />
+                    <Card className='choices' >
+                        <Card.Img className="choices-img" variant="top" src="conduit.png" />
                         <Card.Body>
                             <Card.Title>Conduit</Card.Title>
                             <Card.Text>
@@ -20,8 +20,8 @@ function Choices() {
                     </Card>
                 </Col>
                 <Col lg={3} xs={12} className='mt-2'>
-                <Card className='conduit inactive' >
-                        <Card.Img className="conduit-img" variant="top" src="connect.png" />
+                <Card className='choices inactive' >
+                        <Card.Img className="choices-img" variant="top" src="connect.png" />
                         <Card.Body>
                             <Card.Title>Connect</Card.Title>
                             <Card.Text>
@@ -32,8 +32,8 @@ function Choices() {
                     </Card>
                 </Col>
                 <Col lg={3} xs={12} className='mt-2'>
-                <Card className='conduit inactive' >
-                        <Card.Img className="conduit-img" variant="top" src="solutions.png" />
+                <Card className='choices inactive' >
+                        <Card.Img className="choices-img" variant="top" src="solutions.png" />
                         <Card.Body>
                             <Card.Title>U-Vote Solutions Teams</Card.Title>
                             <Card.Text>

@@ -167,9 +167,35 @@ button, .btn {
 
 }
 
+.choices.inactive{
+  opacity: .5;
+} 
+
 .choices .card{
   margin-top: 20px; 
 }
+
+.choices.card .card-img-top{
+  background-color: #fff !important;
+}
+
+.choices .card-body{
+  background-color: #f6f6f6;
+}
+
+.choices .choices-img{
+  width: 65% !important;
+  margin:auto;
+  padding: 10px;
+}
+
+
+.conduit-title{
+  width:25px;
+}
+
+
+
 
 .comment-dialog{
   width: 100% !important;
@@ -181,41 +207,26 @@ button, .btn {
   padding-top: 100px
 }
 
+
+
+
 .conduit{
   background-color: #282c34;
 }
 
-.conduit.inactive{
-  opacity: .5;
-}
-.conduit-title{
-  width:25px;
-}
-.conduit.card .card-img-top{
-  background-color: #fff !important;
-}
-.conduit .card-body{
-  background-color: #f6f6f6;
-}
-
-.conduit .conduit-img{
-  width: 65% !important;
-  margin:auto;
-  padding: 10px;
-}
 .conduit-receivers{
   padding: 0.2em !important;
 }
 
-.conduit-receivers.local{
-  background-color: orange;
+.local{
+  background-color: #ADD9B0 !important;
 }
 
-.conduit-receivers.state{
-  background-color: magenta;
+.state{
+  background-color: #F2F2F2 !important;
 }
-.conduit-receivers.national{
-  background-color: maroon;
+.national{
+  background-color: #0D0D0D !important;
 }
 
 .conduit-toast{

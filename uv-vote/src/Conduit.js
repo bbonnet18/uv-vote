@@ -1,7 +1,7 @@
 import './App.css';
 import { useState, useEffect } from 'react';
 import axios from "axios";
-import { Col, Alert, Row, Button, Container, OverlayTrigger, Table, Tab, Tabs, Toast, Tooltip, Spinner } from "react-bootstrap";
+import { Col, Alert, Row, Button, Container, Nav, OverlayTrigger, Table, Tab, Tabs, Toast, Tooltip, Spinner } from "react-bootstrap";
 import Comment from './Comment';
 import Receiver from './Receiver';
 import { useNavigate } from 'react-router-dom';
@@ -13,22 +13,22 @@ function Conduit() {
 
   const [groups, setGroups] = useState({});
   const [loading, setLoading] = useState(false);
-  const [currentGroup,setCurrentGroup] = useState("Local");
-  const [currentTopics,setCurrentTopics] = useState([]);
-  const [currentTopic,setCurrentTopic] = useState(null);
-  const [currentReceiver,setCurrentReceiver] = useState(null); 
-  const [receivers,setReceivers] = useState([]);
+  const [currentGroup, setCurrentGroup] = useState("Local");
+  const [currentTopics, setCurrentTopics] = useState([]);
+  const [currentTopic, setCurrentTopic] = useState(null);
+  const [currentReceiver, setCurrentReceiver] = useState(null);
+  const [receivers, setReceivers] = useState([]);
   const [tryComment, setTryComment] = useState(false);
-  const [tryReceiver,setTryReceiver] = useState(false); 
-  const [show, setShow] = useState(false); 
+  const [tryReceiver, setTryReceiver] = useState(false);
+  const [show, setShow] = useState(false);
   const [alertTitle, setAlertTitle] = useState('Success!')
   const [alertMsg, setAlertMsg] = useState("");
   const [alertType, setAlertType] = useState('success')
   //const [completedIds, setCompletedIds] = useState({}); 
   const reason = {
-    'success' : 'Your comment was created successfully.',
-    'error':'There was an error creating your comment, please try again.',
-    'duplicate':'We already have a comment from this voter on this topic.'
+    'success': 'Your comment was created successfully.',
+    'error': 'There was an error creating your comment, please try again.',
+    'duplicate': 'We already have a comment from this voter on this topic.'
   }
   const navigate = useNavigate();
 
@@ -65,14 +65,14 @@ function Conduit() {
         setGroups(conduitGroups);
         setLoading(false);
       } catch (err) {
-        setLoading(false); 
+        setLoading(false);
       }
 
       setLoading(false);
     }
-    const checkReceivers  = async ()=>{
+    const checkReceivers = async () => {
       let receivers = await getReceivers();
-      setReceivers(receivers); 
+      setReceivers(receivers);
     }
 
     checkGroups();
@@ -87,7 +87,7 @@ function Conduit() {
 
     checkTopics();
 
-  }, [groups,receivers,currentGroup])
+  }, [groups, receivers, currentGroup])
 
 
   const getGroups = async () => {
@@ -128,41 +128,41 @@ function Conduit() {
       }
       let thisGroup = groups[group]
       // check for topics first and if not there, go get them 
-       //if (groups[group] && groups[group].hasOwnProperty('topics') === false) {
-        // get the JWT to use for auth
-        const authCookie = cookies.getCookie('voterToken') || "";
-        if (authCookie === "") {
+      //if (groups[group] && groups[group].hasOwnProperty('topics') === false) {
+      // get the JWT to use for auth
+      const authCookie = cookies.getCookie('voterToken') || "";
+      if (authCookie === "") {
 
-          navigate('/validate');
-        }
-        // get the cookie and set the auth header
-        const reqOpts = {
-          headers: {
-            "Authorization": `Bearer ${authCookie}`
-          },
-          withCredentials: true
-        }
+        navigate('/validate');
+      }
+      // get the cookie and set the auth header
+      const reqOpts = {
+        headers: {
+          "Authorization": `Bearer ${authCookie}`
+        },
+        withCredentials: true
+      }
 
-        const resObj = await axios.post(`${config.apiBaseUrl}/votes/my-topics`, { groupId: thisGroup.gsid, active:true }, reqOpts);
-        if (resObj && resObj.data.Items) {
-          //let groupObj = { ...groups };// set a new object to replace groups
-          // unescape the topic if it was escaped
-          let voterTopics = resObj.data.Items.map((itm) => {
-            let unescapedTopic = unescape(itm.topic);
-            itm.topic = unescapedTopic;
-            itm.tags = createTags(itm.tags); 
-            return itm;
-          });
-          
-          let checkedTopics = await checkComments(voterTopics);
+      const resObj = await axios.post(`${config.apiBaseUrl}/votes/my-topics`, { groupId: thisGroup.gsid, active: true }, reqOpts);
+      if (resObj && resObj.data.Items) {
+        //let groupObj = { ...groups };// set a new object to replace groups
+        // unescape the topic if it was escaped
+        let voterTopics = resObj.data.Items.map((itm) => {
+          let unescapedTopic = unescape(itm.topic);
+          itm.topic = unescapedTopic;
+          itm.tags = createTags(itm.tags);
+          return itm;
+        });
 
-          //groupObj[group].topics = checkedTopics;
-          setCurrentTopics(checkedTopics);
+        let checkedTopics = await checkComments(voterTopics);
+
+        //groupObj[group].topics = checkedTopics;
+        setCurrentTopics(checkedTopics);
 
 
-          //setGroups(groupObj);
-       }
-        
+        //setGroups(groupObj);
+      }
+
       //}
 
     } catch (err) {
@@ -171,33 +171,33 @@ function Conduit() {
 
   }
 
-  const getReceivers = async ()=>{
-      try {
+  const getReceivers = async () => {
+    try {
 
-        const authCookie = cookies.getCookie('voterToken') || "";
-        if (authCookie === "") {
+      const authCookie = cookies.getCookie('voterToken') || "";
+      if (authCookie === "") {
 
-          navigate('/validate');
-        }
-        // get the cookie and set the auth header
-        const reqOpts = {
-          headers: {
-            "Authorization": `Bearer ${authCookie}`
-          },
-          withCredentials: true
-        }
+        navigate('/validate');
+      }
+      // get the cookie and set the auth header
+      const reqOpts = {
+        headers: {
+          "Authorization": `Bearer ${authCookie}`
+        },
+        withCredentials: true
+      }
 
-        const resObj = await axios.post(`${config.apiBaseUrl}/votes/get-receivers`,{}, reqOpts);
-        if (resObj && resObj.data.Items) {
-          //let groupObj = { ...groups };// set a new object to replace groups
-          // unescape the topic if it was escaped
-          let receivers = resObj.data.Items.map((itm) => {
-            return itm
-          });
+      const resObj = await axios.post(`${config.apiBaseUrl}/votes/get-receivers`, {}, reqOpts);
+      if (resObj && resObj.data.Items) {
+        //let groupObj = { ...groups };// set a new object to replace groups
+        // unescape the topic if it was escaped
+        let receivers = resObj.data.Items.map((itm) => {
+          return itm
+        });
 
-          return receivers;
-       }
-        
+        return receivers;
+      }
+
       //}
 
     } catch (err) {
@@ -206,37 +206,37 @@ function Conduit() {
   }
 
   const checkComments = async (topics) => {
-     try{
-      
-      if(!topics){
-        return; 
+    try {
+
+      if (!topics) {
+        return;
       }
       let checkedTopics = [];// to hold array of promises 
       // create promises for each 
       let topicCount = 0;
-      
-      while(topicCount < topics.length){
-        let itm = topics[topicCount]; 
+
+      while (topicCount < topics.length) {
+        let itm = topics[topicCount];
         let hasCompleted = await checkComment(itm.groupId, itm.topicId);
-        if(hasCompleted && hasCompleted.groupId){
-          
-            itm.hasCommented = hasCompleted.hasCommented;
-        } 
-        checkedTopics.push(itm); 
-        topicCount += 1; 
+        if (hasCompleted && hasCompleted.groupId) {
+
+          itm.hasCommented = hasCompleted.hasCommented;
+        }
+        checkedTopics.push(itm);
+        topicCount += 1;
       }
-     
-        return checkedTopics;
-      }catch(err){
-        console.log('no topics ')
-      }
+
+      return checkedTopics;
+    } catch (err) {
+      console.log('no topics ')
+    }
   }
 
-  const checkComment = async (groupId,topicId) => {
-    if(!groupId || !topicId){
+  const checkComment = async (groupId, topicId) => {
+    if (!groupId || !topicId) {
       return;
     }
-    try{
+    try {
       const authCookie = cookies.getCookie('voterToken') || "";
       if (authCookie === "") {
 
@@ -251,29 +251,29 @@ function Conduit() {
       }
 
       const resObj = await axios.post(`${config.apiBaseUrl}/votes/check-comment`, {
-        groupId:groupId,
-        topicId:topicId,
+        groupId: groupId,
+        topicId: topicId,
       }, reqOpts);
 
-      if(resObj && resObj.data){
-       return resObj.data;
-      }else{
+      if (resObj && resObj.data) {
+        return resObj.data;
+      } else {
         return {};
       }
 
-    }catch(err){
+    } catch (err) {
       return {};
     }
   }
 
   // sends the comment to be posted 
-  const sendComment = async (comment)=>{
+  const sendComment = async (comment) => {
     let groupId = groups[currentGroup].gsid;
     let topicId = currentTopic.topicId;
-    if(!groupId || !topicId || !comment){
+    if (!groupId || !topicId || !comment) {
       return;
     }
-    try{
+    try {
       const authCookie = cookies.getCookie('voterToken') || "";
       if (authCookie === "") {
 
@@ -288,27 +288,27 @@ function Conduit() {
       }
 
       const resObj = await axios.post(`${config.apiBaseUrl}/votes/create-comment`, {
-        groupId:groupId,
-        topicId:topicId,
-        comment:comment
+        groupId: groupId,
+        topicId: topicId,
+        comment: comment
       }, reqOpts);
 
-      if(resObj && resObj.status === 200){
+      if (resObj && resObj.status === 200) {
         setAlertType('success');
         setAlertTitle('Success!');
         setAlertMsg(reason.success);
-      }else{
+      } else {
         setAlertType('danger');
         setAlertTitle('Voter already commented');
         setAlertMsg(reason.duplicate);
       }
-      
+
       setTryComment(false);
       setShow(true);
 
       await getTopics(currentGroup);
 
-    }catch(err){
+    } catch (err) {
       setAlertType('danger');
       setAlertTitle('Error');
       setAlertMsg(reason.error);
@@ -319,148 +319,225 @@ function Conduit() {
 
   // takes the string representation of the tags
   // breaks them up and turns them into links
-  const createTags = (tags)=>{
+  const createTags = (tags) => {
 
-      let tagsArr = [];
-      // create a map of the receivers to get their level
-     
-      try{
-         let receiverMap = {}
-      if(receivers && receivers.length){
-        receivers.map((itm,ind)=>{
+    let tagsArr = [];
+    // create a map of the receivers to get their level
+
+    try {
+      let receiverMap = {}
+      if (receivers && receivers.length) {
+        receivers.map((itm, ind) => {
           receiverMap[itm.receiverId.S] = itm.level.S;
         });
       }
-          let tagsColl = tags.split("|");
-          tagsColl.map((itm,ind)=>{  
-              let tag = itm.split("-");
-              let tagId = tag[0];
-              let lastname = tag[1]; 
-              let receiverLevel = receiverMap[tagId];
-              if(tagId){
-                tagsArr.push({receiverId:tagId,lastname:lastname, level:receiverLevel});
-              }
-          });
-      }catch(err){
-        return [];   
-      }
-      return tagsArr; 
+      let tagsColl = tags.split("|");
+      tagsColl.map((itm, ind) => {
+        let tag = itm.split("-");
+        let tagId = tag[0];
+        let lastname = tag[1];
+        let receiverLevel = receiverMap[tagId];
+        if (tagId) {
+          tagsArr.push({ receiverId: tagId, lastname: lastname, level: receiverLevel });
+        }
+      });
+    } catch (err) {
+      return [];
+    }
+    return tagsArr;
   }
 
   const getReceiver = (tag) => {
-    try{
+    try {
       let receiver = {};
-      receivers.map((itm,ind)=>{
-        if(itm.receiverId.S === tag){
-          if(itm && itm.website && itm.website.S){
+      receivers.map((itm, ind) => {
+        if (itm.receiverId.S === tag) {
+          if (itm && itm.website && itm.website.S) {
             itm.website.S = unescape(itm.website.S);
           }
-          if(itm && itm.social && itm.social.S){
+          if (itm && itm.social && itm.social.S) {
             itm.social.S = unescape(itm.social.S);
           }
-          
-          
-          receiver = itm; 
+
+
+          receiver = itm;
         }
       })
-      if(receiver){
-        setCurrentReceiver(receiver); 
+      if (receiver) {
+        setCurrentReceiver(receiver);
       }
-      
-    }catch(err){
+
+    } catch (err) {
       console.error("Couldn't set receiver");
     }
-      
+
   }
 
   return (<Container fluid="md">
-      <h2>Conduit <img src="../conduit.png" className='conduit-title' alt="conduit" title="conduit" /></h2>
-      <p>Conduit is a service that allows you to make a comment on a specific topic. Your comment goes directly to a feed that we publish specifically for your elected officials, candidates and public officials.</p>
-      <hr></hr>
-     {loading ? (<div className="comment-loading loading-centered"><Spinner animation="border" role="status" className='loading-spinner'> <span className="visually-hidden">Loading...</span></Spinner></div>) : (
+    <h2>Conduit <img src="../conduit.png" className='conduit-title' alt="conduit" title="conduit" /></h2>
+    <p>Conduit is a service that allows you to make a comment on a specific topic. Your comment goes directly to a feed that we publish specifically for your elected officials, candidates and public officials.</p>
+    <hr></hr>
+    <Row>
 
-      <Tabs onSelect={async (e) => {
-      let groupName = e; 
-      setCurrentGroup(groupName);
-      let group = groups[groupName] || "";
-      if (group && group.hasOwnProperty('topics') === false) {
-        await getTopics(groupName);
-      }
-      return;
+      {show ? (
+        <Col lg={6} xs={12}>
+          <Toast className='conduit-toast' bg={alertType} onClose={() => setShow(false)} show={show} delay={3000} autohide>
+            <Toast.Header>
+              <strong className="me-auto">{alertTitle}</strong>
+            </Toast.Header>
+            <Toast.Body>{alertTitle} {alertMsg}</Toast.Body>
+          </Toast>
+        </Col>
+      ) : (<></>)}
+    </Row>
+    {loading ? (<div className="comment-loading loading-centered"><Spinner animation="border" role="status" className='loading-spinner'> <span className="visually-hidden">Loading...</span></Spinner></div>) : (
 
-    }}>
-     
-      {(loading === false && groups) ? Object.keys(groups).map((itm, ind) => {
-        return (
-          <Tab eventKey={itm} title={itm} key={ind}>
-            
-            <h4 className='mt-1'>{groups[itm].title}  <img src={`../${groups[itm].name}.png`} alt={groups[itm].name} title={groups[itm].name} className='table-group-img'></img></h4>
-            <Row>
-              <Col lg={6} xs={12}><p>Description: {groups[itm].description}</p></Col>
-               {show ? (
-              <Col lg={6} xs={12}>
-                <Toast className='conduit-toast' bg={alertType} onClose={() => setShow(false)} show={show} delay={3000} autohide>
-                  <Toast.Header>
-                    <strong className="me-auto">{alertTitle}</strong>
-                  </Toast.Header>
-                  <Toast.Body>{alertTitle} {alertMsg}</Toast.Body>
-                </Toast>
-              </Col>
-             ):(<></>)}
-            </Row>
-            
-            
-            {currentTopics ? (
-             <>
-             <Table key={ind} striped bordered hover>
-             <thead>
-                <tr>
-                  <th>Topics</th>
-                  <th className='table-link-col'>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {currentTopics.map((itm,ind) => {
-              return (
-              <tr key={ind} className={itm.hasCommented ? 'vote-completed' : ''}>
-                <td>
-                  <div className='topic'>{itm.topic}</div>
-                  <div className='tags'>Receivers: {itm.tags && Array.isArray(itm.tags) ? (itm.tags.map((itm,ind)=>{
-                    return (<>{ind && ind > 0 ? (" | "):(<></>)}<Button className={`conduit-receivers ${itm && itm.level ? itm.level:''}`} value={itm.receiverId}  onClick={(e)=>{
-                      getReceiver(e.currentTarget.value);
-                      setTryReceiver(true); 
-                    }} key={ind}>{itm.lastname}</Button> </> );
-                    })):(<></>)}</div>
-                </td>
-                <td className='table-link-col'>{itm.hasCommented ? (<OverlayTrigger overlay={<Tooltip id={`tooltip${ind}`}>You Commented</Tooltip>}><div><img src='../check-square.svg' alt='comment completed' title='comment completed'></img></div></OverlayTrigger>):(
-                  <Button variant='primary' onClick={(e)=>{
-                let topic = itm;
-                setCurrentTopic(topic);
-                setTryComment(true);
-              }}>Comment</Button>
-                )}</td>
-              </tr>
-             )
-             }
-             )
-             }
-              </tbody>
-            </Table> 
+      // <Tabs onSelect={async (e) => {
+      //   let groupName = e;
+      //   setCurrentGroup(groupName);
+      //   let group = groups[groupName] || "";
+      //   if (group && group.hasOwnProperty('topics') === false) {
+      //     await getTopics(groupName);
+      //   }
+      //   return;
 
-             {tryComment && currentTopic ? (<Comment show={tryComment} hide={setTryComment} send={sendComment} topic={currentTopic.topic}></Comment>):("")}
-             {tryReceiver && currentReceiver ? (<Receiver show={tryReceiver} hide={setTryReceiver} receiver={currentReceiver}></Receiver>):("")}
-             </>
-            ):(<div>No topics yet</div>)}
-          </Tab>
-        )
-      }) : (<></>)
-      }
-   
-    </Tabs>
-   
+      // }}>
 
-     )}
-    
+      //   {(loading === false && groups) ? Object.keys(groups).map((itm, ind) => {
+      //     return (
+
+      //       <Tab eventKey={itm} title={itm} key={ind}>
+      //         <Col lg={6} xs={12}><p>Description: {groups[itm].description}</p></Col>
+      //         <h4 className='mt-1'>{groups[itm].title}  <img src={`../${groups[itm].name}.png`} alt={groups[itm].name} title={groups[itm].name} className='table-group-img'></img></h4>
+      //         {currentTopics ? (
+      //           <>
+      //             <Table key={ind} striped bordered hover>
+      //               <thead>
+      //                 <tr>
+      //                   <th>Topics</th>
+      //                   <th className='table-link-col'>Action</th>
+      //                 </tr>
+      //               </thead>
+      //               <tbody>
+      //                 {currentTopics.map((itm, ind) => {
+      //                   return (
+      //                     <tr key={ind} className={itm.hasCommented ? 'vote-completed' : ''}>
+      //                       <td>
+      //                         <div className='topic'>{itm.topic}</div>
+      //                         <div className='tags'>Receivers: {itm.tags && Array.isArray(itm.tags) ? (itm.tags.map((itm, ind) => {
+      //                           return (<>{ind && ind > 0 ? (" | ") : (<></>)}<Button className={`conduit-receivers ${itm && itm.level ? itm.level : ''}`} value={itm.receiverId} onClick={(e) => {
+      //                             getReceiver(e.currentTarget.value);
+      //                             setTryReceiver(true);
+      //                           }} key={ind}>{itm.lastname}</Button> </>);
+      //                         })) : (<></>)}</div>
+      //                       </td>
+      //                       <td className='table-link-col'>{itm.hasCommented ? (<OverlayTrigger overlay={<Tooltip id={`tooltip${ind}`}>You Commented</Tooltip>}><div><img src='../check-square.svg' alt='comment completed' title='comment completed'></img></div></OverlayTrigger>) : (
+      //                         <Button variant='primary' onClick={(e) => {
+      //                           let topic = itm;
+      //                           setCurrentTopic(topic);
+      //                           setTryComment(true);
+      //                         }}>Comment</Button>
+      //                       )}</td>
+      //                     </tr>
+      //                   )
+      //                 }
+      //                 )
+      //                 }
+      //               </tbody>
+      //             </Table>
+
+      //             {tryComment && currentTopic ? (<Comment show={tryComment} hide={setTryComment} send={sendComment} topic={currentTopic.topic}></Comment>) : ("")}
+      //             {tryReceiver && currentReceiver ? (<Receiver show={tryReceiver} hide={setTryReceiver} receiver={currentReceiver}></Receiver>) : ("")}
+      //           </>
+      //         ) : (<div>No topics yet</div>)}
+      //       </Tab>
+      //     )
+      //   }) : (<></>)
+      //   }
+
+
+
+
+        
+
+
+
+
+      // </Tabs>
+
+        <Tab.Container defaultActiveKey="Local">
+          <Row>
+              <Nav variant='tabs' defaultActiveKey={"/Local"}>
+                <Nav.Item>
+                  <Nav.Link eventKey="Local">Local</Nav.Link>
+                </Nav.Item>
+                <Nav.Item>
+                  <Nav.Link eventKey="State">State</Nav.Link>
+                </Nav.Item>
+                <Nav.Item>
+                  <Nav.Link eventKey="National">National</Nav.Link>
+                </Nav.Item>
+              </Nav>
+          </Row>
+          <Row>
+            <Col sm={12}>
+              <Tab.Content>
+                {(loading === false && groups) ? Object.keys(groups).map((itm, ind) => {
+                  return (
+                    <Tab.Pane eventKey={itm}>
+                      <Col lg={6} xs={12}><p>Description: {groups[itm].description}</p></Col>
+                      <h4 className='mt-1'>{groups[itm].title}  <img src={`../${groups[itm].name}.png`} alt={groups[itm].name} title={groups[itm].name} className='table-group-img'></img></h4>
+                      {currentTopics ? (
+                        <>
+                          <Table key={ind} striped bordered hover>
+                            <thead>
+                              <tr>
+                                <th>Topics</th>
+                                <th className='table-link-col'>Action</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {currentTopics.map((itm, ind) => {
+                                return (
+                                  <tr key={ind} className={itm.hasCommented ? 'vote-completed' : ''}>
+                                    <td>
+                                      <div className='topic'>{itm.topic}</div>
+                                      <div className='tags'>Receivers: {itm.tags && Array.isArray(itm.tags) ? (itm.tags.map((itm, ind) => {
+                                        return (<>{ind && ind > 0 ? (" | ") : (<></>)}<Button className={`conduit-receivers ${itm && itm.level ? itm.level : ''}`} value={itm.receiverId} onClick={(e) => {
+                                          getReceiver(e.currentTarget.value);
+                                          setTryReceiver(true);
+                                        }} key={ind}>{itm.lastname}</Button> </>);
+                                      })) : (<></>)}</div>
+                                    </td>
+                                    <td className='table-link-col'>{itm.hasCommented ? (<OverlayTrigger overlay={<Tooltip id={`tooltip${ind}`}>You Commented</Tooltip>}><div><img src='../check-square.svg' alt='comment completed' title='comment completed'></img></div></OverlayTrigger>) : (
+                                      <Button variant='primary' onClick={(e) => {
+                                        let topic = itm;
+                                        setCurrentTopic(topic);
+                                        setTryComment(true);
+                                      }}>Comment</Button>
+                                    )}</td>
+                                  </tr>
+                                )
+                              }
+                              )
+                              }
+                            </tbody>
+                          </Table>
+
+                          {tryComment && currentTopic ? (<Comment show={tryComment} hide={setTryComment} send={sendComment} topic={currentTopic.topic}></Comment>) : ("")}
+                          {tryReceiver && currentReceiver ? (<Receiver show={tryReceiver} hide={setTryReceiver} receiver={currentReceiver}></Receiver>) : ("")}
+                        </>
+                      ) : (<div>No topics yet</div>)}
+                    </Tab.Pane>)
+                }) : (<></>)}
+              </Tab.Content>
+            </Col>
+          </Row>
+
+
+        </Tab.Container>
+    )}
+
   </Container>)
 
 
@@ -468,14 +545,3 @@ function Conduit() {
 
 export default Conduit;
 
-
-/**
- * <Button onClick={async (e)=>{
-                let topicId = itm.topicId;
-                let groupId = groups[currentGroup].gsid;
-                console.log('Group: ', groupId, ' Topic: ', topicId); 
-                setCurrentTopic(topicId);
-                let hasCommented = await checkComment(groupId,topicId);
-
-              }}>Check for comment</Button>
- */
