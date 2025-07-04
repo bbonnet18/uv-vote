@@ -62,13 +62,13 @@ function VoteList (props){
                       if(itm && itm.link){
                         window.location=itm.link;
                       }
-                    }}>Vote</Button> ):(itm.link === 'completed') ? (<OverlayTrigger overlay={<Tooltip id={`tooltip${ind}`}>You Voted</Tooltip>}><div><img src='../check-square.svg' alt='comment completed' title='comment completed'></img></div></OverlayTrigger>) : (<span><Button variant="primary" onClick={(e)=>{
+                    }}><img src='../play.svg' className='button-icon' alt='vote on this issue' title='vote on this issue' /><span>Vote</span></Button> ):(itm.link === 'completed') ? (<OverlayTrigger overlay={<Tooltip id={`tooltip${ind}`}>You Voted</Tooltip>}><div><img src='../check-square-full.svg' alt='comment completed' title='comment completed'></img></div></OverlayTrigger>) : (<span><Button variant="primary" onClick={(e)=>{
                     e.preventDefault();
                     let myLid = {...loadingIds};
                     myLid[itm.surveyId] = 'loading';
                     setLoadingIds(myLid)
                     props.register(itm.surveyId)}
-                  } alt='click or tap to register' title='click or tap to register' >Register</Button></span>))}</td>
+                  } alt='click or tap to register' title='click or tap to register' ><img src='../register.svg' className='button-icon' alt='register for this issue' title='register for this issue' /><span>Register</span></Button></span>))}</td>
                 </tr>)
               }) : (<tr><td className='no-votes'><img src='./emoji-frown.svg' alt='no votes available' />No votes available - check back soon!</td><td></td></tr>)}
               </tbody>

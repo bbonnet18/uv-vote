@@ -44,7 +44,7 @@ function Comment(props) {
                         <Modal.Body>
                              <h4>Topic: {props.topic}</h4>
                             <span>Text remaining: </span><span id="charLimit" >{currText}</span>
-                            <div className='comment'><textarea id="conduitComment" onChange={(e) => {
+                            <div className='comment'><textarea onChange={(e) => {
                                 let val = e.currentTarget.value;
                                 setCurrVal(val);
                             }} onKeyUp={checkChar} placeholder='use this space to enter your text' value={currVal} /></div>

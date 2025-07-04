@@ -199,15 +199,22 @@ button, .btn {
 
 .comment-dialog{
   width: 100% !important;
-  margin-top: 0 !important;
-  margin-bottom: 0 !important;
+  margin: 0 !important;
 }
+
 .comment-dialog .comment-loading{
   min-height:250px;
   padding-top: 100px
 }
 
-.comment-icon{
+.comment-dialog .modal-body{
+  padding: 10px !important; 
+}
+.comment-dialog .modal-footer{
+  margin-top: 10px;
+}
+
+.button-icon{
   width: 30px;
   margin-right: 10px;
 }
@@ -220,6 +227,9 @@ button, .btn {
 
 .conduit-receivers{
   padding: 0.2em !important;
+  background-color: transparent !important;
+  border: 1px solid black !important;
+  color: #000 !important;
 }
 
 .local{
@@ -249,8 +259,8 @@ button, .btn {
 }
 .modal-body .comment{
   width: 100%;
-  box-sizing: content-box;
-  padding: 0;
+  box-sizing: border-box;
+  padding: 2%;
 }
 
 
@@ -259,7 +269,7 @@ button, .btn {
 }
 .modal-body .comment textarea{
   width:100%;
-  min-height: 6em;
+  min-height: 8em;
 }
 
 .cookies{
@@ -556,8 +566,8 @@ Form input.error {
 
 .nav-indicator{
   display: inline-block;
-  width: 20px;
-  height: 20px;
+  width: 20px !important;
+  height: 20px !important;
   border-radius: 5px;
   margin-left: 10px;
   margin-top: 5px;
@@ -801,7 +811,7 @@ Form input.error {
 }
 
 .vote-completed div>img {
-  width: 25px;
+  width: 30%;
 }
 
 #verifyAddress {
@@ -937,7 +947,7 @@ Form input.error {
     margin:auto;
     text-align: center;
   }
-  .comment-icon{
+  .button-icon{
     margin:auto
   }
   .table-link-col button span{
@@ -958,6 +968,9 @@ Form input.error {
   .video-space{
     margin-left: auto;
     margin-right: auto;
+  }
+  .vote-completed div>img {
+    width: 70%;
   }
   #votingGap{
     width: 100%;

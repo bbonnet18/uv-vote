@@ -1,7 +1,7 @@
 import './App.css';
 import { useState, useEffect } from 'react';
 import axios from "axios";
-import { Col, Alert, Row, Button, Container, Nav, OverlayTrigger, Table, Tab, Tabs, Toast, Tooltip, Spinner } from "react-bootstrap";
+import { Col, Alert, Row, Button, Container, Nav, OverlayTrigger, Table, Tab, Tabs, Toast, Tooltip, Spinner, ToastContainer } from "react-bootstrap";
 import Comment from './Comment';
 import Receiver from './Receiver';
 import { useNavigate } from 'react-router-dom';
@@ -381,95 +381,34 @@ function Conduit() {
 
       {show ? (
         <Col lg={6} xs={12}>
-          <Toast className='conduit-toast' bg={alertType} onClose={() => setShow(false)} show={show} delay={3000} autohide>
+          <ToastContainer position='middle-center'>
+            <Toast className='conduit-toast' bg={alertType} onClose={() => setShow(false)} show={show} delay={3000} autohide>
             <Toast.Header>
               <strong className="me-auto">{alertTitle}</strong>
             </Toast.Header>
             <Toast.Body>{alertTitle} {alertMsg}</Toast.Body>
           </Toast>
+          </ToastContainer>
         </Col>
       ) : (<></>)}
     </Row>
     {loading ? (<div className="comment-loading loading-centered"><Spinner animation="border" role="status" className='loading-spinner'> <span className="visually-hidden">Loading...</span></Spinner></div>) : (
 
-      // <Tabs onSelect={async (e) => {
-      //   let groupName = e;
-      //   setCurrentGroup(groupName);
-      //   let group = groups[groupName] || "";
-      //   if (group && group.hasOwnProperty('topics') === false) {
-      //     await getTopics(groupName);
-      //   }
-      //   return;
+  
+        <Tab.Container defaultActiveKey="Local" onSelect={async (e) => {
+        let groupName = e;
+        setCurrentGroup(groupName);
+        let group = groups[groupName] || "";
+        if (group && group.hasOwnProperty('topics') === false) {
+          await getTopics(groupName);
+        }
+        return;
 
-      // }}>
-
-      //   {(loading === false && groups) ? Object.keys(groups).map((itm, ind) => {
-      //     return (
-
-      //       <Tab eventKey={itm} title={itm} key={ind}>
-      //         <Col lg={6} xs={12}><p>Description: {groups[itm].description}</p></Col>
-      //         <h4 className='mt-1'>{groups[itm].title}  <img src={`../${groups[itm].name}.png`} alt={groups[itm].name} title={groups[itm].name} className='table-group-img'></img></h4>
-      //         {currentTopics ? (
-      //           <>
-      //             <Table key={ind} striped bordered hover>
-      //               <thead>
-      //                 <tr>
-      //                   <th>Topics</th>
-      //                   <th className='table-link-col'>Action</th>
-      //                 </tr>
-      //               </thead>
-      //               <tbody>
-      //                 {currentTopics.map((itm, ind) => {
-      //                   return (
-      //                     <tr key={ind} className={itm.hasCommented ? 'vote-completed' : ''}>
-      //                       <td>
-      //                         <div className='topic'>{itm.topic}</div>
-      //                         <div className='tags'>Receivers: {itm.tags && Array.isArray(itm.tags) ? (itm.tags.map((itm, ind) => {
-      //                           return (<>{ind && ind > 0 ? (" | ") : (<></>)}<Button className={`conduit-receivers ${itm && itm.level ? itm.level : ''}`} value={itm.receiverId} onClick={(e) => {
-      //                             getReceiver(e.currentTarget.value);
-      //                             setTryReceiver(true);
-      //                           }} key={ind}>{itm.lastname}</Button> </>);
-      //                         })) : (<></>)}</div>
-      //                       </td>
-      //                       <td className='table-link-col'>{itm.hasCommented ? (<OverlayTrigger overlay={<Tooltip id={`tooltip${ind}`}>You Commented</Tooltip>}><div><img src='../check-square.svg' alt='comment completed' title='comment completed'></img></div></OverlayTrigger>) : (
-      //                         <Button variant='primary' onClick={(e) => {
-      //                           let topic = itm;
-      //                           setCurrentTopic(topic);
-      //                           setTryComment(true);
-      //                         }}>Comment</Button>
-      //                       )}</td>
-      //                     </tr>
-      //                   )
-      //                 }
-      //                 )
-      //                 }
-      //               </tbody>
-      //             </Table>
-
-      //             {tryComment && currentTopic ? (<Comment show={tryComment} hide={setTryComment} send={sendComment} topic={currentTopic.topic}></Comment>) : ("")}
-      //             {tryReceiver && currentReceiver ? (<Receiver show={tryReceiver} hide={setTryReceiver} receiver={currentReceiver}></Receiver>) : ("")}
-      //           </>
-      //         ) : (<div>No topics yet</div>)}
-      //       </Tab>
-      //     )
-      //   }) : (<></>)
-      //   }
-
-
-
-
-        
-
-
-
-
-      // </Tabs>
-
-        <Tab.Container defaultActiveKey="Local">
+      }}>
           <Row>
               <Nav variant='tabs' defaultActiveKey={"/Local"}>
                 <Nav.Item>
-                  <Nav.Link eventKey="Local">Local <div className='nav-indicator local'></div></Nav.Link>
+                  <Nav.Link eventKey="Local">Local<div className='nav-indicator local'></div></Nav.Link>
                 </Nav.Item>
                 <Nav.Item>
                   <Nav.Link eventKey="State">State<div className='nav-indicator state'></div></Nav.Link>
@@ -503,18 +442,18 @@ function Conduit() {
                                     <td>
                                       <div className='topic'>{itm.topic}</div>
                                       <div className='tags'>Receivers: {itm.tags && Array.isArray(itm.tags) ? (itm.tags.map((itm, ind) => {
-                                        return (<>{ind && ind > 0 ? (" | ") : (<></>)}<Button  className={`conduit-receivers ${itm && itm.level ? itm.level : ''}`} value={itm.receiverId} onClick={(e) => {
+                                        return (<>{ind && ind > 0 ? (" | ") : (<></>)}<Button className={'conduit-receivers'} value={itm.receiverId} onClick={(e) => {
                                           getReceiver(e.currentTarget.value);
                                           setTryReceiver(true);
-                                        }} key={ind}>{itm.lastname}</Button> </>);
+                                        }} key={ind}>{itm.lastname} <div className={`nav-indicator ${itm && itm.level ? itm.level : ''}`}></div> </Button> </>);
                                       })) : (<></>)}</div>
                                     </td>
-                                    <td className='table-link-col'>{itm.hasCommented ? (<OverlayTrigger overlay={<Tooltip id={`tooltip${ind}`}>You Commented</Tooltip>}><div><img src='../check-square.svg' alt='comment completed' title='comment completed'></img></div></OverlayTrigger>) : (
+                                    <td className='table-link-col'>{itm.hasCommented ? (<OverlayTrigger overlay={<Tooltip id={`tooltip${ind}`}>You Commented</Tooltip>}><div><img src='../check-square-full.svg' alt='comment completed' title='comment completed'></img></div></OverlayTrigger>) : (
                                       <Button variant='primary' onClick={(e) => {
                                         let topic = itm;
                                         setCurrentTopic(topic);
                                         setTryComment(true);
-                                      }}><img src='../chat-quote.svg' className='comment-icon' alt='comment on this issue' title='comment on this issue' /><span>Comment</span></Button>
+                                      }}><img src='../chat-quote.svg' className='button-icon' alt='comment on this issue' title='comment on this issue' /><span>Comment</span></Button>
                                     )}</td>
                                   </tr>
                                 )
