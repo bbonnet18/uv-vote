@@ -469,13 +469,13 @@ function Conduit() {
           <Row>
               <Nav variant='tabs' defaultActiveKey={"/Local"}>
                 <Nav.Item>
-                  <Nav.Link eventKey="Local">Local</Nav.Link>
+                  <Nav.Link eventKey="Local">Local <div className='nav-indicator local'></div></Nav.Link>
                 </Nav.Item>
                 <Nav.Item>
-                  <Nav.Link eventKey="State">State</Nav.Link>
+                  <Nav.Link eventKey="State">State<div className='nav-indicator state'></div></Nav.Link>
                 </Nav.Item>
                 <Nav.Item>
-                  <Nav.Link eventKey="National">National</Nav.Link>
+                  <Nav.Link eventKey="National">National<div className='nav-indicator national'></div></Nav.Link>
                 </Nav.Item>
               </Nav>
           </Row>
@@ -503,7 +503,7 @@ function Conduit() {
                                     <td>
                                       <div className='topic'>{itm.topic}</div>
                                       <div className='tags'>Receivers: {itm.tags && Array.isArray(itm.tags) ? (itm.tags.map((itm, ind) => {
-                                        return (<>{ind && ind > 0 ? (" | ") : (<></>)}<Button className={`conduit-receivers ${itm && itm.level ? itm.level : ''}`} value={itm.receiverId} onClick={(e) => {
+                                        return (<>{ind && ind > 0 ? (" | ") : (<></>)}<Button  className={`conduit-receivers ${itm && itm.level ? itm.level : ''}`} value={itm.receiverId} onClick={(e) => {
                                           getReceiver(e.currentTarget.value);
                                           setTryReceiver(true);
                                         }} key={ind}>{itm.lastname}</Button> </>);
@@ -514,7 +514,7 @@ function Conduit() {
                                         let topic = itm;
                                         setCurrentTopic(topic);
                                         setTryComment(true);
-                                      }}>Comment</Button>
+                                      }}><img src='../chat-quote.svg' className='comment-icon' alt='comment on this issue' title='comment on this issue' /><span>Comment</span></Button>
                                     )}</td>
                                   </tr>
                                 )

@@ -207,6 +207,10 @@ button, .btn {
   padding-top: 100px
 }
 
+.comment-icon{
+  width: 30px;
+  margin-right: 10px;
+}
 
 
 
@@ -219,11 +223,11 @@ button, .btn {
 }
 
 .local{
-  background-color: #ADD9B0 !important;
+  background-color: #038C7F !important;
 }
 
 .state{
-  background-color: #F2F2F2 !important;
+  background-color: #030A8C !important;
 }
 .national{
   background-color: #0D0D0D !important;
@@ -512,6 +516,16 @@ Form input.error {
   width: 300px;
 }
 
+.nav-item{
+  font-size: larger;
+}
+
+.nav-item a{
+  border-radius: 0 !important;
+  vertical-align: middle;
+  
+}
+
 .nav-link {
   color: #000 !important;
 }
@@ -538,6 +552,15 @@ Form input.error {
 .nav ul li a.active{
   border-bottom: 3px solid #0C2D48;
   font-weight: 800;
+}
+
+.nav-indicator{
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border-radius: 5px;
+  margin-left: 10px;
+  margin-top: 5px;
 }
 
 .no-voter{
@@ -914,6 +937,13 @@ Form input.error {
     margin:auto;
     text-align: center;
   }
+  .comment-icon{
+    margin:auto
+  }
+  .table-link-col button span{
+    display: none;
+  }
+
   .video-facade{
     display: block;
     margin:auto;
