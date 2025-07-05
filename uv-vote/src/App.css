@@ -232,6 +232,12 @@ button, .btn {
   color: #000 !important;
 }
 
+.conduit-receivers .conduit-receiver-label{
+  display: inline-block;
+  width: auto !important;
+  vertical-align: text-bottom;
+}
+
 .local{
   background-color: #038C7F !important;
 }
@@ -246,6 +252,30 @@ button, .btn {
 .conduit-toast{
   float:right;
   position:relative;
+  border-radius: 0px !important;
+}
+
+.conduit-toast .toast-header{
+  border-radius: 0px !important;
+  background-color: #f6f6f6;
+
+}
+
+.conduit-toast .toast-body{
+  background-color: #FFF;
+}
+
+.conduit-toast .conduit-toast-action{
+  margin:auto; 
+  text-align: center;
+}
+.conduit-toast .conduit-toast-action img{
+  width: 50px;
+}
+
+.conduit-toast .conduit-toast-message{
+  text-align: center;
+  font-weight: bold;
 }
 
 .modal-dialog .modal-content{
@@ -569,7 +599,7 @@ Form input.error {
   width: 20px !important;
   height: 20px !important;
   border-radius: 5px;
-  margin-left: 10px;
+  margin-left: 5px;
   margin-top: 5px;
 }
 
@@ -907,6 +937,10 @@ Form input.error {
     margin: 0;
     padding: 0;
   }
+
+  .vote-completed div>img {
+    width: 70%;
+  }
 }
 
 
@@ -920,6 +954,9 @@ Form input.error {
     position: relative;
     top: 20px;
     left: 0px;
+  }
+  .conduit-receivers{
+    padding: 1px 2px !important;
   }
 
 
@@ -951,7 +988,8 @@ Form input.error {
     margin:auto
   }
   .table-link-col button span{
-    display: none;
+    display: block;
+    font-size: small;
   }
 
   .video-facade{
@@ -968,9 +1006,6 @@ Form input.error {
   .video-space{
     margin-left: auto;
     margin-right: auto;
-  }
-  .vote-completed div>img {
-    width: 70%;
   }
   #votingGap{
     width: 100%;

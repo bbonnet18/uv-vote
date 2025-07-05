@@ -22,8 +22,8 @@ function Conduit() {
   const [tryReceiver, setTryReceiver] = useState(false);
   const [show, setShow] = useState(false);
   const [alertTitle, setAlertTitle] = useState('Success!')
-  const [alertMsg, setAlertMsg] = useState("");
-  const [alertType, setAlertType] = useState('success')
+  const [alertMsg, setAlertMsg] = useState("Thanks for submitting your comment");
+  const [alertType, setAlertType] = useState('success');
   //const [completedIds, setCompletedIds] = useState({}); 
   const reason = {
     'success': 'Your comment was created successfully.',
@@ -383,10 +383,13 @@ function Conduit() {
         <Col lg={6} xs={12}>
           <ToastContainer position='middle-center'>
             <Toast className='conduit-toast' bg={alertType} onClose={() => setShow(false)} show={show} delay={3000} autohide>
-            <Toast.Header>
-              <strong className="me-auto">{alertTitle}</strong>
-            </Toast.Header>
-            <Toast.Body>{alertTitle} {alertMsg}</Toast.Body>
+              <Toast.Header>
+                <strong className="me-auto">{alertTitle}</strong>
+              </Toast.Header>
+              <Toast.Body>
+                  <div className='conduit-toast-message'>{alertMsg}</div>
+                  <div className='conduit-toast-action'>{alertType === "success" ? (<img src="../star.svg" title="success!" alt="success" />):(<img src="../exclamation-triangle-red.svg" title="error!" alt="error" />)}</div>
+              </Toast.Body>
           </Toast>
           </ToastContainer>
         </Col>
@@ -442,10 +445,10 @@ function Conduit() {
                                     <td>
                                       <div className='topic'>{itm.topic}</div>
                                       <div className='tags'>Receivers: {itm.tags && Array.isArray(itm.tags) ? (itm.tags.map((itm, ind) => {
-                                        return (<>{ind && ind > 0 ? (" | ") : (<></>)}<Button className={'conduit-receivers'} value={itm.receiverId} onClick={(e) => {
+                                        return (<>{ind && ind > 0 ? (" ") : (<></>)}<Button className={'conduit-receivers'} value={itm.receiverId} onClick={(e) => {
                                           getReceiver(e.currentTarget.value);
                                           setTryReceiver(true);
-                                        }} key={ind}>{itm.lastname} <div className={`nav-indicator ${itm && itm.level ? itm.level : ''}`}></div> </Button> </>);
+                                        }} key={ind}><div className='conduit-receiver-label'>{itm.lastname}</div> <div className={`nav-indicator ${itm && itm.level ? itm.level : ''}`}></div> </Button> </>);
                                       })) : (<></>)}</div>
                                     </td>
                                     <td className='table-link-col'>{itm.hasCommented ? (<OverlayTrigger overlay={<Tooltip id={`tooltip${ind}`}>You Commented</Tooltip>}><div><img src='../check-square-full.svg' alt='comment completed' title='comment completed'></img></div></OverlayTrigger>) : (
