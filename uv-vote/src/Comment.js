@@ -1,6 +1,7 @@
 import './App.css';
 import { NavLink } from "react-router-dom";
 import { Button, Container, Row, Spinner, Col, Card, Modal } from "react-bootstrap";
+import Quotes from './Quotes';
 import { useState } from 'react';
 
 
@@ -12,6 +13,7 @@ function Comment(props) {
     const [currText, setCurrText] = useState(0);// to display text left before limit
     const [currVal, setCurrVal] = useState("");
     const [loading, setLoading] = useState(false);
+    const [showQuote, setShowQuote] = useState(true);
 
     // get the number of characters against the limit
     const checkChar = (e) => {
@@ -37,10 +39,11 @@ function Comment(props) {
                     <div className="comment-loading loading-centered">
                         <Spinner animation="border" role="status" className='loading-spinner spinner-bordered'> <span className="visually-hidden">Loading...</span></Spinner>
                     </div>) : (
-                    <><Modal.Header closeButton>
+                    <>
+                        <Modal.Header closeButton>
                         <Modal.Title>Enter Comment</Modal.Title>
                        
-                    </Modal.Header>
+                        </Modal.Header>
                         <Modal.Body>
                              <h4>Topic: {props.topic}</h4>
                             <span>Text remaining: </span><span id="charLimit" >{currText}</span>
@@ -67,6 +70,7 @@ function Comment(props) {
                                     setLoading(false);
                                 }
                             }}>Send</Button>
+                            <Quotes></Quotes>
                         </Modal.Footer>
                     </>
                 )}

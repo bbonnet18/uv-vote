@@ -79,10 +79,7 @@ return(
         <Card.Text>
           Voting that's convenient and feels like it should in the 21st century. <br></br>Watch the <a href="https://youtu.be/bHeLAYnaKD8" target='_blank' alt="one minute overview video" title="one minute overview video">one minute overview</a> video. 
         </Card.Text>
-        <Button onClick={()=>{
-          errFunc();
-        }}>Throw</Button>
-        {/* <Card.Link href="/about">See how we do it</Card.Link> */}
+        <Card.Link href="/about">See how we do it</Card.Link>
       </Card.Body>
     </Card>
     </Col>

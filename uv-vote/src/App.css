@@ -786,6 +786,27 @@ Form input.error {
 
 }
 
+.u-vote-quote{
+
+}
+
+.u-vote-quote-title{
+  font-style: italic;
+}
+
+.u-vote-quote .u-vote-quote-text{
+  opacity: 0;
+}
+
+.u-vote-quote-text.fade-in{
+  opacity: 1;
+  transition: opacity 1s ease-in-out 3s;
+}
+
+.u-vote-author{
+
+}
+
 .video-facade{
   display:inline-block;
   width:auto !important;
