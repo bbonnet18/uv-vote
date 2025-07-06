@@ -1,8 +1,7 @@
 import './App.css';
-import { NavLink } from "react-router-dom";
-import { Button, Container, Row, Spinner, Col, Card, Modal } from "react-bootstrap";
+import { Button, Modal } from "react-bootstrap";
 import Quotes from './Quotes';
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 
 
 // this will be the main way a voter enters their information after they are hit with the quote
@@ -12,8 +11,15 @@ function Comment(props) {
     const commentLimit = 250;
     const [currText, setCurrText] = useState(0);// to display text left before limit
     const [currVal, setCurrVal] = useState("");
-    const [loading, setLoading] = useState(false);
     const [showQuote, setShowQuote] = useState(true);
+    const [loading, setLoading] = useState(false); 
+
+
+    useEffect(()=>{
+        setInterval(()=>{
+            setShowQuote(false); 
+        },6500)
+    },[]);
 
     // get the number of characters against the limit
     const checkChar = (e) => {
@@ -35,14 +41,11 @@ function Comment(props) {
 
             <Modal.Dialog className="comment-dialog">
 
-                {loading ? (
-                    <div className="comment-loading loading-centered">
-                        <Spinner animation="border" role="status" className='loading-spinner spinner-bordered'> <span className="visually-hidden">Loading...</span></Spinner>
-                    </div>) : (
+                {showQuote ? (<Quotes show={setShowQuote}></Quotes>
+                   ) : (
                     <>
                         <Modal.Header closeButton>
                         <Modal.Title>Enter Comment</Modal.Title>
-                       
                         </Modal.Header>
                         <Modal.Body>
                              <h4>Topic: {props.topic}</h4>
@@ -70,7 +73,6 @@ function Comment(props) {
                                     setLoading(false);
                                 }
                             }}>Send</Button>
-                            <Quotes></Quotes>
                         </Modal.Footer>
                     </>
                 )}

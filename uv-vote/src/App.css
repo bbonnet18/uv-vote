@@ -787,7 +787,12 @@ Form input.error {
 }
 
 .u-vote-quote{
+  text-align: center;
+  min-height: 300px;
 
+}
+.u-vote-quote div{
+  width:100%;
 }
 
 .u-vote-quote-title{
@@ -796,16 +801,41 @@ Form input.error {
 
 .u-vote-quote .u-vote-quote-text{
   opacity: 0;
+  font-style: italic;
 }
-
-.u-vote-quote-text.fade-in{
-  opacity: 1;
-  transition: opacity 1s ease-in-out 3s;
-}
-
 .u-vote-author{
-
+    opacity: 0;
 }
+
+.u-vote-quote .fade-in{
+  opacity: 1;
+  transition: opacity 1s ease-in-out;
+}
+.u-vote-quote .fade-1{
+  opacity:0;
+  transition: opacity 1s ease-out 1s;
+}
+
+.u-vote-quote .fade-2{
+  opacity:0;
+  transition: opacity 1s ease-out 2s;
+}
+
+.u-vote-quote .fade-3{
+  opacity:0;
+  transition: opacity 1s ease-out 3s;
+}
+
+.u-vote-quote .fade-4{
+  opacity:0;
+  transition: opacity 1s ease-out 4s;
+}
+
+.u-vote-quote .fade-5{
+  opacity:0;
+  transition: opacity 1s ease-out 5s;
+}
+
 
 .video-facade{
   display:inline-block;
