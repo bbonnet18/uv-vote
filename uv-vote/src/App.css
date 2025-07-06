@@ -195,7 +195,9 @@ button, .btn {
 }
 
 
-
+.comment-civil{
+  font-style: italic;
+}
 
 .comment-dialog{
   width: 100% !important;
@@ -786,6 +788,11 @@ Form input.error {
 
 }
 
+#voteQuote{
+  margin-top: 2em;
+  font-size: large;
+}
+
 .u-vote-quote{
   text-align: center;
   min-height: 300px;
@@ -1039,7 +1046,7 @@ Form input.error {
     margin:auto
   }
   .table-link-col button span{
-    display: block;
+    display: none;
     font-size: small;
   }
 

@@ -45,7 +45,7 @@ function Comment(props) {
                    ) : (
                     <>
                         <Modal.Header closeButton>
-                        <Modal.Title>Enter Comment</Modal.Title>
+                        <Modal.Title>Let's hear from you!</Modal.Title>
                         </Modal.Header>
                         <Modal.Body>
                              <h4>Topic: {props.topic}</h4>
@@ -53,7 +53,9 @@ function Comment(props) {
                             <div className='comment'><textarea onChange={(e) => {
                                 let val = e.currentTarget.value;
                                 setCurrVal(val);
-                            }} onKeyUp={checkChar} placeholder='use this space to enter your text' value={currVal} /></div>
+                            }} onKeyUp={checkChar} placeholder='use this space to enter your text' value={currVal} />
+                            <div className='comment-civil'>Hey... Let's put the <strong>civil</strong> back in civil discourse. You can be critical, but be constructive!</div>
+                            </div>
                         </Modal.Body>
 
                         <Modal.Footer>

@@ -465,9 +465,6 @@ function Conduit() {
                               }
                             </tbody>
                           </Table>
-
-                          {tryComment && currentTopic ? (<Comment show={tryComment} hide={setTryComment} send={sendComment} topic={currentTopic.topic}></Comment>) : ("")}
-                          {tryReceiver && currentReceiver ? (<Receiver show={tryReceiver} hide={setTryReceiver} receiver={currentReceiver}></Receiver>) : ("")}
                         </>
                       ) : (<div>No topics yet</div>)}
                     </Tab.Pane>)
@@ -479,7 +476,8 @@ function Conduit() {
 
         </Tab.Container>
     )}
-
+   {tryComment && currentTopic ? (<Comment show={tryComment} hide={setTryComment} send={sendComment} topic={currentTopic.topic}></Comment>) : ("")}
+  {tryReceiver && currentReceiver ? (<Receiver show={tryReceiver} hide={setTryReceiver} receiver={currentReceiver}></Receiver>) : ("")}
   </Container>)
 
 
