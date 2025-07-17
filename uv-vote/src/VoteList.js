@@ -54,21 +54,21 @@ function VoteList (props){
               {
                groups[itm] && groups[itm].length ? groups[itm].map((itm,ind)=>{
                   return (<tr key={itm.surveyId} className={itm.link === 'completed' ? 'vote-completed' : ''}> 
-                  <td><img src={(itm.description && itm.description.length ? itm.description.trim():"ballot")+"_sm.png"} alt={itm.description + " type vote"} title={itm.description + " type vote"}></img> {itm.title}</td>
+                  <td className='table-info-col'><img src={(itm.description && itm.description.length ? itm.description.trim():"ballot")+"_sm.png"} alt={itm.description + " type vote"} title={itm.description + " type vote"}></img> {itm.title}</td>
                   <td className='table-link-col'>{ loadingIds && loadingIds[itm.surveyId] ? (
                     <Spinner animation="border" role="status">
                       <span className="visually-hidden">Loading...</span>
-                    </Spinner>):(itm.link && itm.link !== 'completed' ? (<Button variant="success" onClick={(e)=>{
+                    </Spinner>):(itm.link && itm.link !== 'completed' ? (<Button className="vote-buttons" variant="success" onClick={(e)=>{
                       if(itm && itm.link){
                         window.location=itm.link;
                       }
-                    }}><img src='../play.svg' className='button-icon' alt='vote on this issue' title='vote on this issue' /><span>Vote</span></Button> ):(itm.link === 'completed') ? (<OverlayTrigger overlay={<Tooltip id={`tooltip${ind}`}>You Voted</Tooltip>}><div><img src='../check-square-full.svg' alt='comment completed' title='comment completed'></img></div></OverlayTrigger>) : (<span><Button variant="primary" onClick={(e)=>{
+                    }}><img src='../play-fill.svg' className='button-icon' alt='vote on this issue' title='vote on this issue' /><div>Vote</div></Button> ):(itm.link === 'completed') ? (<OverlayTrigger overlay={<Tooltip id={`tooltip${ind}`}>You Voted</Tooltip>}><div className='vote-buttons vote-completed-img'><img src='../check-square.svg' alt='vote completed' title='vote completed'></img><div>Done</div></div></OverlayTrigger>) : (<Button className="vote-buttons" variant="primary" onClick={(e)=>{
                     e.preventDefault();
                     let myLid = {...loadingIds};
                     myLid[itm.surveyId] = 'loading';
                     setLoadingIds(myLid)
                     props.register(itm.surveyId)}
-                  } alt='click or tap to register' title='click or tap to register' ><img src='../register.svg' className='button-icon' alt='register for this issue' title='register for this issue' /><span>Register</span></Button></span>))}</td>
+                  } alt='click or tap to register' title='click or tap to register' ><img src='../play-empty.svg' className='button-icon' alt='register for this issue' title='register for this issue' /><div>Start</div></Button>))}</td>
                 </tr>)
               }) : (<tr><td className='no-votes'><img src='./emoji-frown.svg' alt='no votes available' />No votes available - check back soon!</td><td></td></tr>)}
               </tbody>

@@ -442,7 +442,7 @@ function Conduit() {
                               {currentTopics.map((itm, ind) => {
                                 return (
                                   <tr key={ind} className={itm.hasCommented ? 'vote-completed' : ''}>
-                                    <td>
+                                    <td className='table-info-col'>
                                       <div className='topic'>{itm.topic}</div>
                                       <div className='tags'>Receivers: {itm.tags && Array.isArray(itm.tags) ? (itm.tags.map((itm, ind) => {
                                         return (<>{ind && ind > 0 ? (" ") : (<></>)}<Button className={'conduit-receivers'} value={itm.receiverId} onClick={(e) => {
@@ -451,7 +451,7 @@ function Conduit() {
                                         }} key={ind}><div className='conduit-receiver-label'>{itm.lastname}</div> <div className={`nav-indicator ${itm && itm.level ? itm.level : ''}`}></div> </Button> </>);
                                       })) : (<></>)}</div>
                                     </td>
-                                    <td className='table-link-col'>{itm.hasCommented ? (<OverlayTrigger overlay={<Tooltip id={`tooltip${ind}`}>You Commented</Tooltip>}><div><img src='../check-square-full.svg' alt='comment completed' title='comment completed'></img></div></OverlayTrigger>) : (
+                                    <td className='table-link-col'>{itm.hasCommented ? (<OverlayTrigger overlay={<Tooltip id={`tooltip${ind}`}>You Commented</Tooltip>}><div className='vote-buttons vote-completed-img'><img src='../check-square.svg' alt='vote completed' title='vote completed'></img><div>Done</div></div></OverlayTrigger>) : (
                                       <Button variant='primary' onClick={(e) => {
                                         let topic = itm;
                                         setCurrentTopic(topic);

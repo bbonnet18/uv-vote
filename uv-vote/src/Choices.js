@@ -7,7 +7,7 @@ function Choices() {
     return (
         <Container className='choices'>
             <Row>
-                <Col lg={3} xs={12} className='mt-2'>
+                <Col lg={3} md={6} xs={12} className='mt-2'>
                     <Card className='choices' >
                         <Card.Img className="choices-img" variant="top" src="conduit.png" />
                         <Card.Body>
@@ -19,7 +19,7 @@ function Choices() {
                         </Card.Body>
                     </Card>
                 </Col>
-                <Col lg={3} xs={12} className='mt-2'>
+                <Col lg={3} md={6} xs={12} className='mt-2'>
                 <Card className='choices inactive' >
                         <Card.Img className="choices-img" variant="top" src="connect.png" />
                         <Card.Body>
@@ -31,7 +31,7 @@ function Choices() {
                         </Card.Body>
                     </Card>
                 </Col>
-                <Col lg={3} xs={12} className='mt-2'>
+                <Col lg={3} md={6} xs={12} className='mt-2'>
                 <Card className='choices inactive' >
                         <Card.Img className="choices-img" variant="top" src="solutions.png" />
                         <Card.Body>
