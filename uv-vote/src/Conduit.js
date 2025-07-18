@@ -63,6 +63,7 @@ function Conduit() {
           )
         }
         setGroups(conduitGroups);
+        setCurrentGroup("Local");
         setLoading(false);
       } catch (err) {
         setLoading(false);
@@ -72,6 +73,7 @@ function Conduit() {
     }
     const checkReceivers = async () => {
       let receivers = await getReceivers();
+      console.log('RECEIVERS SET');
       setReceivers(receivers);
     }
 
@@ -82,13 +84,33 @@ function Conduit() {
 
   useEffect(() => {
     const checkTopics = async () => {
-      await getTopics(currentGroup);
+      try{
+          if(groups && groups.Local && groups.State && groups.National){
+            let localTopics = await getTopics("Local");
+            let stateTopics = await getTopics("State");
+            let nationalTopics = await getTopics("National");
+            let newGroups = {...groups};
+            newGroups["Local"].topics = localTopics;
+            newGroups["State"].topics = stateTopics;
+            newGroups["National"].topics = nationalTopics;
+            setGroups(newGroups); 
+          }
+         
+      }catch(err){
+        console.log('error loading topics');
+      }
     }
 
     checkTopics();
 
-  }, [groups, receivers, currentGroup])
+  }, [receivers])
 
+  useEffect(()=>{
+    let newTopics = groups[currentGroup] && groups[currentGroup].topics || [];
+    if(newTopics && newTopics.length){
+      setCurrentTopics(newTopics);
+    }
+  },[currentGroup])
 
   const getGroups = async () => {
 
@@ -145,7 +167,6 @@ function Conduit() {
 
       const resObj = await axios.post(`${config.apiBaseUrl}/votes/my-topics`, { groupId: thisGroup.gsid, active: true }, reqOpts);
       if (resObj && resObj.data.Items) {
-        //let groupObj = { ...groups };// set a new object to replace groups
         // unescape the topic if it was escaped
         let voterTopics = resObj.data.Items.map((itm) => {
           let unescapedTopic = unescape(itm.topic);
@@ -156,17 +177,12 @@ function Conduit() {
 
         let checkedTopics = await checkComments(voterTopics);
 
-        //groupObj[group].topics = checkedTopics;
-        setCurrentTopics(checkedTopics);
 
-
-        //setGroups(groupObj);
+        return checkedTopics; 
       }
 
-      //}
-
     } catch (err) {
-      return;
+      return {};
     }
 
   }
@@ -401,10 +417,13 @@ function Conduit() {
         <Tab.Container defaultActiveKey="Local" onSelect={async (e) => {
         let groupName = e;
         setCurrentGroup(groupName);
-        let group = groups[groupName] || "";
-        if (group && group.hasOwnProperty('topics') === false) {
-          await getTopics(groupName);
-        }
+        //let group = groups[groupName] || "";
+        // if (group && group.hasOwnProperty('topics') === false) {
+        //   await getTopics(groupName);
+        // }
+        // let newTopics = groups[groupName].topics;
+        // console.log('new topics: ',newTopics);
+        // setCurrentTopics(newTopics);
         return;
 
       }}>
@@ -426,7 +445,7 @@ function Conduit() {
               <Tab.Content>
                 {(loading === false && groups) ? Object.keys(groups).map((itm, ind) => {
                   return (
-                    <Tab.Pane eventKey={itm}>
+                    <Tab.Pane eventKey={itm} key={ind}>
                       <Col lg={6} xs={12}><p>Description: {groups[itm].description}</p></Col>
                       <h4 className='mt-1'>{groups[itm].title}  <img src={`../${groups[itm].name}.png`} alt={groups[itm].name} title={groups[itm].name} className='table-group-img'></img></h4>
                       {currentTopics ? (
@@ -445,10 +464,10 @@ function Conduit() {
                                     <td className='table-info-col'>
                                       <div className='topic'>{itm.topic}</div>
                                       <div className='tags'>Receivers: {itm.tags && Array.isArray(itm.tags) ? (itm.tags.map((itm, ind) => {
-                                        return (<>{ind && ind > 0 ? (" ") : (<></>)}<Button className={'conduit-receivers'} value={itm.receiverId} onClick={(e) => {
+                                        return (<>{ind && ind > 0 ? (" ") : (<></>)}<Button key={ind} className={'conduit-receivers'} value={itm.receiverId} onClick={(e) => {
                                           getReceiver(e.currentTarget.value);
                                           setTryReceiver(true);
-                                        }} key={ind}><div className='conduit-receiver-label'>{itm.lastname}</div> <div className={`nav-indicator ${itm && itm.level ? itm.level : ''}`}></div> </Button> </>);
+                                        }}><div className='conduit-receiver-label'>{itm.lastname}</div> <div className={`nav-indicator ${itm && itm.level ? itm.level : ''}`}></div> </Button> </>);
                                       })) : (<></>)}</div>
                                     </td>
                                     <td className='table-link-col'>{itm.hasCommented ? (<OverlayTrigger overlay={<Tooltip id={`tooltip${ind}`}>You Commented</Tooltip>}><div className='vote-buttons vote-completed-img'><img src='../check-square.svg' alt='vote completed' title='vote completed'></img><div>Done</div></div></OverlayTrigger>) : (
