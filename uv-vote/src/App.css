@@ -900,6 +900,12 @@ Form input.error {
   width: 80%; 
   padding: 1em;
 }
+
+.vote-buttons div{
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .vote-completed {
   color: gray;
 }
@@ -913,13 +919,14 @@ Form input.error {
 }
 
 .vote-completed div {
-  display: inline-block;
+  display: block;
   text-align: center;
+  margin:auto;
   /* width: 90%; */
 }
 
 .vote-completed-img{
-    background-color: rgba(12, 45, 72, 0.4);
+    background-color: rgba(12, 45, 72, 0.2);
     color:#FFF;
 }
 
@@ -1028,7 +1035,7 @@ Form input.error {
 }
 
 
-@media screen and (max-width:430px) {
+@media screen and (max-width:450px) {
 
   .alpha-mark{
     margin-left: 30px;
@@ -1076,6 +1083,12 @@ Form input.error {
     font-size: small;
   } */
 
+  .table-link-col{
+    max-width: 30%;
+  }
+  .table-info-col{
+    width: 70%;
+  }
   .video-facade{
     display: block;
     margin:auto;
