@@ -13,6 +13,7 @@ function Conduit() {
 
   const [groups, setGroups] = useState({});
   const [loading, setLoading] = useState(false);
+  const [groupsSet, setGroupsSet] = useState(false);
   const [currentGroup, setCurrentGroup] = useState("Local");
   const [currentTopics, setCurrentTopics] = useState([]);
   const [currentTopic, setCurrentTopic] = useState(null);
@@ -34,7 +35,35 @@ function Conduit() {
 
   // get the set of groups if not already there
   useEffect(() => {
-    setLoading(true);
+    setLoading(true);      
+
+    const checkTopics = async (topicGroups,topicReceivers) => {
+      try{
+          if(topicGroups && topicGroups.Local && topicGroups.State && topicGroups.National){
+            let localTopics = await getTopics(topicGroups["Local"],topicReceivers);
+            let stateTopics = await getTopics(topicGroups["State"],topicReceivers);
+            let nationalTopics = await getTopics(topicGroups["National"],topicReceivers);
+            let newGroups = {...topicGroups};
+            newGroups["Local"].topics = localTopics;
+            newGroups["State"].topics = stateTopics;
+            newGroups["National"].topics = nationalTopics;
+            return newGroups;
+          }
+          let noGroups = {...topicGroups}
+          noGroups["Local"].topics = [];
+          noGroups["State"].topics = [];
+          noGroups["National"].topics = [];
+          return noGroups; 
+      }catch(err){
+        let errorGroups = {...topicGroups}
+        errorGroups["Local"].topics = [];
+        errorGroups["State"].topics = [];
+        errorGroups["National"].topics = [];
+        return errorGroups; 
+      }
+    }
+
+
     const checkGroups = async () => {
 
       let conduitGroups = {
@@ -62,8 +91,15 @@ function Conduit() {
           }
           )
         }
-        setGroups(conduitGroups);
+        
         setCurrentGroup("Local");
+        let topicReceivers = await getReceivers();
+        let topicGroups = await checkTopics(conduitGroups,topicReceivers);
+        setGroups(topicGroups);
+        setCurrentGroup('Local');
+        let currentTopics = topicGroups['Local'].topics;
+        setReceivers(topicReceivers); 
+        setCurrentTopics(currentTopics);
         setLoading(false);
       } catch (err) {
         setLoading(false);
@@ -71,45 +107,20 @@ function Conduit() {
 
       setLoading(false);
     }
-    const checkReceivers = async () => {
-      let receivers = await getReceivers();
-      console.log('RECEIVERS SET');
-      setReceivers(receivers);
-    }
 
-    checkGroups();
-    checkReceivers();
+    if(groupsSet === false){
+      checkGroups();
+      setGroupsSet(true);
+    }
+    
 
   }, []);
 
-  useEffect(() => {
-    const checkTopics = async () => {
-      try{
-          if(groups && groups.Local && groups.State && groups.National){
-            let localTopics = await getTopics("Local");
-            let stateTopics = await getTopics("State");
-            let nationalTopics = await getTopics("National");
-            let newGroups = {...groups};
-            newGroups["Local"].topics = localTopics;
-            newGroups["State"].topics = stateTopics;
-            newGroups["National"].topics = nationalTopics;
-            setGroups(newGroups); 
-          }
-         
-      }catch(err){
-        console.log('error loading topics');
-      }
-    }
-
-    checkTopics();
-
-  }, [receivers])
+ 
 
   useEffect(()=>{
     let newTopics = groups[currentGroup] && groups[currentGroup].topics || [];
-    if(newTopics && newTopics.length){
-      setCurrentTopics(newTopics);
-    }
+    setCurrentTopics(newTopics);
   },[currentGroup])
 
   const getGroups = async () => {
@@ -139,16 +150,15 @@ function Conduit() {
   }
 
 
-  const getTopics = async (group) => {
+  const getTopics = async (group,topicReceivers) => {
 
     try {
 
       // check if groups have been established and if the group 
       // exists first
-      if (!groups && !groups[group]) {
-        return;
+      if(!group || !topicReceivers){
+        return {};
       }
-      let thisGroup = groups[group]
       // check for topics first and if not there, go get them 
       //if (groups[group] && groups[group].hasOwnProperty('topics') === false) {
       // get the JWT to use for auth
@@ -165,13 +175,13 @@ function Conduit() {
         withCredentials: true
       }
 
-      const resObj = await axios.post(`${config.apiBaseUrl}/votes/my-topics`, { groupId: thisGroup.gsid, active: true }, reqOpts);
+      const resObj = await axios.post(`${config.apiBaseUrl}/votes/my-topics`, { groupId: group.gsid, active: true }, reqOpts);
       if (resObj && resObj.data.Items) {
         // unescape the topic if it was escaped
         let voterTopics = resObj.data.Items.map((itm) => {
           let unescapedTopic = unescape(itm.topic);
           itm.topic = unescapedTopic;
-          itm.tags = createTags(itm.tags);
+          itm.tags = createTags(itm.tags,topicReceivers);
           return itm;
         });
 
@@ -335,15 +345,15 @@ function Conduit() {
 
   // takes the string representation of the tags
   // breaks them up and turns them into links
-  const createTags = (tags) => {
+  const createTags = (tags,topicReceivers) => {
 
     let tagsArr = [];
     // create a map of the receivers to get their level
 
     try {
       let receiverMap = {}
-      if (receivers && receivers.length) {
-        receivers.map((itm, ind) => {
+      if (topicReceivers && topicReceivers.length) {
+        topicReceivers.map((itm, ind) => {
           receiverMap[itm.receiverId.S] = itm.level.S;
         });
       }
@@ -471,11 +481,11 @@ function Conduit() {
                                       })) : (<></>)}</div>
                                     </td>
                                     <td className='table-link-col'>{itm.hasCommented ? (<OverlayTrigger overlay={<Tooltip id={`tooltip${ind}`}>You Commented</Tooltip>}><div className='vote-buttons vote-completed-img'><img src='../check-square.svg' alt='vote completed' title='vote completed'></img><div>Done</div></div></OverlayTrigger>) : (
-                                      <Button variant='primary' onClick={(e) => {
+                                      <Button className='vote-buttons' variant='primary' onClick={(e) => {
                                         let topic = itm;
                                         setCurrentTopic(topic);
                                         setTryComment(true);
-                                      }}><img src='../chat-quote.svg' className='button-icon' alt='comment on this issue' title='comment on this issue' /><span>Comment</span></Button>
+                                      }}><img src='../chat-quote.svg' className='button-icon' alt='comment on this issue' title='comment on this issue' /><div>Comment</div></Button>
                                     )}</td>
                                   </tr>
                                 )

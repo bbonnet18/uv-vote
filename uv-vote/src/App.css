@@ -757,9 +757,9 @@ Form input.error {
   text-align: center;
   max-width: 20%;
 }
- .table-link-col .btn{
+ /* .table-link-col .btn{
   padding: 0 !important;
- }
+ } */
 .table-group-img{
   width:40px;
   border-radius: 0 !important;
@@ -898,6 +898,7 @@ Form input.error {
 
 .vote-buttons{
   width: 80%; 
+  padding: 1em;
 }
 .vote-completed {
   color: gray;
@@ -908,6 +909,7 @@ Form input.error {
 }
 .vote-completed .tags{
   text-align: left;
+  display: block;
 }
 
 .vote-completed div {
