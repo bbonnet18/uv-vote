@@ -121,7 +121,7 @@ function Conduit() {
   useEffect(()=>{
     let newTopics = groups[currentGroup] && groups[currentGroup].topics || [];
     setCurrentTopics(newTopics);
-  },[currentGroup])
+  },[currentGroup,groups])
 
   const getGroups = async () => {
 
@@ -332,7 +332,11 @@ function Conduit() {
       setTryComment(false);
       setShow(true);
 
-      await getTopics(currentGroup);
+      let topicGroups = {...groups}
+      let topicGroup = topicGroups[currentGroup];
+      let groupWithTopics = await getTopics(topicGroup,receivers);
+      topicGroups[currentGroup].topics = groupWithTopics;
+      setGroups(topicGroups);
 
     } catch (err) {
       setAlertType('danger');
@@ -455,7 +459,7 @@ function Conduit() {
               <Tab.Content>
                 {(loading === false && groups) ? Object.keys(groups).map((itm, ind) => {
                   return (
-                    <Tab.Pane eventKey={itm} key={ind}>
+                    <Tab.Pane eventKey={itm} key={`${ind}-pane`}>
                       <Col lg={6} xs={12}><p>Description: {groups[itm].description}</p></Col>
                       <h4 className='mt-1'>{groups[itm].title}  <img src={`../${groups[itm].name}.png`} alt={groups[itm].name} title={groups[itm].name} className='table-group-img'></img></h4>
                       {currentTopics ? (
@@ -468,10 +472,10 @@ function Conduit() {
                               </tr>
                             </thead>
                             <tbody>
-                              {currentTopics.map((itm, ind) => {
+                              {currentTopics && Array.isArray(currentTopics) ? currentTopics.map((itm, ind) => {
                                 return (
                                   <tr key={ind} className={itm.hasCommented ? 'vote-completed' : ''}>
-                                    <td className='table-info-col'>
+                                    <td key={`${ind}-info`} className='table-info-col'>
                                       <div className='topic'>{itm.topic}</div>
                                       <div className='tags'>Receivers: {itm.tags && Array.isArray(itm.tags) ? (itm.tags.map((itm, ind) => {
                                         return (<>{ind && ind > 0 ? (" ") : (<></>)}<Button key={ind} className={'conduit-receivers'} value={itm.receiverId} onClick={(e) => {
@@ -480,7 +484,7 @@ function Conduit() {
                                         }}><div className='conduit-receiver-label'>{itm.lastname}</div> <div className={`nav-indicator ${itm && itm.level ? itm.level : ''}`}></div> </Button> </>);
                                       })) : (<></>)}</div>
                                     </td>
-                                    <td className='table-link-col'>{itm.hasCommented ? (<OverlayTrigger overlay={<Tooltip id={`tooltip${ind}`}>You Commented</Tooltip>}><div className='vote-buttons vote-completed-img'><img src='../check-square.svg' alt='vote completed' title='vote completed'></img><div>Done</div></div></OverlayTrigger>) : (
+                                    <td key={`${ind}-link`} className='table-link-col'>{itm.hasCommented ? (<OverlayTrigger overlay={<Tooltip id={`tooltip${ind}`}>You Commented</Tooltip>}><div className='vote-buttons vote-completed-img'><img src='../check-square.svg' alt='vote completed' title='vote completed'></img><div>Done</div></div></OverlayTrigger>) : (
                                       <Button className='vote-buttons' variant='primary' onClick={(e) => {
                                         let topic = itm;
                                         setCurrentTopic(topic);
@@ -490,7 +494,7 @@ function Conduit() {
                                   </tr>
                                 )
                               }
-                              )
+                              ) : (<div>No topics yet</div>)
                               }
                             </tbody>
                           </Table>

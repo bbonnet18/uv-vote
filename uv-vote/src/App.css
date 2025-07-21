@@ -597,7 +597,7 @@ Form input.error {
 }
 
 .nav-indicator{
-  display: inline-block;
+  display: inline-block !important;
   width: 20px !important;
   height: 20px !important;
   border-radius: 5px;
