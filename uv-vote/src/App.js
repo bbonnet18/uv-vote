@@ -5,6 +5,7 @@ import { Container } from 'react-bootstrap';
 import { useState, useEffect } from 'react';
 import cookies from './cookies';
 import CookieNotice from './CookieNotice';
+import Countdown from './Countdown';
 
 export default function App() {
 
@@ -27,7 +28,7 @@ export default function App() {
 
   return (
     <>
-    <div className="icon-brand"><div className='container'><img src='logo64.webp' alt="U-Vote" title="U-Vote" className='header-img'></img>U-Vote<div className='alpha-mark'>BETA</div></div></div>
+    <div className="icon-brand"><div className='container'><img src='logo64.webp' alt="U-Vote" title="U-Vote" className='header-img'></img>U-Vote<div className='alpha-mark'>BETA</div><Countdown /></div></div>
     <hr className='nav-sep'></hr>
     
     <Container className='p-0'>

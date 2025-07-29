@@ -163,9 +163,7 @@ button, .btn {
   text-align: left;
 }
 
-.choices{
 
-}
 
 .choices.inactive{
   opacity: .5;
@@ -238,6 +236,13 @@ button, .btn {
   display: inline-block;
   width: auto !important;
   vertical-align: text-bottom;
+}
+
+.countdown{
+  font-size: 1.5em;
+  font-weight: bold;
+  color: #0C2D48;
+  display: inline-block;
 }
 
 .local{
