@@ -36,7 +36,8 @@ function Countdown() {
   }
     return (
         <div className='countdown'>
-           Days left to participate in Q{quarterInfo.quarter?.q}: <span className='countdown'>{quarterInfo.daysLeftInQuarter}</span>
+           <div>Days left for Q{quarterInfo.quarter?.q} Votes: </div> 
+           <div className='count'>{quarterInfo.daysLeftInQuarter}</div>
         </div>
     );
 }

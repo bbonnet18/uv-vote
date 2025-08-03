@@ -43,6 +43,7 @@ function VoteList (props){
           {(loading === false && groups) ? Object.keys(groups).map((itm,ind)=>{
            return (
               <Tab eventKey={itm} title={itm} key={ind}> 
+                {itm === 'State' || itm === 'National' ? ( <div className='limit-notice'><p>U-Vote is currntly testing <strong>local</strong> votes. Votes are here to show <strong>state</strong> and <strong>national</strong> capability. </p></div>) : (<></>)}
                 <Table key={ind} striped bordered hover>   
               <>
               <thead>

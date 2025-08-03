@@ -239,10 +239,21 @@ button, .btn {
 }
 
 .countdown{
-  font-size: 1.5em;
+  margin-left: 1em;
+  font-size: .75em;
   font-weight: bold;
   color: #0C2D48;
   display: inline-block;
+}
+.countdown div{
+  display: inline-block;
+}
+.countdown .count{
+  text-align: center;
+  padding: 0 5px;
+  color:chocolate;
+  font-weight: bold;
+
 }
 
 .local{
@@ -538,6 +549,7 @@ Form input.error {
 }
 
 .limit-notice {
+  margin-top:.5em;
   padding: 5px 5px 0px 5px;
   border-radius: 8px;
   background-color: orangered;
@@ -1053,6 +1065,14 @@ Form input.error {
   }
   .conduit-receivers{
     padding: 1px 2px !important;
+  }
+  
+  .countdown{
+    font-size: small;
+  }
+  .countdown div{
+    display: inline-block;
+    font-size: small;
   }
 
 

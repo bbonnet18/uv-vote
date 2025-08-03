@@ -460,7 +460,9 @@ function Conduit() {
                 {(loading === false && groups) ? Object.keys(groups).map((itm, ind) => {
                   return (
                     <Tab.Pane eventKey={itm} key={`${ind}-pane`}>
-                      <Col lg={6} xs={12}><p>Description: {groups[itm].description}</p></Col>
+                      <Col lg={6} xs={12}><p>Description: {groups[itm].description}</p>
+                      {itm === 'State' || itm === 'National' ? ( <div className='limit-notice'><p>U-Vote is currntly testing <strong>local</strong> issues. Issues are here to show <strong>state</strong> and <strong>national</strong> capability. </p></div>) : (<></>)}
+                      </Col>
                       <h4 className='mt-1'>{groups[itm].title}  <img src={`../${groups[itm].name}.png`} alt={groups[itm].name} title={groups[itm].name} className='table-group-img'></img></h4>
                       {currentTopics ? (
                         <>
