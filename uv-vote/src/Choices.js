@@ -11,9 +11,9 @@ function Choices() {
                     <Card className='choices' >
                         <Card.Img className="choices-img" variant="top" src="conduit.png" />
                         <Card.Body>
-                            <Card.Title>Conduit</Card.Title>
+                            <Card.Title>Conduit <span className='alpha-feature'>(early alpha - <img className='experimental' src="../flask.svg" alt="experimental" title='experimental feature - early alpha' />)</span></Card.Title>
                             <Card.Text>
-                                Conduit let's you say what on your mind about a variety of issues. 
+                                Conduit let's you say what's on your mind about a variety of issues. 
                             </Card.Text>
                             <NavLink to="/actions/conduit">Check out Conduit</NavLink>
                         </Card.Body>

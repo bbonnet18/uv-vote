@@ -405,6 +405,7 @@ function Conduit() {
 
   return (<Container fluid="md">
     <h2>Conduit <img src="../conduit.png" className='conduit-title' alt="conduit" title="conduit" /></h2>
+    <div> <span className='alpha-feature'>(early alpha - <img className='experimental' src="../flask.svg" alt="experimental" title='experimental feature - early alpha' />)</span></div>
     <p>Conduit is a service that allows you to make a comment on a specific topic. Your comment goes directly to a feed that we publish specifically for your elected officials, candidates and public officials.</p>
     <hr></hr>
     <Row>

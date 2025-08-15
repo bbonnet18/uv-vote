@@ -73,6 +73,11 @@ body {
   /* text-decoration: underline; */
 }
 
+.alpha-feature{
+  font-size: small;
+  color: purple;
+  line-height: 10px;
+}
 
 .alt-grey {
   /* background-color: rgba(128,128,128,0.1) */
@@ -386,6 +391,10 @@ button, .btn {
   background-size: 180px;
   background-image: url('x-square.svg');
   background-repeat: no-repeat;
+}
+
+.experimental{
+  width: 1em;
 }
 
 .figure-img {
