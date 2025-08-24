@@ -18,7 +18,6 @@ function Buddy() {
     "state": "",
     "zipcode" : "",
     "phone": "",
-    "DOB": "",
     "idsample": "",
     "buddycode": ""
   }
@@ -32,6 +31,7 @@ function Buddy() {
   const [selectedStreet1, setSelectedStreet1] = useState("");
   const [selectedStreet2, setSelectedStreet2] = useState("");
   const [normalizedStreet, setNormalizedStreet] = useState("");
+    const [dob, setDob] = useState("");// used to hold date of birth
   const [verified, setVerified] = useState(false);// used to handle selections and updates to address
   const [buddyVerified, setBuddyVerified] = useState(false)
   const [registerToken, setRegisterToken] = useState(null);
@@ -130,6 +130,30 @@ function Buddy() {
     }
 
   }
+
+  const checkDate = (e) => {
+    const formattedDate = formatToMMDDYYYY(e.target.value);
+    setDob(formattedDate);
+  }
+
+
+  function formatToMMDDYYYY(input) {
+    // Remove non-digit characters
+    const digits = input.replace(/\D/g, '');
+
+    // Extract month, day, year
+    const month = digits.substring(0, 2);
+    const day = digits.substring(2, 4);
+    const year = digits.substring(4, 8);
+
+    let formatted = '';
+    if (month) formatted += month;
+    if (day) formatted += '/' + day;
+    if (year) formatted += '/' + year;
+
+    return formatted;
+  }
+
 
   // check to see if the buddy code is valid
   const checkBuddyCode = async (val) => {
@@ -287,7 +311,7 @@ function Buddy() {
                 <Form.Label id="aDOB">DOB</Form.Label>
               </Col>
               <Col lg={10}>
-                <Form.Control id="DOB" name="DOB" size="lg" type="text" pattern='(0[1-9]|1[1,2,0])\/(0[1-9]|[12][0-9]|3[01])\/(19|20)\d{2}' maxLength={10} minLength={10} placeholder="MM/DD/YYYY" defaultValue={currentVoter.DOB} required />
+                <Form.Control id="DOB" name="DOB" size="lg" type="text" pattern='(0[1-9]|1[1,2,0])\/(0[1-9]|[12][0-9]|3[01])\/(19|20)\d{2}' maxLength={10} minLength={10} placeholder="MM/DD/YYYY" value={dob} onChange={checkDate} required />
                 <Form.Text muted>
                   You must be 18 or older
                 </Form.Text>

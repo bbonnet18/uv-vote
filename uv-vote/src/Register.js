@@ -18,7 +18,6 @@ function Register() {
     "state": "",
     "zipcode": "",
     "phone": "",
-    "DOB": ""
   }
   const [loading, setLoading] = useState(false);
   const [disabled, setDisabled] = useState(true);
@@ -29,12 +28,13 @@ function Register() {
   const [showSelect, setShowSelect] = useState(false);// controls showing the address select
   const [selectedStreet1, setSelectedStreet1] = useState("");
   const [selectedStreet2, setSelectedStreet2] = useState("");
+  const [dob, setDob] = useState("");// used to hold date of birth
   const [normalizedStreet, setNormalizedStreet] = useState("");
   const [verified, setVerified] = useState(false);// used to handle selections and updates to address
   const [registerToken, setRegisterToken] = useState(null);
   const [showError, setShowError] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
-  const [agree, setAgree] = useState(false); 
+  const [agree, setAgree] = useState(false);
   const [modalShow, setModalShow] = useState(false);
 
   const handleClose = () => setModalShow(false);
@@ -128,6 +128,28 @@ function Register() {
     }
 
   }
+  const checkDate = (e) => {
+    const formattedDate = formatToMMDDYYYY(e.target.value);
+    setDob(formattedDate);
+  }
+
+
+  function formatToMMDDYYYY(input) {
+    // Remove non-digit characters
+    const digits = input.replace(/\D/g, '');
+
+    // Extract month, day, year
+    const month = digits.substring(0, 2);
+    const day = digits.substring(2, 4);
+    const year = digits.substring(4, 8);
+
+    let formatted = '';
+    if (month) formatted += month;
+    if (day) formatted += '/' + day;
+    if (year) formatted += '/' + year;
+
+    return formatted;
+  }
 
 
   // check fields and attempt to add
@@ -182,7 +204,7 @@ function Register() {
       formData.append('idFile', idFile.files[0]);
       formData.append('selfyFile', selfyFile.files[0]);
       formData.append('regToken', registerToken);// received from captcha challenges
-      formData.append('agree',agreeCheck.checked);
+      formData.append('agree', agreeCheck.checked);
       try {
         setLoading(true)
         let res = await axios.post(`${config.apiBaseUrl}/register`, formData, { withCredentials: true });//await axios.post("https://vote.u-vote.us/register", formData);
@@ -262,7 +284,7 @@ function Register() {
                 <Form.Label id="aDOB">DOB</Form.Label>
               </Col>
               <Col lg={10}>
-                <Form.Control id="DOB" name="DOB" size="lg" type="text" pattern='(0[1-9]|1[1,2,0])\/(0[1-9]|[12][0-9]|3[01])\/(19|20)\d{2}' maxLength={10} minLength={10} placeholder="MM/DD/YYYY" defaultValue={currentVoter.DOB} required />
+                <Form.Control id="DOB" name="DOB" size="lg" type="text" pattern='(0[1-9]|1[1,2,0])\/(0[1-9]|[12][0-9]|3[01])\/(19|20)\d{2}' maxLength={10} minLength={10} placeholder="MM/DD/YYYY" value={dob} onChange={checkDate} required />
                 <Form.Text muted>
                   You must be 18 or older
                 </Form.Text>
@@ -467,8 +489,8 @@ function Register() {
                 <Form.Check // prettier-ignore
                   type={'checkbox'}
                   id={'agree'}
-                  label={'I agree to the U-Vote terms of service'} onClick={(e)=> setModalShow(true)} checked={agree} onChange={(e)=>{}} required /> 
-                  <Button variant='primary' onClick={(e) => setModalShow(true)}>Review Terms</Button>
+                  label={'I agree to the U-Vote terms of service'} onClick={(e) => setModalShow(true)} checked={agree} onChange={(e) => { }} required />
+                <Button variant='primary' onClick={(e) => setModalShow(true)}>Review Terms</Button>
                 <Form.Text id="agreeHelp">
                   * You must agree to terms of service to participate in U-Vote
                 </Form.Text>
