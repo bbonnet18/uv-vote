@@ -94,8 +94,14 @@ function Register() {
   }
 
   // checks to see if the address entered is a real address and offers options 
-  const checkAddress = async (val) => {
+  const checkAddress = async (val, hasSecondary = false) => {
 
+    // For apartments and other mult-unit dwellings, include unit number in the search
+    // allow the user to select an entry with multiple units and then that
+    // will trigger another query to the address API so that it can suggest the number of possible address
+    // options. Basically, if the user selects an entry with multiple units, we want to show them all the possible
+    // addresses for that entry. 
+    // this will mean that the query will trigger another query based on the user's selection
     if (val.length === 0) {
       return;
     }
@@ -105,7 +111,10 @@ function Register() {
     const formCheck = document.getElementById('formCheck');
 
     try {
-      const payload = { address: val };
+      const payload = { 
+        address: val, 
+        hasSecondary: hasSecondary
+      };
       let res = await axios.post(`${config.apiBaseUrl}/address`, payload, { withCredentials: true });
       if (res.status === 200) {
         const addressArr = res.data.result;
@@ -126,6 +135,7 @@ function Register() {
       setAddressError("Error finding address");
 
     }
+    setSelectedAddress("");// always unset the address when running a new query
 
   }
   const checkDate = (e) => {
@@ -367,6 +377,15 @@ function Register() {
                     <Col lg={10}>
                       <Form.Select id="address" name="address" lg={6} type="text" minLength={2} placeholder="enter and select your address" onChange={(e) => {
 
+                        // if has secondary, re-run a query
+                        let selectedOption = addressOptions[e.target.value];
+                        if (selectedOption.entries > 1) {
+                          // trigger another query to the address API
+                          // build the string for another query
+                          let addressStr = `${selectedOption.streetLine} ${selectedOption.secondary} (${selectedOption.entries}) ${selectedOption.city} ${selectedOption.state}, ${selectedOption.zipcode}`;
+                          checkAddress(addressStr, true);
+                          return; 
+                        }
                         setSelectedAddress(addressOptions[e.target.value]);
                         if (addressOptions[e.target.value].streetLine) {
                           setSelectedStreet1(addressOptions[e.target.value].streetLine);
@@ -382,9 +401,10 @@ function Register() {
 
                         //setShowSelect(false);
                       }}
-                        className={verified ? 'verified' : 'unverified'} required >
+                        className={verified ? 'verified' : 'unverified'} required>
+                          <option key={"unselected"} disabled selected value="">Select an address</option>
                         {addressOptions.map((itm, ind) => {
-                          return <option key={ind} value={ind}>{itm.streetLine} {itm.secondary}</option>
+                          return <option key={ind} value={ind}>{itm.streetLine} {itm.secondary} {itm.entries && itm.entries > 1 ? `(${itm.entries})` : ''} {itm.city} {itm.state}, {itm.zipcode}</option>
                         })}
                       </Form.Select>
                     </Col>
