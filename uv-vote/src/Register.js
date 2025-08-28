@@ -22,6 +22,7 @@ function Register() {
   const [loading, setLoading] = useState(false);
   const [disabled, setDisabled] = useState(true);
   const [currentVoter, setCurrentVoter] = useState(starterVoter);
+  const [newAddress, setNewAddress] = useState(true);// used to set the options to unselected 
   const [addressOptions, setAddressOptions] = useState([]);// used to show addresses as the user types 
   const [selectedAddress, setSelectedAddress] = useState();// the address the user chose
   const [addressError, setAddressError] = useState("");// shows if no address was returned or error happens
@@ -43,29 +44,6 @@ function Register() {
   // for captcha
   const recaptchaRef = useRef(null);
 
-  useEffect(() => {
-    if (addressOptions && addressOptions.length === 1) {
-      setSelectedAddress(addressOptions[0])
-      setSelectedStreet1(addressOptions[0].streetLine);
-      setSelectedStreet2(addressOptions[0].secondary);
-      setNormalizedStreet(addressOptions[0].streetLine);// this will be the value we use in the registration
-      let streetInput = document.getElementById('address1');
-      if (streetInput && streetInput.value) {
-        streetInput.value = addressOptions[0].streetLine;
-      }
-      //setShowSelect(false);
-      setVerified(true);
-    }
-
-    if (addressOptions && addressOptions.length === 0) {
-      setSelectedAddress("")
-      setSelectedStreet1("");
-      setSelectedStreet2("");
-      setNormalizedStreet("");// this will be the value we use in the registration
-      //setShowSelect(false);
-      setVerified(false);
-    }
-  }, [addressOptions])
 
   // check validity states with a listener on all form element item changes. 
 
@@ -109,35 +87,34 @@ function Register() {
     setShowSelect(true);
 
     const formCheck = document.getElementById('formCheck');
-
+    const selectAddress = document.getElementById('address');
     try {
       const payload = { 
         address: val, 
         hasSecondary: hasSecondary
       };
+       
       let res = await axios.post(`${config.apiBaseUrl}/address`, payload, { withCredentials: true });
       if (res.status === 200) {
         const addressArr = res.data.result;
-        if (Array.isArray(addressArr) && addressArr.length > 0) {
-          setAddressOptions(addressArr);
-          setAddressError("");
-          formCheck.classList.remove('address-check');
-        } else {
-          setAddressError("No results returned, please try again");
-          setAddressOptions([]);
-        }
+        let size = addressArr.length > 5 ? 5 : addressArr.length;
+        selectAddress.size = size;
+        setAddressOptions(addressArr);
+        setAddressError("");
       } else {
-        setAddressError("Error finding address")
         setAddressOptions([]);
-      }
+        setAddressError("No address found");}   
     } catch (err) {
-      formCheck.classList.add('address-check');
+      formCheck.classList.remove('address-check');
       setAddressError("Error finding address");
 
     }
-    setSelectedAddress("");// always unset the address when running a new query
-
+    setNewAddress(true)
+    setSelectedAddress({});// always unset the address when running a new query
   }
+
+
+
   const checkDate = (e) => {
     const formattedDate = formatToMMDDYYYY(e.target.value);
     setDob(formattedDate);
@@ -341,13 +318,9 @@ function Register() {
                   <InputGroup>
                     <Form.Control id="address1" name="address1" lg={6} type="text" maxLength={75} placeholder="enter and select your address" onChange={(e) => {
 
-                      if (verified && normalizedStreet !== e.currentTarget.value) {
-                        setAddressOptions([]);
-                      }
-                      else {
-                        setSelectedStreet1(e.currentTarget.value)
-                      }
-
+                      // this needs a slight delay and then will check addresses, which will populate the select
+                      let val = e.target.value;
+                      setSelectedStreet1(val);
 
                     }} value={selectedStreet1} required />
                     <Button id="verifyAddress" variant={(verified) ? 'success' : 'warning'} onClick={() => {
@@ -377,28 +350,32 @@ function Register() {
                     <Col lg={10}>
                       <Form.Select id="address" name="address" lg={6} type="text" minLength={2} placeholder="enter and select your address" onChange={(e) => {
 
+                        console.log('show changed');
                         // if has secondary, re-run a query
                         let selectedOption = addressOptions[e.target.value];
-                        if (selectedOption.entries > 1) {
+                        if (selectedOption && selectedOption.entries && selectedOption.entries > 1) {
                           // trigger another query to the address API
                           // build the string for another query
                           let addressStr = `${selectedOption.streetLine} ${selectedOption.secondary} (${selectedOption.entries}) ${selectedOption.city} ${selectedOption.state}, ${selectedOption.zipcode}`;
                           checkAddress(addressStr, true);
                           return; 
                         }
-                        setSelectedAddress(addressOptions[e.target.value]);
-                        if (addressOptions[e.target.value].streetLine) {
-                          setSelectedStreet1(addressOptions[e.target.value].streetLine);
-                          setNormalizedStreet(addressOptions[e.target.value].streetLine)
-                          setSelectedStreet2(addressOptions[e.target.value].secondary);
-                          let streetInput = document.getElementById('address1');
-                          if (streetInput && streetInput.value) {
-                            streetInput.value = addressOptions[0].streetLine;
+
+                        if(selectedOption && selectedOption.entries && selectedOption.entries === 1){
+                            setSelectedAddress(addressOptions[e.target.value]);
+                            setVerified(true);
+                            if (addressOptions[e.target.value].streetLine) {
+                              setSelectedStreet1(addressOptions[e.target.value].streetLine);
+                              setNormalizedStreet(addressOptions[e.target.value].streetLine)
+                              setSelectedStreet2(addressOptions[e.target.value].secondary);
+                              
+                              let streetInput = document.getElementById('address1');
+                              if (streetInput && streetInput.value) {
+                                streetInput.value = addressOptions[0].streetLine;
+                              }
                           }
                         }
-
-                        setVerified(true);
-
+                        
                         //setShowSelect(false);
                       }}
                         className={verified ? 'verified' : 'unverified'} required>
