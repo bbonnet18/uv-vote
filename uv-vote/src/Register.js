@@ -97,7 +97,7 @@ function Register() {
       let res = await axios.post(`${config.apiBaseUrl}/address`, payload, { withCredentials: true });
       if (res.status === 200) {
         const addressArr = res.data.result;
-        let size = addressArr.length > 5 ? 5 : addressArr.length;
+        let size = addressArr.length > 5 ? 5 : addressArr.length+1;
         selectAddress.size = size;
         setAddressOptions(addressArr);
         setAddressError("");
@@ -109,6 +109,7 @@ function Register() {
       setAddressError("Error finding address");
 
     }
+    setVerified(false); 
     setNewAddress(true)
     setSelectedAddress({});// always unset the address when running a new query
   }
@@ -321,6 +322,7 @@ function Register() {
                       // this needs a slight delay and then will check addresses, which will populate the select
                       let val = e.target.value;
                       setSelectedStreet1(val);
+                      setVerified(false);
 
                     }} value={selectedStreet1} required />
                     <Button id="verifyAddress" variant={(verified) ? 'success' : 'warning'} onClick={() => {
@@ -350,7 +352,10 @@ function Register() {
                     <Col lg={10}>
                       <Form.Select id="address" name="address" lg={6} type="text" minLength={2} placeholder="enter and select your address" onChange={(e) => {
 
-                        console.log('show changed');
+                        //clear
+                          setNormalizedStreet("")
+                          setSelectedStreet2("");
+                          setSelectedAddress({});
                         // if has secondary, re-run a query
                         let selectedOption = addressOptions[e.target.value];
                         if (selectedOption && selectedOption.entries && selectedOption.entries > 1) {
@@ -361,9 +366,9 @@ function Register() {
                           return; 
                         }
 
-                        if(selectedOption && selectedOption.entries && selectedOption.entries === 1){
+                        if(selectedOption){
                             setSelectedAddress(addressOptions[e.target.value]);
-                            setVerified(true);
+                            
                             if (addressOptions[e.target.value].streetLine) {
                               setSelectedStreet1(addressOptions[e.target.value].streetLine);
                               setNormalizedStreet(addressOptions[e.target.value].streetLine)
@@ -374,12 +379,13 @@ function Register() {
                                 streetInput.value = addressOptions[0].streetLine;
                               }
                           }
+                        setVerified(true);
                         }
-                        
+                        setNewAddress(false);
                         //setShowSelect(false);
                       }}
                         className={verified ? 'verified' : 'unverified'} required>
-                          <option key={"unselected"} disabled selected value="">Select an address</option>
+                          <option key={"unselected"} disabled selected={newAddress} value="">Select an address</option>
                         {addressOptions.map((itm, ind) => {
                           return <option key={ind} value={ind}>{itm.streetLine} {itm.secondary} {itm.entries && itm.entries > 1 ? `(${itm.entries})` : ''} {itm.city} {itm.state}, {itm.zipcode}</option>
                         })}
