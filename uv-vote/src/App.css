@@ -41,6 +41,10 @@ body {
   grid-template-rows: 1fr auto;
 }
 
+option:disabled {
+  color: black;
+}
+
 .address-check {
   display: inline;
 }

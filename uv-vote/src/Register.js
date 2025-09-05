@@ -319,7 +319,6 @@ function Register() {
                   <InputGroup>
                     <Form.Control id="address1" name="address1" lg={6} type="text" maxLength={75} placeholder="enter and select your address" onChange={(e) => {
 
-                      // this needs a slight delay and then will check addresses, which will populate the select
                       let val = e.target.value;
                       setSelectedStreet1(val);
                       setVerified(false);
@@ -350,7 +349,7 @@ function Register() {
                       <Form.Label id="verifiedAddress" >Verified Address:</Form.Label>
                     </Col>
                     <Col lg={10}>
-                      <Form.Select id="address" name="address" lg={6} type="text" minLength={2} placeholder="enter and select your address" onChange={(e) => {
+                      <Form.Select id="address" name="address" lg={6} className={verified ? 'verified' : 'unverified'}  type="text" minLength={2} placeholder="enter and select your address" onChange={(e) => {
 
                         //clear
                           setNormalizedStreet("")
@@ -358,6 +357,7 @@ function Register() {
                           setSelectedAddress({});
                         // if has secondary, re-run a query
                         let selectedOption = addressOptions[e.target.value];
+                        let optionEl = e.currentTarget; 
                         if (selectedOption && selectedOption.entries && selectedOption.entries > 1) {
                           // trigger another query to the address API
                           // build the string for another query
@@ -379,15 +379,17 @@ function Register() {
                                 streetInput.value = addressOptions[0].streetLine;
                               }
                           }
+
+                        optionEl.size = 1;
                         setVerified(true);
                         }
                         setNewAddress(false);
                         //setShowSelect(false);
                       }}
-                        className={verified ? 'verified' : 'unverified'} required>
+                        required>
                           <option key={"unselected"} disabled selected={newAddress} value="">Select an address</option>
                         {addressOptions.map((itm, ind) => {
-                          return <option key={ind} value={ind}>{itm.streetLine} {itm.secondary} {itm.entries && itm.entries > 1 ? `(${itm.entries})` : ''} {itm.city} {itm.state}, {itm.zipcode}</option>
+                          return <option key={ind}  value={ind}>{itm.streetLine} {itm.secondary} {itm.entries && itm.entries > 1 ? `(${itm.entries})` : ''} {itm.city} {itm.state}, {itm.zipcode}</option>
                         })}
                       </Form.Select>
                     </Col>

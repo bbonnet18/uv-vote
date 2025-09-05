@@ -24,6 +24,7 @@ function Buddy() {
   const [loading, setLoading] = useState(false);
   const [disabled, setDisabled] = useState(true);
   const [currentVoter, setCurrentVoter] = useState(starterVoter);
+  const [newAddress, setNewAddress] = useState(true);// used to set the options to unselected 
   const [addressOptions, setAddressOptions] = useState([]);// used to show addresses as the user types 
   const [selectedAddress, setSelectedAddress] = useState();// the address the user chose
   const [addressError,setAddressError] = useState("");// shows if no address was returned or error happens
@@ -46,30 +47,6 @@ function Buddy() {
   const navigate = useNavigate();
   // for captcha
   const recaptchaRef = useRef(null);
-
-  useEffect(() => {
-    if (addressOptions && addressOptions.length === 1) {
-      setSelectedAddress(addressOptions[0])
-      setSelectedStreet1(addressOptions[0].streetLine);
-      setSelectedStreet2(addressOptions[0].secondary);
-      setNormalizedStreet(addressOptions[0].streetLine);// this will be the value we use in the registration
-      let streetInput = document.getElementById('address1');
-      if(streetInput && streetInput.value){
-        streetInput.value = addressOptions[0].streetLine;
-      }
-      //setShowSelect(false);
-      setVerified(true);
-    }
-
-    if(addressOptions && addressOptions.length === 0){
-      setSelectedAddress("")
-      setSelectedStreet1("");
-      setSelectedStreet2("");
-      setNormalizedStreet("");// this will be the value we use in the registration
-      //setShowSelect(false);
-      setVerified(false);
-    }
-  }, [addressOptions])
 
 
   // check captcha val
@@ -95,9 +72,15 @@ function Buddy() {
 
   }
 
-  // checks to see if the address entered is a real address and offers options 
-  const checkAddress = async (val) => {
+// checks to see if the address entered is a real address and offers options 
+  const checkAddress = async (val, hasSecondary = false) => {
 
+    // For apartments and other mult-unit dwellings, include unit number in the search
+    // allow the user to select an entry with multiple units and then that
+    // will trigger another query to the address API so that it can suggest the number of possible address
+    // options. Basically, if the user selects an entry with multiple units, we want to show them all the possible
+    // addresses for that entry. 
+    // this will mean that the query will trigger another query based on the user's selection
     if (val.length === 0) {
       return;
     }
@@ -105,30 +88,31 @@ function Buddy() {
     setShowSelect(true);
 
     const formCheck = document.getElementById('formCheck');
-
+    const selectAddress = document.getElementById('address');
     try {
-      const payload = { address: val };
+      const payload = { 
+        address: val, 
+        hasSecondary: hasSecondary
+      };
+       
       let res = await axios.post(`${config.apiBaseUrl}/address`, payload, { withCredentials: true });
       if (res.status === 200) {
         const addressArr = res.data.result;
-        if(Array.isArray(addressArr) && addressArr.length > 0){
-          setAddressOptions(addressArr);
-          setAddressError("");
-          formCheck.classList.remove('address-check');
-        }else{
-          setAddressError("No results returned, please try again");
-          setAddressOptions([]);
-        }
+        let size = addressArr.length > 5 ? 5 : addressArr.length+1;
+        selectAddress.size = size;
+        setAddressOptions(addressArr);
+        setAddressError("");
       } else {
-        setAddressError("Error finding address")
         setAddressOptions([]);
-      }
+        setAddressError("No address found");}   
     } catch (err) {
-      formCheck.classList.add('address-check');
+      formCheck.classList.remove('address-check');
       setAddressError("Error finding address");
 
     }
-
+    setVerified(false); 
+    setNewAddress(true)
+    setSelectedAddress({});// always unset the address when running a new query
   }
 
   const checkDate = (e) => {
@@ -358,14 +342,10 @@ function Buddy() {
                 <InputGroup>
                 <Form.Control id="address1" name="address1" lg={6} type="text" maxLength={75} placeholder="enter and select your address" onChange={(e) => {
                     
-                     if(verified && normalizedStreet !== e.currentTarget.value){
-                      setAddressOptions([]);
-                     }
-                     else{
-                      setSelectedStreet1(e.currentTarget.value)
-                     }
+                      let val = e.target.value;
+                      setSelectedStreet1(val);
+                      setVerified(false);
                      
-                 
                 }} value={selectedStreet1} required /> 
                 <Button id="verifyAddress" variant={(verified) ? 'success' : 'warning'} onClick={() => {
                   // need to get the value of the current street address field
@@ -392,27 +372,49 @@ function Buddy() {
                 <Form.Label id="verifiedAddress" >Verified Address:</Form.Label>
               </Col>
               <Col lg={10}>
-                <Form.Select id="address" name="address" lg={6} type="text" minLength={2} placeholder="enter and select your address" onChange={(e) => {
-                  
-                  setSelectedAddress(addressOptions[e.target.value]);
-                  if (addressOptions[e.target.value].streetLine) {
-                    setSelectedStreet1(addressOptions[e.target.value].streetLine);
-                    setNormalizedStreet(addressOptions[e.target.value].streetLine)
-                    setSelectedStreet2(addressOptions[e.target.value].secondary);
-                    let streetInput = document.getElementById('address1');
-                    if(streetInput && streetInput.value){
-                      streetInput.value = addressOptions[0].streetLine;
-                    }
+                <Form.Select id="address" name="address" lg={6} className={verified ? 'verified' : 'unverified'} type="text" minLength={2} placeholder="enter and select your address" onChange={(e) => {
+                 
+                  //clear
+                  setNormalizedStreet("")
+                  setSelectedStreet2("");
+                  setSelectedAddress({});
+                  // if has secondary, re-run a query
+                  let selectedOption = addressOptions[e.target.value];
+                  let optionEl = e.currentTarget; 
+                  if (selectedOption && selectedOption.entries && selectedOption.entries > 1) {
+                    // trigger another query to the address API
+                    // build the string for another query
+                    let addressStr = `${selectedOption.streetLine} ${selectedOption.secondary} (${selectedOption.entries}) ${selectedOption.city} ${selectedOption.state}, ${selectedOption.zipcode}`;
+                    checkAddress(addressStr, true);
+                    return; 
                   }
 
-                  setVerified(true);
+                    if(selectedOption){
+                        setSelectedAddress(addressOptions[e.target.value]);
+                        
+                        if (addressOptions[e.target.value].streetLine) {
+                          setSelectedStreet1(addressOptions[e.target.value].streetLine);
+                          setNormalizedStreet(addressOptions[e.target.value].streetLine)
+                          setSelectedStreet2(addressOptions[e.target.value].secondary);
+                          
+                          let streetInput = document.getElementById('address1');
+                          if (streetInput && streetInput.value) {
+                            streetInput.value = addressOptions[0].streetLine;
+                          }
+                      }
 
-                  //setShowSelect(false);
-                }}
-                 className={verified ? 'verified' : 'unverified'} required >
+                    optionEl.size = 1;
+                    setVerified(true);
+                    }
+                    setNewAddress(false);
+                    //setShowSelect(false);
+                  }}
+                  required>
+                    <option key={"unselected"} disabled selected={newAddress} value="">Select an address</option>
                   {addressOptions.map((itm, ind) => {
-                    return <option key={ind} value={ind}>{itm.streetLine} {itm.secondary}</option>
+                    return <option key={ind}  value={ind}>{itm.streetLine} {itm.secondary} {itm.entries && itm.entries > 1 ? `(${itm.entries})` : ''} {itm.city} {itm.state}, {itm.zipcode}</option>
                   })}
+                 
                 </Form.Select>
               </Col>
             </Row></>) : (<></>)}
