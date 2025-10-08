@@ -5,6 +5,7 @@ import App from './App';
 import Actions from './Actions';
 import About from './About';
 import Choices from './Choices';
+import Chart from './Chart';
 import Conduit from './Conduit';
 import Confirm from './Confirm';
 import Register from './Register';
@@ -37,6 +38,7 @@ const router = createBrowserRouter(
       <Route path="/validate" element={<Validate />}/>
       <Route path="/faqs" element={<FAQs />}/>
       <Route path="/about" element={<About />}/>
+      <Route path="/chart" element={<Chart />}/>
       <Route path="*" element={<NotFound></NotFound>} />
     </Route>
   )
