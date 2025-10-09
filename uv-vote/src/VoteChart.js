@@ -1,8 +1,34 @@
 import './App.css';
 import { Button, Container, Row, Col, Card } from "react-bootstrap";
+import { useEffect, useState } from 'react';
 import {csv} from 'd3-fetch';
+import {
+    Chart as ChartJS,
+    CategoryScale,
+    LinearScale,
+    BarElement,
+    Title,
+    Tooltip,
+    Legend,
+  } from 'chart.js';
+  import { Bar } from 'react-chartjs-2';
 
-function Chart(){
+  ChartJS.register(
+    CategoryScale,
+    LinearScale,
+    BarElement,
+    Title,
+    Tooltip,
+    Legend
+  );
+
+
+
+
+function VoteChart(){
+
+    const [voteChart,setVoteChart] = useState({});// will be used to hold the actual data
+
 
     const getCSVData = async () => {
         try{
@@ -89,38 +115,35 @@ function Chart(){
                 let qCount = 0;
                 let treated = treatData(data); 
                 let questions = getQuestions(treated);
-                console.log('questions: ',questions); 
-                // data.forEach(row => {
-                //     // Extract headings or process each row as needed
-                //     if(row['Number of records in this query:']){
-                //         if(row['Number of records in this query:'].indexOf('Summary') !== -1){
-                //             isData = true;
-                //             isQuestion = true;
-                //         }
-                //     }
-                //     if(isData && isQuestion){
-                //            headings[`Q${qCount}`] = {question: row['Number of records in this query:']};
-                //            isQuestion = false;
-                //            qCount++;
-                //     }else if(isData && !isQuestion){
-                //         let keys = Object.keys(row);
-                //         // Process the data rows here using keys
-                //         // check for labels
-                //         if(row[keys[0]]==='Count' && row[keys[1]] === 'Answer' && row[keys[2]] === 'Percentage') {
-                //             // Additional processing can be done here
-                //             headings[`Q${qCount - 1}`].labels = ['Count','Answer','Percentage'];
-                //             headings[`Q${qCount - 1}`].data = [];
-                //         }else{
-                //             headings[`Q${qCount - 1}`].data.push({
-                //                 count: row[keys[0]],
-                //                 answer: row[keys[1]],
-                //                 percentage: row[keys[2]]
-                //             });
-                //         }
-                //     }
+                //extract the actual data and labels
+            
+                if(questions['question0']){
+                    let chartData = {}
+                    let labels = [];
+                    let count = [];
+                    console.log('q0',questions['question0']);
+                    
+                    questions['question0'].data.map((itm)=>{
+                        labels.push(itm.answer);
+                        count.push(parseInt(itm.count));
+                    })
+                    chartData = {
+                        labels,
+                        datasets: [
+                            {
+                              label: 'Dataset 2',
+                              data: count,
+                              borderColor: 'rgb(255, 99, 132)',
+                              backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                            }
+                          ]
 
-
-                //});
+                    };
+                    console.log('chartData: ', chartData);
+                    
+                    setVoteChart(chartData);
+                }
+                
             }
         } catch (error) {
             console.error("Error processing data:", error);
@@ -128,7 +151,19 @@ function Chart(){
     }
 
     getCSVData();
+     const labels = ['answer','count','percentage'];
 
+const data = {
+    labels,
+    datasets: [
+      {
+        label: 'Dataset 1',
+        data: labels.map(() => 100),
+        borderColor: 'rgb(255, 99, 132)',
+        backgroundColor: 'rgba(255, 99, 132, 0.5)',
+      }
+    ],
+  };
     return(
         <Container>
             <Row>
@@ -143,8 +178,14 @@ function Chart(){
                     </Card>
                 </Col>
             </Row>
+            <Row>
+                <Bar data={data} />
+            </Row>
+            <Row>
+                {voteChart && voteChart.datasets ?  (<Bar data={voteChart} />):(<span>'nothing'</span>)}
+            </Row>
         </Container>
     );
 }
 
-export default Chart;
+export default VoteChart;
