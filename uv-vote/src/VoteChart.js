@@ -27,13 +27,22 @@ import {
 
 function VoteChart(){
 
-    const [voteChart,setVoteChart] = useState({});// will be used to hold the actual data
-
+    const [voteCharts,setVoteCharts] = useState([]);// will be used to hold the actual data
+    useEffect(()=>{
+        const checkData = async ()=>{
+            console.log('processing ..... in useEffect')
+            await getCSVData();
+        }
+        checkData();
+    },[])
 
     const getCSVData = async () => {
         try{
            let csvData = await csv('http://localhost:8000/testStats.csv');
-            processData(csvData);
+           
+
+
+           processData(csvData);
         } catch (error) {
             console.error("Error loading CSV data:", error);
         }
@@ -109,61 +118,48 @@ function VoteChart(){
         try{
             if(Array.isArray(data)) {
                 // Process the data here
-                let headings = {};// this will hold the questions
-                let isData = false;//this is a flag that will be used to know when we're hitting data
-                let isQuestion = false
-                let qCount = 0;
                 let treated = treatData(data); 
                 let questions = getQuestions(treated);
                 //extract the actual data and labels
-            
-                if(questions['question0']){
-                    let chartData = {}
-                    let labels = [];
-                    let count = [];
-                    console.log('q0',questions['question0']);
-                    
-                    questions['question0'].data.map((itm)=>{
-                        labels.push(itm.answer);
-                        count.push(parseInt(itm.count));
-                    })
-                    chartData = {
-                        labels,
-                        datasets: [
-                            {
-                              label: 'Dataset 2',
-                              data: count,
-                              borderColor: 'rgb(255, 99, 132)',
-                              backgroundColor: 'rgba(255, 99, 132, 0.5)',
-                            }
-                          ]
-
-                    };
-                    console.log('chartData: ', chartData);
-                    
-                    setVoteChart(chartData);
+                let votingCharts = [...voteCharts]
+                let questionKeys = Object.keys(questions);
+                for(let qKey in questionKeys){
+                    if(questions[questionKeys[qKey]]){
+                        let chartData = {}
+                        let labels = [];
+                        let count = [];
+                        
+                        questions[questionKeys[qKey]].data.map((itm)=>{
+                            labels.push(itm.answer);
+                            count.push(parseInt(itm.count));
+                        })
+                        let label = questions[questionKeys[qKey]].question
+                        chartData = {
+                            labels,
+                            datasets: [
+                                {
+                                  label: label,
+                                  data: count,
+                                  borderColor: 'rgb(255, 99, 132)',
+                                  backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                                }
+                              ]
+    
+                        };
+                        
+                        votingCharts.push(chartData)
+                    }
                 }
                 
+                setVoteCharts(votingCharts);
             }
         } catch (error) {
             console.error("Error processing data:", error);
         }
     }
 
-    getCSVData();
-     const labels = ['answer','count','percentage'];
 
-const data = {
-    labels,
-    datasets: [
-      {
-        label: 'Dataset 1',
-        data: labels.map(() => 100),
-        borderColor: 'rgb(255, 99, 132)',
-        backgroundColor: 'rgba(255, 99, 132, 0.5)',
-      }
-    ],
-  };
+
     return(
         <Container>
             <Row>
@@ -178,11 +174,15 @@ const data = {
                     </Card>
                 </Col>
             </Row>
-            <Row>
+            {/* <Row>
                 <Bar data={data} />
-            </Row>
+            </Row> */}
             <Row>
-                {voteChart && voteChart.datasets ?  (<Bar data={voteChart} />):(<span>'nothing'</span>)}
+                {voteCharts && voteCharts.length ?  (
+                    voteCharts.map((voteChart) => {
+                        return(<Bar data={voteChart} />)
+                    })) : (<span>No votes</span>)
+                }
             </Row>
         </Container>
     );
