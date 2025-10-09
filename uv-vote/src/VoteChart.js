@@ -2,6 +2,8 @@ import './App.css';
 import { Button, Container, Row, Col, Card } from "react-bootstrap";
 import { useEffect, useState } from 'react';
 import {csv} from 'd3-fetch';
+import config from './config';
+
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -25,22 +27,20 @@ import {
 
 
 
-function VoteChart(){
+function VoteChart(props){
 
     const [voteCharts,setVoteCharts] = useState([]);// will be used to hold the actual data
     useEffect(()=>{
         const checkData = async ()=>{
-            await getCSVData();
+            if(props && props.surveyId)
+            await getCSVData(props.surveyId);
         }
         checkData();
     },[])
 
-    const getCSVData = async () => {
+    const getCSVData = async (surveyId) => {
         try{
-           let csvData = await csv('http://localhost:8000/testStats.csv');
-           
-
-
+           let csvData = await csv(`${config.apiBaseUrl}/${surveyId}Stats.csv`);
            processData(csvData);
         } catch (error) {
             console.error("Error loading CSV data:", error);
@@ -168,21 +168,6 @@ function VoteChart(){
 
     return(
         <Container>
-            <Row>
-                <Col>
-                    <Card>
-                        <Card.Body>
-                            <Card.Title>Chart Title</Card.Title>
-                            <Card.Text>
-                                Chart content goes here.
-                            </Card.Text>
-                        </Card.Body>
-                    </Card>
-                </Col>
-            </Row>
-            {/* <Row>
-                <Bar data={data} />
-            </Row> */}
             <Row>
                 {voteCharts && voteCharts.length ?  (
                     voteCharts.map((voteChart) => {
