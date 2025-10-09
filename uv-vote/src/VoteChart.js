@@ -30,7 +30,6 @@ function VoteChart(){
     const [voteCharts,setVoteCharts] = useState([]);// will be used to hold the actual data
     useEffect(()=>{
         const checkData = async ()=>{
-            console.log('processing ..... in useEffect')
             await getCSVData();
         }
         checkData();
@@ -71,9 +70,10 @@ function VoteChart(){
                 }
                 if(checkForSummary(row)){
                     isQuestion = true;
+                    isAnswer = false;
                 }
 
-                if(checkForData(row)){
+                if(isAnswer && checkForData(row)){
                     questionsObj[`question${count-1}`].data.push(row); 
                 }
                 
@@ -88,6 +88,12 @@ function VoteChart(){
         let isData = false;
         if(row.percentage.indexOf('%') > -1){
             isData = true;
+        }else{
+            let count = row.count;
+            let num = parseInt(count); 
+            if(count){
+                isData = true; 
+            }
         }
         return isData; 
     }
