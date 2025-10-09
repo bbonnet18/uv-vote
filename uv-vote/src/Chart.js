@@ -45,7 +45,7 @@ function Chart(){
         }
         )
 
-        return questions; 
+        return questionsObj; 
 
     }
     // looks at a row and determines if it's a data row
@@ -89,7 +89,7 @@ function Chart(){
                 let qCount = 0;
                 let treated = treatData(data); 
                 let questions = getQuestions(treated);
-                //console.log('questions: ',data); 
+                console.log('questions: ',questions); 
                 // data.forEach(row => {
                 //     // Extract headings or process each row as needed
                 //     if(row['Number of records in this query:']){
