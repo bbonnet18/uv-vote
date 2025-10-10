@@ -1,7 +1,6 @@
 import './App.css';
 import { NavLink } from "react-router-dom";
 import { Button, Container, Row, Col, Card } from "react-bootstrap";
-import VoteChart from './VoteChart';
 
 function Choices() {
 

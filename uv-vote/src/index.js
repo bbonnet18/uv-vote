@@ -5,9 +5,9 @@ import App from './App';
 import Actions from './Actions';
 import About from './About';
 import Choices from './Choices';
-import VoteChart from './VoteChart';
 import Conduit from './Conduit';
 import Confirm from './Confirm';
+import Feeds from './Feeds';
 import Register from './Register';
 import Buddy from './Buddy';
 import Home from './Home';
@@ -38,7 +38,7 @@ const router = createBrowserRouter(
       <Route path="/validate" element={<Validate />}/>
       <Route path="/faqs" element={<FAQs />}/>
       <Route path="/about" element={<About />}/>
-      <Route path="/chart" element={<VoteChart />}/>
+      <Route path="/feeds" element={<Feeds />}/>
       <Route path="*" element={<NotFound></NotFound>} />
     </Route>
   )
