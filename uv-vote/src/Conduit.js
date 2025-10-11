@@ -1,7 +1,7 @@
 import './App.css';
 import { useState, useEffect } from 'react';
 import axios from "axios";
-import { Col, Alert, Row, Button, Container, Nav, OverlayTrigger, Table, Tab, Tabs, Toast, Tooltip, Spinner, ToastContainer } from "react-bootstrap";
+import { Badge, Col, Alert, Row, Button, Container, Nav, OverlayTrigger, Table, Tab, Tabs, Toast, Tooltip, Spinner, ToastContainer } from "react-bootstrap";
 import Comment from './Comment';
 import Receiver from './Receiver';
 import { useNavigate } from 'react-router-dom';
@@ -381,15 +381,7 @@ function Conduit() {
     try {
       let receiver = {};
       receivers.map((itm, ind) => {
-        if (itm.receiverId.S === tag) {
-          if (itm && itm.website && itm.website.S) {
-            itm.website.S = unescape(itm.website.S);
-          }
-          if (itm && itm.social && itm.social.S) {
-            itm.social.S = unescape(itm.social.S);
-          }
-
-
+        if (itm.receiverId.S === tag) { 
           receiver = itm;
         }
       })
@@ -402,6 +394,7 @@ function Conduit() {
     }
 
   }
+
 
   return (<Container fluid="md">
     <h2>Conduit <img src="../conduit.png" className='conduit-title' alt="conduit" title="conduit" /></h2>
@@ -432,13 +425,6 @@ function Conduit() {
         <Tab.Container defaultActiveKey="Local" onSelect={async (e) => {
         let groupName = e;
         setCurrentGroup(groupName);
-        //let group = groups[groupName] || "";
-        // if (group && group.hasOwnProperty('topics') === false) {
-        //   await getTopics(groupName);
-        // }
-        // let newTopics = groups[groupName].topics;
-        // console.log('new topics: ',newTopics);
-        // setCurrentTopics(newTopics);
         return;
 
       }}>
