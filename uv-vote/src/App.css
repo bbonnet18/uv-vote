@@ -239,7 +239,7 @@ button, .btn {
   background-color: transparent !important;
   border: 1px solid black !important;
   color: #000 !important;
-  border-radius: 5px;
+  border-radius: 5px !important;
 }
 
 .conduit-receivers .conduit-receiver-label{

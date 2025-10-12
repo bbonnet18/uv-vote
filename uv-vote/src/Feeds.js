@@ -1,8 +1,9 @@
 import './App.css';
 import axios from "axios";
 import { useState, useEffect } from 'react';
-import { Badge, Button, Container, Row, Col,  Nav, OverlayTrigger, Table, Tab,  } from "react-bootstrap";
+import { Badge, Button, Container, Row, Col,  Nav, OverlayTrigger, Spinner,  Table, Tab,  } from "react-bootstrap";
 import { useNavigate } from 'react-router-dom';
+import Feed from './Feed';
 import cookies from './cookies';
 import config from './config';
 import Receiver from './Receiver';
@@ -17,6 +18,7 @@ function Feeds() {
     const [currentReceiver, setCurrentReceiver] = useState(null);
     const [receivers, setReceivers] = useState([]);
     const [tryReceiver, setTryReceiver] = useState(false);
+    const [feedsViewed, setFeedsViewed] = useState({});
 
     const navigate = useNavigate();
 
@@ -80,11 +82,11 @@ function Feeds() {
         }
         
         setCurrentGroup("Local");
-        let topicReceivers = await getReceivers();
-        let allFeedsGroups = await checkFeeds(feedGroups);
+        let feedReceivers = await getReceivers();
+        let allFeedsGroups = await checkFeeds(feedGroups, feedReceivers);
         setGroups(allFeedsGroups);
         setCurrentGroup('Local');
-        setReceivers(topicReceivers);
+        setReceivers(feedReceivers);
         let currentFeeds = allFeedsGroups['Local'].feeds;
         setCurrentFeeds(currentFeeds);
         setLoading(false);
@@ -211,15 +213,15 @@ function Feeds() {
 
     // takes the string representation of the tags
       // breaks them up and turns them into links
-      const createTags = (tags,topicReceivers) => {
-    
+      const createTags = (tags,feedReceivers) => {
+
         let tagsArr = [];
         // create a map of the receivers to get their level
     
         try {
           let receiverMap = {}
-          if (topicReceivers && topicReceivers.length) {
-            topicReceivers.map((itm, ind) => {
+          if (feedReceivers && feedReceivers.length) {
+            feedReceivers.map((itm, ind) => {
               receiverMap[itm.receiverId.S] = itm.level.S;
             });
           }
@@ -254,11 +256,16 @@ function Feeds() {
         } catch (err) {
           console.error("Couldn't set receiver");
         }
-    
+      }
+      // sets if a feed has been viewed so it doesn't reload it
+      const setFeedViewed = (groupId,topicId) => {
+        if(!feedsViewed[`${groupId}-${topicId}`]) {
+          setFeedsViewed(prevState => ({ ...prevState, [`${groupId}-${topicId}`]: true }));
+        }
       }
 
     return (<Container>
-         <Tab.Container defaultActiveKey="Local" onSelect={async (e) => {
+        {loading ? (<div className="comment-loading loading-centered"><Spinner animation="border" role="status" className='loading-spinner'> <span className="visually-hidden">Loading...</span></Spinner></div>):(<Tab.Container defaultActiveKey="Local" onSelect={async (e) => {
         let groupName = e;
         setCurrentGroup(groupName);
         return;
@@ -308,8 +315,9 @@ function Feeds() {
                                           setTryReceiver(true);
                                         }}><div className='conduit-receiver-label'>{itm.lastname}</div> <div className={`nav-indicator ${itm && itm.level ? itm.level : ''}`}></div> </Button> </>);
                                       })) : (<></>)}</div>
+                                    <div>{feedsViewed[`${itm.groupId}-${itm.topicId}`] ? (<div><Feed groupId={itm.groupId} topicId={itm.topicId}></Feed></div>) : (<></>)}</div>
                                     </td>
-                                    <td key={`${ind}-link`} className='table-link-col'>placeholder</td>
+                                    <td key={`${ind}-link`} className='table-link-col'><Button key={ind} onClick={() => setFeedViewed(itm.groupId, itm.topicId)}>Action</Button></td>
                                   </tr>
                                 )
                               }
@@ -324,7 +332,7 @@ function Feeds() {
               </Tab.Content>
             </Col>
           </Row>
-        </Tab.Container>
+        </Tab.Container>)}
           {tryReceiver && currentReceiver ? (<Receiver show={tryReceiver} hide={setTryReceiver} receiver={currentReceiver}></Receiver>) : ("")}
     </Container>)
 }
