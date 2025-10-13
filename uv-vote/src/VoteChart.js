@@ -130,10 +130,11 @@ function VoteChart(props){
                     count: curr[0],
                     percentage: curr[2]
                 }
+                if(newObj && newObj[0] && newObj[1] && newObj[2]){
+                    return newObj
+                }
             })
-            if(newObj && newObj[0] && newObj[1] && newObj[2]){
-                return newObj
-            }
+           
         }catch (err){
             console.log('error on it')
         }
