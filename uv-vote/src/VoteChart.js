@@ -123,20 +123,21 @@ function VoteChart(props){
     const processData2 = (data) => {
         let filtered = [];
         try{
-            filtered  = data.filter((itm,ind)=>{
-                let curr = {...itm};
+            data.map((itm,ind)=>{
+                const { "16":count, "Number of records in this query:":answer, "":percentage} = itm;
                 let newObj = {
-                    answer:curr[1],
-                    count: curr[0],
-                    percentage: curr[2]
+                    answer:answer,
+                    count:count,
+                    percentage:percentage
                 }
-                if(newObj && newObj[0] && newObj[1] && newObj[2]){
-                    return newObj
+                console.log(newObj);
+                if(newObj && newObj.answer){
+                    filtered.push(newObj)
                 }
             })
-           
+            return filtered;
         }catch (err){
-            console.log('error on it')
+            return [];
         }
     }
     // this will process the CSV data to extract relevant information
