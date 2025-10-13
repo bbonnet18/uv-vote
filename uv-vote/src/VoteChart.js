@@ -121,6 +121,7 @@ function VoteChart(props){
     }
     // this will process the CSV data to extract relevant information
     const processData = (data) => {
+        console.log('data: ', data);
         try{
             if(Array.isArray(data)) {
                 // Process the data here
