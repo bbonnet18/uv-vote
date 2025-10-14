@@ -90,7 +90,6 @@ function VoteChart(props){
             isData = true;
         }else{
             let count = row.count;
-            let num = parseInt(count); 
             if(count){
                 isData = true; 
             }
@@ -105,26 +104,14 @@ function VoteChart(props){
         }
         return isSummary; 
     }
-    // return data with correct column names
-    const treatData = (data) => {
-        let keyLabels = ["count","answer","percentage"];
-        let treatedData = data.map((itm,ind)=>{
-                let retObj = {};
-                let mKeys = Object.keys(itm);
-                for(let mKey in mKeys){
-                    retObj[keyLabels[mKey]] = itm[mKeys[mKey]];
-                }
-                return retObj;
-        })
 
-        return treatedData;
-    }
 
     const processData2 = (data) => {
         let filtered = [];
         try{
-            data.map((itm,ind)=>{
-                const { "16":count, "Number of records in this query:":answer, "":percentage} = itm;
+            let keys = Object.keys(data[0]);
+            data.map((itm)=>{
+                const { [keys[0]]:count, [keys[1]]:answer, [keys[2]]:percentage} = itm;
                 let newObj = {
                     answer:answer,
                     count:count,
@@ -147,10 +134,8 @@ function VoteChart(props){
             if(Array.isArray(data)) {
 
                 let filtered = processData2(data);
-                console.log('filtered: ',filtered)
                 // Process the data here
-                let treated = treatData(data); 
-                let questions = getQuestions(treated);
+                let questions = getQuestions(filtered);
                 //extract the actual data and labels
                 let votingCharts = [...voteCharts]
                 let questionKeys = Object.keys(questions);
