@@ -6,10 +6,13 @@ import config from './config';
 import Comments from './Comments';
 import VoteChart from './VoteChart';
 import unescape from 'validator/lib/unescape';
+import { useNavigate } from 'react-router-dom';
+import cookies from './cookies';
 
 function Feed(props) {
     const [loading, setLoading] = useState(false);
     const [feed, setFeed] = useState({});
+    const navigate = useNavigate();
 
     useEffect(() => {
         const checkFeed = async () => {
@@ -22,17 +25,31 @@ function Feed(props) {
 
     const getFeed = async(groupId,topicId) => {
         try{
+
+             // get the JWT to use for auth
+            const authCookie = cookies.getCookie('voterToken') || "";
+            if (authCookie === "") {
+    
+            navigate('/validate');
+            }
+            // get the cookie and set the auth header
+            const reqOpts = {
+            headers: {
+                "Authorization": `Bearer ${authCookie}`
+            },
+            withCredentials: true
+            }
             setLoading(true);
-        let payload = {
-            groupId:groupId,
-            topicId:topicId
-        }
-        const resObj = await axios.post(`${config.apiBaseUrl}/feeds/get-feed`, payload);
-        setFeed(resObj.data);
-        setLoading(false);
-        } catch (error) {
-            console.error("Error fetching feed:", error);
+            let payload = {
+                groupId:groupId,
+                topicId:topicId
+            }
+            const resObj = await axios.post(`${config.apiBaseUrl}/votes/get-feed`, payload, reqOpts);
+            setFeed(resObj.data);
             setLoading(false);
+            } catch (error) {
+                console.error("Error fetching feed:", error);
+                setLoading(false);
         }
         
     }
