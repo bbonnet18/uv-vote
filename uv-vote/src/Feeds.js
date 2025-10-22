@@ -26,93 +26,135 @@ function Feeds() {
   useEffect(() => {
     setLoading(true);      
 
-    const checkFeeds = async (feedGroups, feedReceivers) => {
+    const checkFeeds = async () => {
       try{
-          if(feedGroups && feedGroups.Local && feedGroups.State && feedGroups.National){
-            let localFeeds = await getFeeds(feedGroups["Local"], feedReceivers);
-            let stateFeeds = await getFeeds(feedGroups["State"], feedReceivers);
-            let nationalFeeds = await getFeeds(feedGroups["National"], feedReceivers);
-            let newGroups = {...feedGroups};
-            newGroups["Local"].feeds = localFeeds;
-            newGroups["State"].feeds = stateFeeds;
-            newGroups["National"].feeds = nationalFeeds;
-            return newGroups;
+          let feedReceivers = await getReceivers();
+          setReceivers(feedReceivers);
+          let newGroups = {
+            Local:{},
+            State:{},
+            National:{}
+          };
+          let allFeeds = await getFeeds();
+          if(allFeeds && allFeeds.feeds){
+            let voterFeeds = {...allFeeds.feeds};
+            newGroups["Local"].feeds = voterFeeds.city;
+            newGroups["State"].feeds = voterFeeds.state;
+            newGroups["National"].feeds = voterFeeds.national;
+          }else{
+            
+            newGroups["Local"].feeds = [];
+            newGroups["State"].feeds = [];
+            newGroups["National"].feeds = [];
           }
-          let noGroups = {...feedGroups}
-          noGroups["Local"].feeds = [];
-          noGroups["State"].feeds = [];
-          noGroups["National"].feeds = [];
-          return noGroups; 
+          setGroups(newGroups);
+          setCurrentGroup('Local');
+          let currentFeeds = newGroups['Local'].feeds;
+          setCurrentFeeds(currentFeeds);
       }catch(err){
-        let errorGroups = {...feedGroups}
+        let errorGroups = {}
         errorGroups["Local"].feeds = [];
         errorGroups["State"].feeds = [];
         errorGroups["National"].feeds = [];
-        return errorGroups; 
+        setReceivers([]);
+        setGroups(errorGroups); 
       }
-    }
-
-
-    const checkGroups = async () => {
-
-      let feedGroups = {
-        Local: {},
-        State: {},
-        National: {}
-
-      };
-
-      setLoading(true)
-      try {
-        let checkGroups = await getGroups();
-        if (checkGroups) {
-          let keys = Object.keys(checkGroups.data);
-          keys.map((key) => {
-            if (key === 'state') {
-              feedGroups.State = checkGroups.data[key];
-            }
-            if (key === 'city') {
-              feedGroups.Local = checkGroups.data[key];
-            }
-            if (key === 'national') {
-              feedGroups.National = checkGroups.data[key];
-            }
-          }
-          )
-        }
-        
-        setCurrentGroup("Local");
-        let feedReceivers = await getReceivers();
-        let allFeedsGroups = await checkFeeds(feedGroups, feedReceivers);
-        setGroups(allFeedsGroups);
-        setCurrentGroup('Local');
-        setReceivers(feedReceivers);
-        let currentFeeds = allFeedsGroups['Local'].feeds;
-        setCurrentFeeds(currentFeeds);
-        setLoading(false);
-      } catch (err) {
-        setLoading(false);
-      }
-
       setLoading(false);
+      
     }
 
-    if(groupsSet === false){
-      checkGroups();
-      setGroupsSet(true);
-    }
+      try{
+        checkFeeds(); 
+      }catch(err){
+        setLoading(false);
+        console.log('error: ',err); 
+      }
+
+
+    // const checkGroups = async () => {
+
+    //   let feedGroups = {
+    //     Local: {},
+    //     State: {},
+    //     National: {}
+
+    //   };
+
+    //   setLoading(true)
+    //   try {
+    //     let checkGroups = await getGroups();
+    //     if (checkGroups) {
+    //       let keys = Object.keys(checkGroups.data);
+    //       keys.map((key) => {
+    //         if (key === 'state') {
+    //           feedGroups.State = checkGroups.data[key];
+    //         }
+    //         if (key === 'city') {
+    //           feedGroups.Local = checkGroups.data[key];
+    //         }
+    //         if (key === 'national') {
+    //           feedGroups.National = checkGroups.data[key];
+    //         }
+    //       }
+    //       )
+    //     }
+        
+    //     setCurrentGroup("Local");
+    //     let feedReceivers = await getReceivers();
+    //     let allFeedsGroups = await checkFeeds(feedGroups, feedReceivers);
+    //     setGroups(allFeedsGroups);
+    //     setCurrentGroup('Local');
+    //     setReceivers(feedReceivers);
+    //     let currentFeeds = allFeedsGroups['Local'].feeds;
+    //     setCurrentFeeds(currentFeeds);
+    //     setLoading(false);
+    //   } catch (err) {
+    //     setLoading(false);
+    //   }
+
+    //   setLoading(false);
+    // }
+
+    // if(groupsSet === false){
+    //   checkGroups();
+    //   setGroupsSet(true);
+    // }
     
 
   }, []);
 
-    const getGroups = async () => {
+  //   const getGroups = async () => {
 
+  //   try {
+
+  //     // get the JWT to use for auth
+  //     const authCookie = cookies.getCookie('voterToken') || "";
+  //     if (authCookie === "") {
+
+  //       navigate('/validate');
+  //     }
+  //     // get the cookie and set the auth header
+  //     const reqOpts = {
+  //       headers: {
+  //         "Authorization": `Bearer ${authCookie}`
+  //       },
+  //       withCredentials: true
+  //     }
+
+  //     const resObj = await axios.post(`${config.apiBaseUrl}/votes/my-groups`, {}, reqOpts);
+  //     return resObj;
+  //   } catch (err) {
+  //     return {};
+  //   }
+
+  // }
+
+  const getFeeds = async () => {
     try {
 
       // get the JWT to use for auth
       const authCookie = cookies.getCookie('voterToken') || "";
       if (authCookie === "") {
-
         navigate('/validate');
       }
       // get the cookie and set the auth header
@@ -123,50 +165,18 @@ function Feeds() {
         withCredentials: true
       }
 
-      const resObj = await axios.post(`${config.apiBaseUrl}/votes/my-groups`, {}, reqOpts);
-      return resObj;
-    } catch (err) {
-      return {};
-    }
 
-  }
-
-  const getFeeds = async (group,feedReceivers) => {
-    try {
-
-        if(!group){
-          return [];
-        }
-      // get the JWT to use for auth
-      const authCookie = cookies.getCookie('voterToken') || "";
-      if (authCookie === "") {
-        navigate('/validate');
-      }
-      // get the cookie and set the auth header
-      const reqOpts = {
-        headers: {
-          "Authorization": `Bearer ${authCookie}`
-        },
-        withCredentials: true
-      }
-
-      let payload = {
-        groupId: group.gsid
-      }
-
-      const resObj = await axios.post(`${config.apiBaseUrl}/feeds`, payload, reqOpts);
+      const resObj = await axios.post(`${config.apiBaseUrl}/votes/my-feeds`, {}, reqOpts);
       if (resObj && resObj.data.feeds) {
               // unescape the topic if it was escaped
-              let voterFeeds = resObj.data.feeds.map((itm) => {
-                let unescapedTitle = unescape(itm.title);
-                itm.title = unescapedTitle;
-                itm.tags = createTags(itm.tags,feedReceivers);
-                return itm;
-              });
+              // let voterFeeds = resObj.data.feeds.map((itm) => {
+              //   let unescapedTitle = unescape(itm.title);
+              //   itm.title = unescapedTitle;
+              //   itm.tags = createTags(itm.tags,feedReceivers);
+              //   return itm;
+              // });
 
-              
-
-              return voterFeeds;
+              return resObj.data;
             }
     } catch (err) {
       return [];
@@ -271,6 +281,9 @@ function Feeds() {
         return;
 
       }}>
+        <Row>
+
+        </Row>
           <Row>
               <Nav variant='tabs' defaultActiveKey={"/Local"}>
                 <Nav.Item>
@@ -293,7 +306,7 @@ function Feeds() {
                       <Col lg={6} xs={12}><p>Description: {groups[itm].description}</p>
                       {itm === 'State' || itm === 'National' ? ( <div className='limit-notice'><p>U-Vote is currntly testing <strong>local</strong> issues. Issues are here to show <strong>state</strong> and <strong>national</strong> capability. </p></div>) : (<></>)}
                       </Col>
-                      <h4 className='mt-1'>{groups[itm].title}  <img src={`../${groups[itm].name}.png`} alt={groups[itm].name} title={groups[itm].name} className='table-group-img'></img></h4>
+                      <h4 className='mt-1'>{groups[itm].title} <img src={`../${groups[itm].name}.png`} alt={groups[itm].name} title={groups[itm].name} className='table-group-img'></img></h4>
                       {currentFeeds ? (
                         <>
                           <Table key={ind} striped bordered hover>
@@ -333,7 +346,7 @@ function Feeds() {
             </Col>
           </Row>
         </Tab.Container>)}
-          {tryReceiver && currentReceiver ? (<Receiver show={tryReceiver} hide={setTryReceiver} receiver={currentReceiver}></Receiver>) : ("")}
+          {/* {tryReceiver && currentReceiver ? (<Receiver show={tryReceiver} hide={setTryReceiver} receiver={currentReceiver}></Receiver>) : ("")} */}
     </Container>)
 }
 
