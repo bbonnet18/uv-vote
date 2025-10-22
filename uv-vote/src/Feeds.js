@@ -35,12 +35,15 @@ function Feeds() {
             State:{},
             National:{}
           };
-          let allFeeds = await getFeeds();
+          let allFeeds = await getFeeds(feedReceivers);
           if(allFeeds && allFeeds.feeds){
             let voterFeeds = {...allFeeds.feeds};
-            newGroups["Local"].feeds = voterFeeds.city;
-            newGroups["State"].feeds = voterFeeds.state;
-            newGroups["National"].feeds = voterFeeds.national;
+            newGroups["Local"].feeds = voterFeeds.city.feeds;
+            newGroups["Local"].name = voterFeeds.city.name
+            newGroups["State"].feeds = voterFeeds.state.feeds;
+            newGroups["State"].name = voterFeeds.state.name
+            newGroups["National"].feeds = voterFeeds.national.feeds;
+            newGroups["National"].name = voterFeeds.national.name
           }else{
             
             newGroups["Local"].feeds = [];
@@ -149,7 +152,7 @@ function Feeds() {
 
   // }
 
-  const getFeeds = async () => {
+  const getFeeds = async (feedReceivers) => {
     try {
 
       // get the JWT to use for auth
@@ -168,16 +171,21 @@ function Feeds() {
 
       const resObj = await axios.post(`${config.apiBaseUrl}/votes/my-feeds`, {}, reqOpts);
       if (resObj && resObj.data.feeds) {
-              // unescape the topic if it was escaped
-              // let voterFeeds = resObj.data.feeds.map((itm) => {
-              //   let unescapedTitle = unescape(itm.title);
-              //   itm.title = unescapedTitle;
-              //   itm.tags = createTags(itm.tags,feedReceivers);
-              //   return itm;
-              // });
 
-              return resObj.data;
-            }
+            // unescape the topic if it was escaped and fix the tags
+            let feedKeys = Object.keys(resObj.data.feeds);
+            feedKeys.forEach((itm)=>{
+              resObj.data.feeds[itm].feeds.map((itm) => {
+                let unescapedTitle = unescape(itm.title);
+                itm.title = unescapedTitle;
+                itm.tags = createTags(itm.tags,feedReceivers);
+                return itm;
+              });
+              
+            });
+
+            return resObj.data;
+      }
     } catch (err) {
       return [];
     }
@@ -346,7 +354,7 @@ function Feeds() {
             </Col>
           </Row>
         </Tab.Container>)}
-          {/* {tryReceiver && currentReceiver ? (<Receiver show={tryReceiver} hide={setTryReceiver} receiver={currentReceiver}></Receiver>) : ("")} */}
+          {tryReceiver && currentReceiver ? (<Receiver show={tryReceiver} hide={setTryReceiver} receiver={currentReceiver}></Receiver>) : ("")}
     </Container>)
 }
 
