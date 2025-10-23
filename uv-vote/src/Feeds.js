@@ -1,7 +1,7 @@
 import './App.css';
 import axios from "axios";
 import { useState, useEffect } from 'react';
-import { Badge, Button, Container, Row, Col, Nav, OverlayTrigger, Spinner,Tooltip, Table, Tab, } from "react-bootstrap";
+import { Badge, Button, Container, Row, Col, Nav, OverlayTrigger, Spinner, Tooltip, Table, Tab, } from "react-bootstrap";
 import { useNavigate } from 'react-router-dom';
 import Feed from './Feed';
 import cookies from './cookies';
@@ -19,6 +19,7 @@ function Feeds() {
   const [receivers, setReceivers] = useState([]);
   const [tryReceiver, setTryReceiver] = useState(false);
   const [feedsViewed, setFeedsViewed] = useState({});
+  const [loadingIds, setLoadingIds] = useState({});
 
   const navigate = useNavigate();
 
@@ -306,26 +307,24 @@ function Feeds() {
       const resObj = await axios.post(`${config.apiBaseUrl}/votes/register`, payload, reqOpts);
 
       if (resObj && resObj.data && resObj.data.surveyLink) {
-        //let myVotes = [...votes]
-        // add the survey link for the newly registered item
-        // myVotes = myVotes.map((itm) => {
-        //   if (itm.surveyId == surveyId) {
-        //     itm.link = resObj.data.surveyLink;
-        //   }
-        //   return itm;
-        // })
-        //setShowError(false);
-        //setVotes(myVotes);
-      } else {
-        //setShowError(true);
-        //setErrorMsg("no votes returned");
+        let myFeeds = [...currentFeeds]
+        //add the survey link for the newly registered item
+        myFeeds = myFeeds.map((itm) => {
+          if (itm.surveyId == surveyId) {
+            itm.voteLink = resObj.data.surveyLink;
+          }
+          return itm;
+        })
 
-        //setValidVoter(false);
+        setLoadingIds({});
+        setCurrentFeeds(myFeeds);
+      } else {
+        setLoadingIds({});
       }
 
     } catch (err) {
       //setValidVoter(false);
-
+      setLoadingIds({});
     }
 
   }
@@ -386,17 +385,19 @@ function Feeds() {
                                   })) : (<></>)}</div>
                                   <div>{feedsViewed[`${itm.groupId}-${itm.topicId}`] ? (<div><Feed groupId={itm.groupId} topicId={itm.topicId}></Feed></div>) : (<></>)}</div>
                                 </td>
-                                <td key={`${ind}-link`} className='table-link-col'><Button key={ind} onClick={() => setFeedViewed(itm.groupId, itm.topicId)}>Action</Button>{itm && itm.surveyId ? (itm.voteLink && itm.voteLink !== 'completed' ? (<Button className="vote-buttons" variant="success" onClick={(e) => {
-                                  if (itm && itm.voteLink) {
-                                    window.location = itm.voteLink;
-                                  }
-                                }}><img src='../play-fill.svg' className='button-icon' alt='vote on this issue' title='vote on this issue' /><div>Vote</div></Button>) : (itm.voteLink === 'completed') ? (<OverlayTrigger overlay={<Tooltip id={`tooltip${ind}`}>You Voted</Tooltip>}><div className='vote-buttons vote-completed-img'><img src='../check-square.svg' alt='vote completed' title='vote completed'></img><div>Done</div></div></OverlayTrigger>) : (<Button className="vote-buttons" variant="primary" onClick={(e) => {
-                                  e.preventDefault();
-                                  //let myLid = { ...loadingIds };
-                                  //myLid[itm.surveyId] = 'loading';
-                                  //setLoadingIds(myLid);
-                                  registerToVote(itm.surveyId);
-                                }} alt='click or tap to register' title='click or tap to register' ><img src='../play-empty.svg' className='button-icon' alt='register for this issue' title='register for this issue' /><div>Start</div></Button>)) : (<></>)}</td>
+                                <td key={`${ind}-link`} className='table-link-col'>{itm && itm.surveyId ? (loadingIds && loadingIds[itm.surveyId] ? ( <Spinner animation="border" role="status">
+                      <span className="visually-hidden">Loading...</span>
+                    </Spinner>):(itm.voteLink && itm.voteLink !== 'completed' ?(<Button className="vote-buttons" variant="success" onClick={(e)=>{
+                      if(itm && itm.voteLink){
+                        window.location=itm.voteLink;
+                      }
+                    }}><img src='../play-fill.svg' className='button-icon' alt='vote on this issue' title='vote on this issue' /><div>Vote</div></Button>):(itm.voteLink === 'completed' ? (<OverlayTrigger overlay={<Tooltip id={`tooltip${ind}`}>You Voted</Tooltip>}><div className='vote-buttons vote-completed-img'><img src='../check-square.svg' alt='vote completed' title='vote completed'></img><div>Done</div></div></OverlayTrigger>):(<Button className="vote-buttons" variant="primary" onClick={(e)=>{
+                      e.preventDefault();
+                      let myLid = {...loadingIds};
+                      myLid[itm.surveyId] = 'loading';
+                      setLoadingIds(myLid)
+                      registerToVote(itm.surveyId)}
+                    } alt='click or tap to register' title='click or tap to register' ><img src='../play-empty.svg' className='button-icon' alt='register for this issue' title='register for this issue' /><div>Start</div></Button>))) ): (<></>)}</td>
                               </tr>
                             )
                           }
