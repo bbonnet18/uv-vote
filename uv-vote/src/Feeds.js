@@ -283,6 +283,7 @@ function Feeds() {
     }
   }
 
+
   const registerToVote = async (surveyId) => {
 
     try {
