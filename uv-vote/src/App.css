@@ -402,9 +402,18 @@ button, .btn {
   width: 1em;
 }
 
-.feeds-actions{
+
+.feeds-table .table-link-col .feed-action{
   width:33%;
-  display:inline-block !important;
+  height:100%;
+  display:inline-block;
+  vertical-align: middle;
+  box-sizing: content-box;
+  overflow: hidden;
+}
+
+.feed-table .table-link-col .feed-action .btn{
+  width:90%
 }
 
 .figure-img {

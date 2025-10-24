@@ -80,7 +80,7 @@ function Feeds() {
 
   }, []);
 
-    useEffect(() => {
+  useEffect(() => {
     let newFeeds = groups[currentGroup] && groups[currentGroup].feeds || [];
     setCurrentFeeds(newFeeds);
   }, [currentGroup, groups])
@@ -158,7 +158,7 @@ function Feeds() {
   }
 
 
-   const checkComments = async (currentFeeds) => {
+  const checkComments = async (currentFeeds) => {
     try {
 
       if (!currentFeeds) {
@@ -247,21 +247,21 @@ function Feeds() {
       }, reqOpts);
 
       if (resObj && resObj.status === 200) {
-          let feedGroups = {...groups}
-          let myFeeds = feedGroups[currentGroup].feeds;
-          let status = resObj.data.status;
-          //add the survey link for the newly registered item
-          if(resObj.data){
-            myFeeds = myFeeds.map((itm) => {
-              itm.hasCommented = status && status === 'created';  
-              return itm;
-            })
+        let feedGroups = { ...groups }
+        let myFeeds = feedGroups[currentGroup].feeds;
+        let status = resObj.data.status;
+        //add the survey link for the newly registered item
+        if (resObj.data) {
+          myFeeds = myFeeds.map((itm) => {
+            itm.hasCommented = status && status === 'created';
+            return itm;
+          })
           setCurrentFeeds(myFeeds);
           setTryComment(false);
         } else {
-          
+
         }
-    }
+      }
 
     } catch (err) {
       // setAlertType('danger');
@@ -408,7 +408,7 @@ function Feeds() {
                   <h4 className='mt-1'>{groups[itm].title} <img src={`../${groups[itm].name}.png`} alt={groups[itm].name} title={groups[itm].name} className='table-group-img'></img></h4>
                   {currentFeeds ? (
                     <>
-                      <Table key={ind} striped bordered hover>
+                      <Table className='feeds-table' key={ind} striped bordered hover>
                         <thead>
                           <tr>
                             <th>Feeds</th>
@@ -429,25 +429,27 @@ function Feeds() {
                                   })) : (<></>)}</div>
                                   <div>{feedsViewed[`${itm.groupId}-${itm.topicId}`] ? (<div><Feed groupId={itm.groupId} topicId={itm.topicId}></Feed></div>) : (<></>)}</div>
                                 </td>
-                                <td key={`${ind}-link`} className='table-link-col'><div>{itm.hasCommented ? (<OverlayTrigger overlay={<Tooltip id={`tooltip${ind}`}>You Commented</Tooltip>}><div className='vote-buttons vote-completed-img'><img src='../check-square.svg' alt='vote completed' title='vote completed'></img><div>Done</div></div></OverlayTrigger>) : (
-                                      <Button className='vote-buttons' variant='primary' onClick={(e) => {
-                                        let topic = itm;
-                                        setCurrentFeed(itm);
-                                        setTryComment(true);
-                                      }}><img src='../chat-quote.svg' className='button-icon' alt='comment on this issue' title='comment on this issue' /><div>Comment</div></Button>
-                                    )}</div><div >{itm && itm.surveyId ? (loadingIds && loadingIds[itm.surveyId] ? ( <Spinner animation="border" role="status">
-                      <span className="visually-hidden">Loading...</span>
-                    </Spinner>):(itm.voteLink && itm.voteLink !== 'completed' ?(<Button className="vote-buttons" variant="success" onClick={(e)=>{
-                      if(itm && itm.voteLink){
-                        window.location=itm.voteLink;
-                      }
-                    }}><img src='../play-fill.svg' className='button-icon' alt='vote on this issue' title='vote on this issue' /><div>Vote</div></Button>):(itm.voteLink === 'completed' ? (<OverlayTrigger overlay={<Tooltip id={`tooltip${ind}`}>You Voted</Tooltip>}><div className='vote-buttons vote-completed-img'><img src='../check-square.svg' alt='vote completed' title='vote completed'></img><div>Done</div></div></OverlayTrigger>):(<Button className="vote-buttons" variant="primary" onClick={(e)=>{
-                      e.preventDefault();
-                      let myLid = {...loadingIds};
-                      myLid[itm.surveyId] = 'loading';
-                      setLoadingIds(myLid)
-                      registerToVote(itm.surveyId)}
-                    } alt='click or tap to register' title='click or tap to register' ><img src='../play-empty.svg' className='button-icon' alt='register for this issue' title='register for this issue' /><div>Start</div></Button>))) ): (<></>)}</div><div><Button className='vote-buttons' key={ind} onClick={() => setFeedViewed(itm.groupId, itm.topicId)}><img src='../bar-chart-fill.svg' className='button-icon' alt='register for this issue' title='register for this issue' />Data</Button></div></td>
+                                <td key={`${ind}-link`} className='table-link-col'><div className='feed-action'>{itm.hasCommented ? (<OverlayTrigger overlay={<Tooltip id={`tooltip${ind}`}>You Commented</Tooltip>}><div className=' vote-completed-img'><img src='../check-square.svg' alt='vote completed' title='vote completed'></img><div>Done</div></div></OverlayTrigger>) : (
+                                  <Button className='' variant='primary' onClick={(e) => {
+                                    let topic = itm;
+                                    setCurrentFeed(itm);
+                                    setTryComment(true);
+                                  }}><img src='../chat-quote.svg' className='button-icon' alt='comment on this issue' title='comment on this issue' /><div>Comment</div></Button>
+                                )}</div><div className='feed-action'>{itm && itm.surveyId ? (loadingIds && loadingIds[itm.surveyId] ? (<Spinner animation="border" role="status">
+                                  <span className="visually-hidden">Loading...</span>
+                                </Spinner>) : (itm.voteLink && itm.voteLink !== 'completed' ? (<Button className="" variant="success" onClick={(e) => {
+                                  if (itm && itm.voteLink) {
+                                    window.location = itm.voteLink;
+                                  }
+                                }}><img src='../play-fill.svg' className='button-icon' alt='vote on this issue' title='vote on this issue' /><div>Vote</div></Button>) : (itm.voteLink === 'completed' ? (<OverlayTrigger overlay={<Tooltip id={`tooltip${ind}`}>You Voted</Tooltip>}><div className=' vote-completed-img'><img src='../check-square.svg' alt='vote completed' title='vote completed'></img><div>Done</div></div></OverlayTrigger>) : (<Button className="" variant="primary" onClick={(e) => {
+                                  e.preventDefault();
+                                  let myLid = { ...loadingIds };
+                                  myLid[itm.surveyId] = 'loading';
+                                  setLoadingIds(myLid)
+                                  registerToVote(itm.surveyId)
+                                }
+                                } alt='click or tap to register' title='click or tap to register' ><img src='../play-empty.svg' className='button-icon' alt='register for this issue' title='register for this issue' /><div>Start</div></Button>)))) : (<></>)}</div>
+                                <div className='feed-action'><div className=''><Button className='' variant='primary'  key={ind} onClick={() => setFeedViewed(itm.groupId, itm.topicId)}><img src='../bar-chart-fill.svg' className='button-icon' alt='register for this issue' title='register for this issue' />Data</Button></div></div></td>
                               </tr>
                             )
                           }
@@ -463,7 +465,7 @@ function Feeds() {
         </Col>
       </Row>
     </Tab.Container>)}
-     {tryComment && currentFeed ? (<Comment show={tryComment} hide={setTryComment} send={sendComment} topic={currentFeed.title}></Comment>) : ("")}
+    {tryComment && currentFeed ? (<Comment show={tryComment} hide={setTryComment} send={sendComment} topic={currentFeed.title}></Comment>) : ("")}
     {tryReceiver && currentReceiver ? (<Receiver show={tryReceiver} hide={setTryReceiver} receiver={currentReceiver}></Receiver>) : ("")}
   </Container>)
 }
