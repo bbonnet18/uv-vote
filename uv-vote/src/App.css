@@ -402,6 +402,11 @@ button, .btn {
   width: 1em;
 }
 
+.feeds-actions{
+  width:33%;
+  display:inline-block !important;
+}
+
 .figure-img {
   margin-top: 30px;
   margin-bottom: 15px;
