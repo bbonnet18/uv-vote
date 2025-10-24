@@ -3,6 +3,7 @@ import axios from "axios";
 import { useState, useEffect } from 'react';
 import { Badge, Button, Container, Row, Col, Nav, OverlayTrigger, Spinner, Tooltip, Table, Tab, } from "react-bootstrap";
 import { useNavigate } from 'react-router-dom';
+import Comment from './Comment';
 import Feed from './Feed';
 import cookies from './cookies';
 import config from './config';
@@ -12,12 +13,13 @@ import unescape from 'validator/lib/unescape';
 function Feeds() {
   const [groups, setGroups] = useState({});
   const [loading, setLoading] = useState(false);
-  const [groupsSet, setGroupsSet] = useState(false);
   const [currentGroup, setCurrentGroup] = useState("Local");
   const [currentFeeds, setCurrentFeeds] = useState([]);
+  const [currentFeed, setCurrentFeed] = useState(null);
   const [currentReceiver, setCurrentReceiver] = useState(null);
   const [receivers, setReceivers] = useState([]);
   const [tryReceiver, setTryReceiver] = useState(false);
+  const [tryComment, setTryComment] = useState(false);
   const [feedsViewed, setFeedsViewed] = useState({});
   const [loadingIds, setLoadingIds] = useState({});
 
@@ -75,83 +77,9 @@ function Feeds() {
     }
 
 
-    // const checkGroups = async () => {
-
-    //   let feedGroups = {
-    //     Local: {},
-    //     State: {},
-    //     National: {}
-
-    //   };
-
-    //   setLoading(true)
-    //   try {
-    //     let checkGroups = await getGroups();
-    //     if (checkGroups) {
-    //       let keys = Object.keys(checkGroups.data);
-    //       keys.map((key) => {
-    //         if (key === 'state') {
-    //           feedGroups.State = checkGroups.data[key];
-    //         }
-    //         if (key === 'city') {
-    //           feedGroups.Local = checkGroups.data[key];
-    //         }
-    //         if (key === 'national') {
-    //           feedGroups.National = checkGroups.data[key];
-    //         }
-    //       }
-    //       )
-    //     }
-
-    //     setCurrentGroup("Local");
-    //     let feedReceivers = await getReceivers();
-    //     let allFeedsGroups = await checkFeeds(feedGroups, feedReceivers);
-    //     setGroups(allFeedsGroups);
-    //     setCurrentGroup('Local');
-    //     setReceivers(feedReceivers);
-    //     let currentFeeds = allFeedsGroups['Local'].feeds;
-    //     setCurrentFeeds(currentFeeds);
-    //     setLoading(false);
-    //   } catch (err) {
-    //     setLoading(false);
-    //   }
-
-    //   setLoading(false);
-    // }
-
-    // if(groupsSet === false){
-    //   checkGroups();
-    //   setGroupsSet(true);
-    // }
-
 
   }, []);
 
-  //   const getGroups = async () => {
-
-  //   try {
-
-  //     // get the JWT to use for auth
-  //     const authCookie = cookies.getCookie('voterToken') || "";
-  //     if (authCookie === "") {
-
-  //       navigate('/validate');
-  //     }
-  //     // get the cookie and set the auth header
-  //     const reqOpts = {
-  //       headers: {
-  //         "Authorization": `Bearer ${authCookie}`
-  //       },
-  //       withCredentials: true
-  //     }
-
-  //     const resObj = await axios.post(`${config.apiBaseUrl}/votes/my-groups`, {}, reqOpts);
-  //     return resObj;
-  //   } catch (err) {
-  //     return {};
-  //   }
-
-  // }
 
   const getFeeds = async (feedReceivers) => {
     try {
@@ -224,6 +152,121 @@ function Feeds() {
       return;
     }
   }
+
+
+   const checkComments = async (topics) => {
+    try {
+
+      if (!topics) {
+        return;
+      }
+      let checkedTopics = [];// to hold array of promises 
+      // create promises for each 
+      let topicCount = 0;
+
+      while (topicCount < topics.length) {
+        let itm = topics[topicCount];
+        let hasCompleted = await checkComment(itm.groupId, itm.topicId);
+        if (hasCompleted && hasCompleted.groupId) {
+
+          itm.hasCommented = hasCompleted.hasCommented;
+        }
+        checkedTopics.push(itm);
+        topicCount += 1;
+      }
+
+      return checkedTopics;
+    } catch (err) {
+      console.log('no topics ')
+    }
+  }
+
+  const checkComment = async (groupId, topicId) => {
+    if (!groupId || !topicId) {
+      return;
+    }
+    try {
+      const authCookie = cookies.getCookie('voterToken') || "";
+      if (authCookie === "") {
+
+        navigate('/validate');
+      }
+      // get the cookie and set the auth header
+      const reqOpts = {
+        headers: {
+          "Authorization": `Bearer ${authCookie}`
+        },
+        withCredentials: true
+      }
+
+      const resObj = await axios.post(`${config.apiBaseUrl}/votes/check-comment`, {
+        groupId: groupId,
+        topicId: topicId,
+      }, reqOpts);
+
+      if (resObj && resObj.data) {
+        return resObj.data;
+      } else {
+        return {};
+      }
+
+    } catch (err) {
+      return {};
+    }
+  }
+
+  // sends the comment to be posted 
+  const sendComment = async (comment,groupId,topicId) => {
+    if (!groupId || !topicId || !comment) {
+      return;
+    }
+    try {
+      const authCookie = cookies.getCookie('voterToken') || "";
+      if (authCookie === "") {
+
+        navigate('/validate');
+      }
+      // get the cookie and set the auth header
+      const reqOpts = {
+        headers: {
+          "Authorization": `Bearer ${authCookie}`
+        },
+        withCredentials: true
+      }
+
+      const resObj = await axios.post(`${config.apiBaseUrl}/votes/create-comment`, {
+        groupId: groupId,
+        topicId: topicId,
+        comment: comment
+      }, reqOpts);
+
+      if (resObj && resObj.status === 200) {
+          let feedGroups = {...groups}
+          let myFeeds = feedGroups[currentGroup].feeds;
+          let status = resObj.data.status;
+          //add the survey link for the newly registered item
+          if(resObj.data && resObj.data.topicId){
+          myFeeds = myFeeds.map((itm) => {
+            itm.hasCommented = status.hasCommented || false;  
+            return itm;
+          })
+
+        setCurrentFeeds(myFeeds);
+      } else {
+        
+      }
+    }
+
+    } catch (err) {
+      // setAlertType('danger');
+      // setAlertTitle('Error');
+      // setAlertMsg(reason.error);
+      // setTryComment(false);
+      // setShow(true);
+      console.log(err);
+    }
+  }
+
 
   useEffect(() => {
     let newFeeds = groups[currentGroup] && groups[currentGroup].feeds || [];
@@ -414,6 +457,7 @@ function Feeds() {
         </Col>
       </Row>
     </Tab.Container>)}
+     {/* {tryComment && currentTopic ? (<Comment show={tryComment} hide={setTryComment} send={sendComment} topic={currentTopic.topic}></Comment>) : ("")} */}
     {tryReceiver && currentReceiver ? (<Receiver show={tryReceiver} hide={setTryReceiver} receiver={currentReceiver}></Receiver>) : ("")}
   </Container>)
 }
