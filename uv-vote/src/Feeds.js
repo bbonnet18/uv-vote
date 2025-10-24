@@ -154,25 +154,25 @@ function Feeds() {
   }
 
 
-   const checkComments = async (topics) => {
+   const checkComments = async (currentFeeds) => {
     try {
 
-      if (!topics) {
+      if (!currentFeeds) {
         return;
       }
       let checkedTopics = [];// to hold array of promises 
       // create promises for each 
-      let topicCount = 0;
+      let feedCount = 0;
 
-      while (topicCount < topics.length) {
-        let itm = topics[topicCount];
+      while (feedCount < currentFeeds.length) {
+        let itm = currentFeeds[feedCount];
         let hasCompleted = await checkComment(itm.groupId, itm.topicId);
         if (hasCompleted && hasCompleted.groupId) {
 
           itm.hasCommented = hasCompleted.hasCommented;
         }
         checkedTopics.push(itm);
-        topicCount += 1;
+        feedCount += 1;
       }
 
       return checkedTopics;
@@ -216,7 +216,9 @@ function Feeds() {
   }
 
   // sends the comment to be posted 
-  const sendComment = async (comment,groupId,topicId) => {
+  const sendComment = async (comment) => {
+    let groupId = currentFeed.groupId;
+    let topicId = currentFeed.topicId;
     if (!groupId || !topicId || !comment) {
       return;
     }
@@ -245,16 +247,16 @@ function Feeds() {
           let myFeeds = feedGroups[currentGroup].feeds;
           let status = resObj.data.status;
           //add the survey link for the newly registered item
-          if(resObj.data && resObj.data.topicId){
-          myFeeds = myFeeds.map((itm) => {
-            itm.hasCommented = status.hasCommented || false;  
-            return itm;
-          })
-
-        setCurrentFeeds(myFeeds);
-      } else {
-        
-      }
+          if(resObj.data){
+            myFeeds = myFeeds.map((itm) => {
+              itm.hasCommented = status && status === 'created';  
+              return itm;
+            })
+          setCurrentFeeds(myFeeds);
+          setTryComment(false);
+        } else {
+          
+        }
     }
 
     } catch (err) {
@@ -418,7 +420,7 @@ function Feeds() {
                         <tbody>
                           {currentFeeds && Array.isArray(currentFeeds) ? currentFeeds.map((itm, ind) => {
                             return (
-                              <tr key={ind}>
+                              <tr key={ind} className={itm.hasCommented ? 'comment-completed vote-completed' : ''}>
                                 <td key={`${ind}-info`} className='table-info-col'>
                                   <div className='title'>{itm.title}</div>
                                   <div className='tags'>Receivers: {itm.tags && Array.isArray(itm.tags) ? (itm.tags.map((itm, ind) => {
@@ -429,7 +431,13 @@ function Feeds() {
                                   })) : (<></>)}</div>
                                   <div>{feedsViewed[`${itm.groupId}-${itm.topicId}`] ? (<div><Feed groupId={itm.groupId} topicId={itm.topicId}></Feed></div>) : (<></>)}</div>
                                 </td>
-                                <td key={`${ind}-link`} className='table-link-col'>{itm && itm.surveyId ? (loadingIds && loadingIds[itm.surveyId] ? ( <Spinner animation="border" role="status">
+                                <td key={`${ind}-link`} className='table-link-col'>{itm.hasCommented ? (<OverlayTrigger overlay={<Tooltip id={`tooltip${ind}`}>You Commented</Tooltip>}><div className='vote-buttons vote-completed-img'><img src='../check-square.svg' alt='vote completed' title='vote completed'></img><div>Done</div></div></OverlayTrigger>) : (
+                                      <Button className='vote-buttons' variant='primary' onClick={(e) => {
+                                        let topic = itm;
+                                        setCurrentFeed(itm);
+                                        setTryComment(true);
+                                      }}><img src='../chat-quote.svg' className='button-icon' alt='comment on this issue' title='comment on this issue' /><div>Comment</div></Button>
+                                    )}{itm && itm.surveyId ? (loadingIds && loadingIds[itm.surveyId] ? ( <Spinner animation="border" role="status">
                       <span className="visually-hidden">Loading...</span>
                     </Spinner>):(itm.voteLink && itm.voteLink !== 'completed' ?(<Button className="vote-buttons" variant="success" onClick={(e)=>{
                       if(itm && itm.voteLink){
@@ -457,7 +465,7 @@ function Feeds() {
         </Col>
       </Row>
     </Tab.Container>)}
-     {/* {tryComment && currentTopic ? (<Comment show={tryComment} hide={setTryComment} send={sendComment} topic={currentTopic.topic}></Comment>) : ("")} */}
+     {tryComment && currentFeed ? (<Comment show={tryComment} hide={setTryComment} send={sendComment} topic={currentFeed.title}></Comment>) : ("")}
     {tryReceiver && currentReceiver ? (<Receiver show={tryReceiver} hide={setTryReceiver} receiver={currentReceiver}></Receiver>) : ("")}
   </Container>)
 }

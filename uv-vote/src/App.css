@@ -937,7 +937,7 @@ Form input.error {
   text-overflow: ellipsis;
 }
 
-.vote-completed {
+.vote-completed, .comment-completed {
   color: gray;
 }
 
@@ -949,7 +949,7 @@ Form input.error {
   display: block;
 }
 
-.vote-completed div {
+.vote-completed div, .comment-completed div {
   display: block;
   text-align: center;
   margin:auto;
@@ -961,7 +961,7 @@ Form input.error {
     color:#FFF;
 }
 
-.vote-completed div>img {
+.vote-completed div>img, .comment-completed div>img {
   width: 30px;
   margin: 5px;
 }
