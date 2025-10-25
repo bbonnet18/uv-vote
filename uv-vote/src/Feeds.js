@@ -1,7 +1,7 @@
 import './App.css';
 import axios from "axios";
 import { useState, useEffect } from 'react';
-import { Badge, Button, Container, Row, Col, Nav, OverlayTrigger, Spinner, Tooltip, Table, Tab, } from "react-bootstrap";
+import { Badge, Button, Container, Row, Col, Nav, OverlayTrigger, Spinner, Toast, Tooltip, Table, Tab, } from "react-bootstrap";
 import { useNavigate } from 'react-router-dom';
 import Comment from './Comment';
 import Feed from './Feed';
@@ -22,6 +22,17 @@ function Feeds() {
   const [tryComment, setTryComment] = useState(false);
   const [feedsViewed, setFeedsViewed] = useState({});
   const [loadingIds, setLoadingIds] = useState({});
+  const [show, setShow] = useState(false);
+  const [alertTitle, setAlertTitle] = useState('Success!')
+  const [alertMsg, setAlertMsg] = useState("Thanks for submitting your comment");
+  const [alertType, setAlertType] = useState('success');
+
+  const reason = {
+    'success': 'Your comment was created successfully.',
+    'error': 'There was an error creating your comment, please try again.',
+    'duplicate': 'We already have a comment from this voter on this topic.'
+  }
+
 
   const navigate = useNavigate();
 
@@ -257,19 +268,25 @@ function Feeds() {
             return itm;
           })
           setCurrentFeeds(myFeeds);
-          setTryComment(false);
+          setAlertType('success');
+          setAlertTitle('Success!');
+          setAlertMsg(reason.success);
         } else {
-
+          setAlertType('danger');
+          setAlertTitle('Voter already commented');
+          setAlertMsg(reason.duplicate);
         }
+        setTryComment(false);
+        setShow(true);
+
       }
 
     } catch (err) {
-      // setAlertType('danger');
-      // setAlertTitle('Error');
-      // setAlertMsg(reason.error);
-      // setTryComment(false);
-      // setShow(true);
-      console.log(err);
+      setAlertType('danger');
+      setAlertTitle('Error');
+      setAlertMsg(reason.error);
+      setTryComment(false);
+      setShow(true);
     }
   }
 
@@ -381,7 +398,21 @@ function Feeds() {
 
     }}>
       <Row>
-
+        {show ? (
+        <Col lg={6} xs={12}>
+          <ToastContainer position='middle-center'>
+            <Toast className='conduit-toast' bg={alertType} onClose={() => setShow(false)} show={show} delay={3000} autohide>
+              <Toast.Header>
+                <strong className="me-auto">{alertTitle}</strong>
+              </Toast.Header>
+              <Toast.Body>
+                  <div className='conduit-toast-message'>{alertMsg}</div>
+                  <div className='conduit-toast-action'>{alertType === "success" ? (<img src="../star.svg" title="success!" alt="success" />):(<img src="../exclamation-triangle-red.svg" title="error!" alt="error" />)}</div>
+              </Toast.Body>
+          </Toast>
+          </ToastContainer>
+        </Col>
+      ) : (<></>)}
       </Row>
       <Row>
         <Nav variant='tabs' defaultActiveKey={"/Local"}>
