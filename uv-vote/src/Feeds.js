@@ -1,7 +1,7 @@
 import './App.css';
 import axios from "axios";
 import { useState, useEffect } from 'react';
-import { Badge, Button, Container, Row, Col, Nav, OverlayTrigger, Spinner, Toast, Tooltip, Table, Tab, } from "react-bootstrap";
+import { Badge, Button, Container, Row, Col, Nav, OverlayTrigger, Spinner, Toast, ToastContainer, Tooltip, Table, Tab, } from "react-bootstrap";
 import { useNavigate } from 'react-router-dom';
 import Comment from './Comment';
 import Feed from './Feed';
@@ -264,7 +264,9 @@ function Feeds() {
         //add the survey link for the newly registered item
         if (resObj.data) {
           myFeeds = myFeeds.map((itm) => {
-            itm.hasCommented = status && status === 'created';
+            if(itm.groupId == groupId & itm.topicId == topicId){
+              itm.hasCommented = status && status === 'created';
+            }
             return itm;
           })
           setCurrentFeeds(myFeeds);
