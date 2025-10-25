@@ -264,7 +264,7 @@ function Feeds() {
         //add the survey link for the newly registered item
         if (resObj.data) {
           myFeeds = myFeeds.map((itm) => {
-            if(itm.groupId == groupId & itm.topicId == topicId){
+            if (itm.groupId == groupId & itm.topicId == topicId) {
               itm.hasCommented = status && status === 'created';
             }
             return itm;
@@ -340,9 +340,13 @@ function Feeds() {
   }
   // sets if a feed has been viewed so it doesn't reload it
   const setFeedViewed = (groupId, topicId) => {
-    if (!feedsViewed[`${groupId}-${topicId}`]) {
-      setFeedsViewed(prevState => ({ ...prevState, [`${groupId}-${topicId}`]: true }));
-    }
+    let viewed = { ...feedsViewed };
+    let currVal = viewed[`${groupId}-${topicId}`];
+    viewed[`${groupId}-${topicId}`] = !currVal;
+
+    //setFeedsViewed(prevState => ({ ...prevState, [`${groupId}-${topicId}`]: true }));
+    setFeedsViewed(viewed);
+    //console.log(viewed); 
   }
 
 
@@ -401,20 +405,20 @@ function Feeds() {
     }}>
       <Row>
         {show ? (
-        <Col lg={6} xs={12}>
-          <ToastContainer position='middle-center'>
-            <Toast className='conduit-toast' bg={alertType} onClose={() => setShow(false)} show={show} delay={3000} autohide>
-              <Toast.Header>
-                <strong className="me-auto">{alertTitle}</strong>
-              </Toast.Header>
-              <Toast.Body>
+          <Col lg={6} xs={12}>
+            <ToastContainer position='middle-center'>
+              <Toast className='conduit-toast' bg={alertType} onClose={() => setShow(false)} show={show} delay={3000} autohide>
+                <Toast.Header>
+                  <strong className="me-auto">{alertTitle}</strong>
+                </Toast.Header>
+                <Toast.Body>
                   <div className='conduit-toast-message'>{alertMsg}</div>
-                  <div className='conduit-toast-action'>{alertType === "success" ? (<img src="../star.svg" title="success!" alt="success" />):(<img src="../exclamation-triangle-red.svg" title="error!" alt="error" />)}</div>
-              </Toast.Body>
-          </Toast>
-          </ToastContainer>
-        </Col>
-      ) : (<></>)}
+                  <div className='conduit-toast-action'>{alertType === "success" ? (<img src="../star.svg" title="success!" alt="success" />) : (<img src="../exclamation-triangle-red.svg" title="error!" alt="error" />)}</div>
+                </Toast.Body>
+              </Toast>
+            </ToastContainer>
+          </Col>
+        ) : (<></>)}
       </Row>
       <Row>
         <Nav variant='tabs' defaultActiveKey={"/Local"}>
@@ -482,7 +486,7 @@ function Feeds() {
                                   registerToVote(itm.surveyId)
                                 }
                                 } alt='click or tap to register' title='click or tap to register' ><img src='../play-empty.svg' className='button-icon' alt='register for this issue' title='register for this issue' /><div>Start</div></Button>)))) : (<></>)}</div>
-                                <div className='feed-action'><div className=''><Button className='vote-buttons' variant='primary'  key={ind} onClick={() => setFeedViewed(itm.groupId, itm.topicId)}><img src='../bar-chart-fill.svg' className='button-icon' alt='register for this issue' title='register for this issue' />Data</Button></div></div></td>
+                                  <div className='feed-action'><div className=''><Button className='vote-buttons' variant='primary' key={ind} onClick={() => setFeedViewed(itm.groupId, itm.topicId)}><img src='../bar-chart-fill.svg' className='button-icon' alt='register for this issue' title='register for this issue' />Data</Button></div></div></td>
                               </tr>
                             )
                           }
