@@ -225,7 +225,7 @@ button, .btn {
 
 .button-icon{
   width: 30px;
-  margin-right: 10px;
+  /* margin-right: 10px; */
 }
 
 
@@ -404,13 +404,28 @@ button, .btn {
 
 
 .feeds-table .table-link-col .feed-action{
-  width:33%;
+  width:29%;
+  margin: 0% 1%;
   min-height: 60px;
   max-height: 60px;
+  height: 60px;
   display:inline-block;
   vertical-align: middle;
   box-sizing: content-box;
   overflow: hidden;
+  font-size: small;
+}
+
+.feeds-table .table-link-col .feed-action .btn{
+  font-size: small;
+}
+
+.feeds-table .table-link-col .feed-action .completed{
+  background-color: silver;
+  height: 100%;
+  padding: .375rem .75rem;
+  width: 80%;
+  margin:auto;
 }
 
 /* .feed-table .table-link-col .feed-action .btn{
@@ -1104,6 +1119,13 @@ Form input.error {
     font-size: small;
   }
 
+  .feeds-table .table-link-col .feed-action{
+    width:100%;
+    display:block;
+    padding: 5px;
+    box-sizing: content-box;
+    overflow: hidden;
+  }
 
   .jumbotron {
     opacity: 0.6;
@@ -1128,9 +1150,6 @@ Form input.error {
   .centered-img {
     margin:auto;
     text-align: center;
-  }
-  .button-icon{
-    margin:auto
   }
   /* .table-link-col button span{
     display: none;

@@ -429,19 +429,19 @@ function Feeds() {
                                   })) : (<></>)}</div>
                                   <div>{feedsViewed[`${itm.groupId}-${itm.topicId}`] ? (<div><Feed groupId={itm.groupId} topicId={itm.topicId}></Feed></div>) : (<></>)}</div>
                                 </td>
-                                <td key={`${ind}-link`} className='table-link-col'><div className='feed-action'>{itm.hasCommented ? (<OverlayTrigger overlay={<Tooltip id={`tooltip${ind}`}>You Commented</Tooltip>}><div className=''><img src='../check-square.svg' alt='vote completed' title='vote completed'></img><div>Done</div></div></OverlayTrigger>) : (
-                                  <Button className='' variant='primary' onClick={(e) => {
+                                <td key={`${ind}-link`} className='table-link-col'><div className='feed-action'>{itm.hasCommented ? (<OverlayTrigger overlay={<Tooltip id={`tooltip${ind}`}>You Commented</Tooltip>}><div className='completed'><img className='button-icon' src='../check-square.svg' alt='vote completed' title='vote completed'></img><div>Done</div></div></OverlayTrigger>) : (
+                                  <Button className='vote-buttons' variant='primary' onClick={(e) => {
                                     let topic = itm;
                                     setCurrentFeed(itm);
                                     setTryComment(true);
                                   }}><img src='../chat-quote.svg' className='button-icon' alt='comment on this issue' title='comment on this issue' /><div>Comment</div></Button>
                                 )}</div><div className='feed-action'>{itm && itm.surveyId ? (loadingIds && loadingIds[itm.surveyId] ? (<Spinner animation="border" role="status">
                                   <span className="visually-hidden">Loading...</span>
-                                </Spinner>) : (itm.voteLink && itm.voteLink !== 'completed' ? (<Button className="" variant="success" onClick={(e) => {
+                                </Spinner>) : (itm.voteLink && itm.voteLink !== 'completed' ? (<Button className="vote-buttons" variant="success" onClick={(e) => {
                                   if (itm && itm.voteLink) {
                                     window.location = itm.voteLink;
                                   }
-                                }}><img src='../play-fill.svg' className='button-icon' alt='vote on this issue' title='vote on this issue' /><div>Vote</div></Button>) : (itm.voteLink === 'completed' ? (<OverlayTrigger overlay={<Tooltip id={`tooltip${ind}`}>You Voted</Tooltip>}><div className=''><img src='../check-square.svg' alt='vote completed' title='vote completed'></img><div>Done</div></div></OverlayTrigger>) : (<Button className="" variant="primary" onClick={(e) => {
+                                }}><img src='../play-fill.svg' className='button-icon' alt='vote on this issue' title='vote on this issue' /><div>Vote</div></Button>) : (itm.voteLink === 'completed' ? (<OverlayTrigger overlay={<Tooltip id={`tooltip${ind}`}>You Voted</Tooltip>}><div className='completed'><img className='button-icon' src='../check-square.svg' alt='vote completed' title='vote completed'></img><div>Done</div></div></OverlayTrigger>) : (<Button className="" variant="primary" onClick={(e) => {
                                   e.preventDefault();
                                   let myLid = { ...loadingIds };
                                   myLid[itm.surveyId] = 'loading';
@@ -449,7 +449,7 @@ function Feeds() {
                                   registerToVote(itm.surveyId)
                                 }
                                 } alt='click or tap to register' title='click or tap to register' ><img src='../play-empty.svg' className='button-icon' alt='register for this issue' title='register for this issue' /><div>Start</div></Button>)))) : (<></>)}</div>
-                                <div className='feed-action'><div className=''><Button className='' variant='primary'  key={ind} onClick={() => setFeedViewed(itm.groupId, itm.topicId)}><img src='../bar-chart-fill.svg' className='button-icon' alt='register for this issue' title='register for this issue' />Data</Button></div></div></td>
+                                <div className='feed-action'><div className=''><Button className='vote-buttons' variant='primary'  key={ind} onClick={() => setFeedViewed(itm.groupId, itm.topicId)}><img src='../bar-chart-fill.svg' className='button-icon' alt='register for this issue' title='register for this issue' />Data</Button></div></div></td>
                               </tr>
                             )
                           }
