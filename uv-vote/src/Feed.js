@@ -58,6 +58,7 @@ function Feed(props) {
             {loading ? (<div className="comment-loading loading-centered"><Spinner animation="border" role="status" className='loading-spinner'> <span className="visually-hidden">Loading...</span></Spinner></div>
             ) : (
                 <div>
+                    <hr/>
                     <h4>{feed && feed.feed ? feed.feed.title : ""}</h4>
                     <Comments comments={feed && feed.comments ? feed.comments : []} />
                     {feed && feed.feed && feed.feed.surveyId ? <VoteChart surveyId={feed.feed.surveyId} /> : null}

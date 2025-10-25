@@ -180,8 +180,8 @@ function VoteChart(props){
         <Container>
             <Row>
                 {voteCharts && voteCharts.length ?  (
-                    voteCharts.map((voteChart) => {
-                        return(<Bar data={voteChart} />)
+                    voteCharts.map((voteChart,ind) => {
+                        return(<Bar key={`chart-${ind}`} data={voteChart} />)
                     })) : (<span>No votes</span>)
                 }
             </Row>
