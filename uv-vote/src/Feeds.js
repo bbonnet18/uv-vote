@@ -17,11 +17,12 @@ function Feeds() {
   const [currentGroup, setCurrentGroup] = useState("Local");
   const [currentFeeds, setCurrentFeeds] = useState([]);
   const [currentFeed, setCurrentFeed] = useState(null);
+  const [feedSet, setFeedSet] = useState([]);// holds the feeds that have been selected
   const [currentReceiver, setCurrentReceiver] = useState(null);
   const [receivers, setReceivers] = useState([]);
   const [tryReceiver, setTryReceiver] = useState(false);
   const [tryComment, setTryComment] = useState(false);
-  const [feedsViewed, setFeedsViewed] = useState({});
+  const [currentFeedViewed, setCurrentFeedViewed] = useState({});
   const [loadingIds, setLoadingIds] = useState({});
   const [show, setShow] = useState(false);
   const [alertTitle, setAlertTitle] = useState('Success!')
@@ -39,6 +40,7 @@ function Feeds() {
 
   // get the set of groups if not already there
   useEffect(() => {
+    console.log('RERENDERING ---- ')
     setLoading(true);
     const checkFeeds = async () => {
       try {
@@ -134,6 +136,48 @@ function Feeds() {
     } catch (err) {
       return [];
     }
+  }
+
+  const getFeed = async (groupId, topicId) => {
+
+    let feedSelected = feedSet.find((itm)=> itm && itm.feed && itm.feed.groupId == groupId && itm.feed.topicId == topicId);
+    if(feedSelected){
+      return feedSelected; 
+    }
+    try {
+
+      // get the JWT to use for auth
+      const authCookie = cookies.getCookie('voterToken') || "";
+      if (authCookie === "") {
+
+        navigate('/validate');
+      }
+      // get the cookie and set the auth header
+      const reqOpts = {
+        headers: {
+          "Authorization": `Bearer ${authCookie}`
+        },
+        withCredentials: true
+      }
+      //setLoading(true);
+      let payload = {
+        groupId: groupId,
+        topicId: topicId
+      }
+      const resObj = await axios.post(`${config.apiBaseUrl}/votes/get-feed`, payload, reqOpts);
+      let newFeed = resObj.data;
+      let newFeedSet = [...feedSet];
+      newFeedSet.push(newFeed);
+      setFeedSet(newFeedSet); 
+      //setLoading(false);
+      return newFeed;
+    } catch (error) {
+      console.error("Error fetching feed:", error);
+      //setLoading(false);
+    }
+
+
+
   }
   const getReceivers = async () => {
     try {
@@ -294,9 +338,9 @@ function Feeds() {
   }
 
 
-  useEffect(() => {
-    console.log('feeds viewed updated: ', feedsViewed);
-  } ,[feedsViewed])
+  // useEffect(() => {
+  //   console.log('feeds viewed updated: ', feedsViewed);
+  // }, [feedsViewed])
   // takes the string representation of the tags
   // breaks them up and turns them into links
   const createTags = (tags, feedReceivers) => {
@@ -344,15 +388,15 @@ function Feeds() {
     }
   }
   // sets if a feed has been viewed so it doesn't reload it
-  const setFeedViewed = (groupId, topicId) => {
-    let viewed = { ...feedsViewed };
-    let currVal = viewed[`${groupId}-${topicId}`];
-    viewed[`${groupId}-${topicId}`] = !currVal;
+  // const setFeedViewed = (groupId, topicId) => {
+  //   let viewed = { ...feedsViewed };
+  //   let currVal = viewed[`${groupId}-${topicId}`];
+  //   viewed[`${groupId}-${topicId}`] = !currVal;
 
-    //setFeedsViewed(prevState => ({ ...prevState, [`${groupId}-${topicId}`]: true }));
-    setFeedsViewed(viewed);
-    //console.log(viewed); 
-  }
+  //   //setFeedsViewed(prevState => ({ ...prevState, [`${groupId}-${topicId}`]: true }));
+  //   //setFeedsViewed(viewed);
+  //   //console.log(viewed); 
+  // }
 
 
   const registerToVote = async (surveyId) => {
@@ -469,7 +513,10 @@ function Feeds() {
                                       setTryReceiver(true);
                                     }}><div className='conduit-receiver-label'>{itm.lastname}</div> <div className={`nav-indicator ${itm && itm.level ? itm.level : ''}`}></div> </Button> </>);
                                   })) : (<></>)}</div>
-                                  {/* <div>{feedsViewed[`${itm.groupId}-${itm.topicId}`] ? (<div><TestComp /></div>) : (<></>)}</div> */}
+                                  <div>{currentFeedViewed && currentFeedViewed.feed ? 
+                                    (currentFeedViewed.feed.groupId  === itm.groupId && currentFeedViewed.feed.topicId === itm.topicId ? (<div><Feed feed={currentFeedViewed} /></div>): (<></>)):(<></>)
+                                  }
+                                 </div>
                                 </td>
                                 <td key={`${ind}-link`} className='table-link-col'><div className='feed-action'>{itm.hasCommented ? (<OverlayTrigger overlay={<Tooltip id={`tooltip${ind}`}>You Commented</Tooltip>}><div className='completed'><img className='button-icon' src='../check-square.svg' alt='vote completed' title='vote completed'></img><div>Done</div></div></OverlayTrigger>) : (
                                   <Button className='vote-buttons' variant='primary' onClick={(e) => {
@@ -491,7 +538,11 @@ function Feeds() {
                                   registerToVote(itm.surveyId)
                                 }
                                 } alt='click or tap to register' title='click or tap to register' ><img src='../play-empty.svg' className='button-icon' alt='register for this issue' title='register for this issue' /><div>Start</div></Button>)))) : (<></>)}</div>
-                                  <div className='feed-action'><div className=''><Button className='vote-buttons' variant='primary' key={ind} onClick={() => setFeedViewed(itm.groupId, itm.topicId)}><img src='../bar-chart-fill.svg' className='button-icon' alt='register for this issue' title='register for this issue' />Data</Button></div></div></td>
+                                  <div className='feed-action'><div className=''><Button className='vote-buttons' variant='primary' key={ind} onClick={ async () => {
+                                    let selectedFeed = await getFeed(itm.groupId, itm.topicId);
+                                    setCurrentFeedViewed(selectedFeed);
+                                    // setFeedViewed(itm.groupId, itm.topicId); 
+                                  }}><img src='../bar-chart-fill.svg' className='button-icon' alt='register for this issue' title='register for this issue' />Data</Button></div></div></td>
                               </tr>
                             )
                           }
@@ -509,7 +560,6 @@ function Feeds() {
     </Tab.Container>)}
     {tryComment && currentFeed ? (<Comment show={tryComment} hide={setTryComment} send={sendComment} topic={currentFeed.title}></Comment>) : ("")}
     {tryReceiver && currentReceiver ? (<Receiver show={tryReceiver} hide={setTryReceiver} receiver={currentReceiver}></Receiver>) : ("")}
-    <div>{ (<div><TestComp /></div>)}</div>
   </Container>)
 }
 
