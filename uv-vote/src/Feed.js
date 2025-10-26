@@ -1,6 +1,6 @@
 import './App.css';
 import axios from "axios";
-import { React, memo, useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Container, Row, Col, Spinner} from "react-bootstrap";
 import config from './config';
 import Comments from './Comments';
@@ -9,7 +9,7 @@ import unescape from 'validator/lib/unescape';
 import { useNavigate } from 'react-router-dom';
 import cookies from './cookies';
 
-const Feed = memo(({groupId,topicId}) => {
+function Feed (props){ 
     const [loading, setLoading] = useState(false);
     const [feed, setFeed] = useState({});
     const [feedChecked,setFeedChecked] = useState(false);
@@ -25,7 +25,7 @@ const Feed = memo(({groupId,topicId}) => {
             setFeedChecked(true);
         }
       
-    }, [groupId, topicId]);
+    }, [props.groupId, props.topicId]);
 
 
 
@@ -74,5 +74,5 @@ const Feed = memo(({groupId,topicId}) => {
             )}
         </Container>
     );
-})
+}
 export default Feed;

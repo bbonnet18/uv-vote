@@ -5,6 +5,7 @@ import { Badge, Button, Container, Row, Col, Nav, OverlayTrigger, Spinner, Toast
 import { useNavigate } from 'react-router-dom';
 import Comment from './Comment';
 import Feed from './Feed';
+import TestComp from './TestComp';
 import cookies from './cookies';
 import config from './config';
 import Receiver from './Receiver';
@@ -39,7 +40,6 @@ function Feeds() {
   // get the set of groups if not already there
   useEffect(() => {
     setLoading(true);
-
     const checkFeeds = async () => {
       try {
         let feedReceivers = await getReceivers();
@@ -90,6 +90,7 @@ function Feeds() {
 
 
   }, []);
+
 
   useEffect(() => {
     let newFeeds = groups[currentGroup] && groups[currentGroup].feeds || [];
@@ -292,6 +293,10 @@ function Feeds() {
     }
   }
 
+
+  useEffect(() => {
+    console.log('feeds viewed updated: ', feedsViewed);
+  } ,[feedsViewed])
   // takes the string representation of the tags
   // breaks them up and turns them into links
   const createTags = (tags, feedReceivers) => {
@@ -464,7 +469,7 @@ function Feeds() {
                                       setTryReceiver(true);
                                     }}><div className='conduit-receiver-label'>{itm.lastname}</div> <div className={`nav-indicator ${itm && itm.level ? itm.level : ''}`}></div> </Button> </>);
                                   })) : (<></>)}</div>
-                                  <div>{feedsViewed[`${itm.groupId}-${itm.topicId}`] ? (<div><Feed groupId={itm.groupId} topicId={itm.topicId}></Feed></div>) : (<></>)}</div>
+                                  {/* <div>{feedsViewed[`${itm.groupId}-${itm.topicId}`] ? (<div><TestComp /></div>) : (<></>)}</div> */}
                                 </td>
                                 <td key={`${ind}-link`} className='table-link-col'><div className='feed-action'>{itm.hasCommented ? (<OverlayTrigger overlay={<Tooltip id={`tooltip${ind}`}>You Commented</Tooltip>}><div className='completed'><img className='button-icon' src='../check-square.svg' alt='vote completed' title='vote completed'></img><div>Done</div></div></OverlayTrigger>) : (
                                   <Button className='vote-buttons' variant='primary' onClick={(e) => {
@@ -504,6 +509,7 @@ function Feeds() {
     </Tab.Container>)}
     {tryComment && currentFeed ? (<Comment show={tryComment} hide={setTryComment} send={sendComment} topic={currentFeed.title}></Comment>) : ("")}
     {tryReceiver && currentReceiver ? (<Receiver show={tryReceiver} hide={setTryReceiver} receiver={currentReceiver}></Receiver>) : ("")}
+    <div>{ (<div><TestComp /></div>)}</div>
   </Container>)
 }
 
