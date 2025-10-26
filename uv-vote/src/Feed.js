@@ -1,6 +1,6 @@
 import './App.css';
 import axios from "axios";
-import { useState, useEffect } from 'react';
+import { React, memo, useState, useEffect } from 'react';
 import { Container, Row, Col, Spinner} from "react-bootstrap";
 import config from './config';
 import Comments from './Comments';
@@ -9,17 +9,23 @@ import unescape from 'validator/lib/unescape';
 import { useNavigate } from 'react-router-dom';
 import cookies from './cookies';
 
-function Feed(props) {
+const Feed = memo(({groupId,topicId}) => {
     const [loading, setLoading] = useState(false);
     const [feed, setFeed] = useState({});
+    const [feedChecked,setFeedChecked] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
         const checkFeed = async () => {
-            await getFeed(props.groupId, props.topicId);
+            //await getFeed(groupId, topicId);
         };
-        checkFeed();
-    }, [props.groupId, props.topicId]);
+        console.log('rerendering ---- ');
+        if(feedChecked===false){
+            checkFeed();
+            setFeedChecked(true);
+        }
+      
+    }, [groupId, topicId]);
 
 
 
@@ -51,6 +57,8 @@ function Feed(props) {
                 console.error("Error fetching feed:", error);
                 setLoading(false);
         }
+
+    
         
     }
     return (
@@ -66,5 +74,5 @@ function Feed(props) {
             )}
         </Container>
     );
-}
+})
 export default Feed;

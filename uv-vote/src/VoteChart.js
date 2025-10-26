@@ -117,7 +117,7 @@ function VoteChart(props){
                     count:count,
                     percentage:percentage
                 }
-                console.log(newObj);
+
                 if(newObj && newObj.answer){
                     filtered.push(newObj)
                 }
@@ -129,7 +129,6 @@ function VoteChart(props){
     }
     // this will process the CSV data to extract relevant information
     const processData = (data) => {
-        console.log('data: ', data);
         try{
             if(Array.isArray(data)) {
 
