@@ -223,6 +223,25 @@ button, .btn {
   margin-top: 10px;
 }
 
+.comment-item{
+  margin-bottom: 10px;
+  padding: 10px;
+  border: 1px solid lightgray;
+  border-radius: 5px;
+  background-color: #f6f6f6;
+}
+
+.comment-meta{
+  font-size: small;
+  color: gray;
+  margin-top: 5px;  
+}
+.comments-section{
+  margin-top: 20px;
+  margin-bottom: 20px;
+  max-height: 300px;
+  overflow-y: auto;
+}
 .button-icon{
   width: 30px;
   /* margin-right: 10px; */
@@ -400,6 +419,16 @@ button, .btn {
 
 .experimental{
   width: 1em;
+}
+
+.feed-container{
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.feed-container h4{
+  margin-bottom: 10px;
+  font-style:underline;
 }
 
 
@@ -818,6 +847,12 @@ Form input.error {
   text-align: center;
   max-width: 20%;
 }
+.table-row-buttons{
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+}
  /* .table-link-col .btn{
   padding: 0 !important;
  } */
@@ -955,6 +990,10 @@ Form input.error {
 #voterKey:valid {
   border: 2px lightgrey;
   background-color: lightgreen;
+}
+
+.vote-chart{
+  border-top: 2px solid #0C2D48;
 }
 
 .vote-buttons{
@@ -1119,13 +1158,13 @@ Form input.error {
     font-size: small;
   }
 
-  .feeds-table .table-link-col .feed-action{
+  /* .feeds-table .table-link-col .feed-action{
     width:100%;
     display:block;
     padding: 5px;
     box-sizing: content-box;
     overflow: hidden;
-  }
+  } */
 
   .jumbotron {
     opacity: 0.6;
@@ -1159,6 +1198,35 @@ Form input.error {
   .table-link-col{
     max-width: 30%;
   }
+  .table-link-col.feeds-table{
+    display:none
+  }
+  .table-row-buttons{
+    display: block;
+  }
+ .feeds-table .table-row-buttons .feed-action{
+  min-height: 50px;
+  max-height: 50px;
+  height: 50px;
+  display:inline-block;
+  vertical-align: middle;
+  box-sizing: content-box;
+  overflow: hidden;
+  font-size: small;
+  margin-left: 5px;
+  margin-right: 5px;
+  margin-top: 10px;
+  }
+
+  .feeds-table .table-row-buttons .feed-action .button-icon{
+    width: 25px;
+  }
+
+  .feeds-table .table-row-buttons .feed-action .label{
+    display: none;
+  }
+
+
   .table-info-col{
     width: 70%;
   }
