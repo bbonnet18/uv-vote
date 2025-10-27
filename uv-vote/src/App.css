@@ -421,6 +421,7 @@ button, .btn {
   width: 1em;
 }
 
+
 .feed-container{
   margin-top: 20px;
   margin-bottom: 20px;
@@ -450,10 +451,7 @@ button, .btn {
 }
 
 .feeds-table .table-link-col .feed-action .completed{
-  background-color: silver;
-  height: 100%;
-  padding: .375rem .75rem;
-  width: 80%;
+  background-color: rgb(99, 98, 98);
   margin:auto;
 }
 
@@ -999,6 +997,8 @@ Form input.error {
 .vote-buttons{
   width: 80%; 
   padding: 1em;
+  height: auto;
+
 }
 
 .vote-buttons div{
@@ -1083,6 +1083,25 @@ Form input.error {
   }
 }
 
+@media screen and (max-width: 1400px) {
+  
+  .feed-action .label{
+    display: none;
+  }
+
+  .feed-action .vote-buttons{
+    width: 100%; 
+    padding: 10px;
+    height: auto;
+  }
+  .feed-action .vote-buttons.completed{
+    background-color: rgb(99, 98, 98);
+    height: auto;
+  }
+}
+
+
+
 @media screen and (min-width: 1024px) {
   .step-one {
     background-image: url('number-one-icon.svg');
@@ -1128,7 +1147,39 @@ Form input.error {
     margin: 0;
     padding: 0;
   }
+  
+  .feeds-table .table-link-col{
+    display:none
+  }
 
+  .feeds-table .table-row-buttons{
+    display: block;
+  }
+
+
+ .feeds-table .table-row-buttons .feed-action{
+  min-height: 50px;
+  max-height: 50px;
+  height: 50px;
+  display:inline-block;
+  vertical-align: middle;
+  box-sizing: content-box;
+  overflow: hidden;
+  font-size: small;
+  margin-left: 5px;
+  margin-right: 5px;
+  margin-top: 10px;
+  }
+
+  .feeds-table .table-row-buttons .feed-action .button-icon{
+    width: 25px;
+  }
+
+
+
+  .table-info-col{
+    width: 70%;
+  }
   /* .vote-completed div>img {
     width: 70%;
   } */
@@ -1222,9 +1273,6 @@ Form input.error {
     width: 25px;
   }
 
-  .feeds-table .table-row-buttons .feed-action .label{
-    display: none;
-  }
 
 
   .table-info-col{
