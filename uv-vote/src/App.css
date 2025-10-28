@@ -452,7 +452,13 @@ button, .btn {
 
 .feeds-table .table-link-col .feed-action .completed{
   background-color: rgb(99, 98, 98);
+  color: #FFF;
   margin:auto;
+  font-size: smaller;
+}
+
+.feeds-table .table-link-col .feed-action .completed img{
+  width: 32px;
 }
 
 /* .feed-table .table-link-col .feed-action .btn{
@@ -1273,7 +1279,9 @@ Form input.error {
     width: 25px;
   }
 
-
+  .feeds-table .feed-action .vote-buttons.completed img{
+    width:27px;
+  }
 
   .table-info-col{
     width: 70%;

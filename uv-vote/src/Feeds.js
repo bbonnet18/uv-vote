@@ -1,6 +1,7 @@
 import './App.css';
 import axios from "axios";
 import { useState, useEffect } from 'react';
+import { useSearchParams } from "react-router-dom";
 import { Badge, Button, Container, Row, Col, Nav, OverlayTrigger, Spinner, Toast, ToastContainer, Tooltip, Table, Tab, } from "react-bootstrap";
 import { useNavigate } from 'react-router-dom';
 import Comment from './Comment';
@@ -98,6 +99,10 @@ function Feeds() {
     let newFeeds = groups[currentGroup] && groups[currentGroup].feeds || [];
     setCurrentFeeds(newFeeds);
   }, [currentGroup, groups])
+
+
+
+
 
   const getFeeds = async (feedReceivers) => {
     try {
