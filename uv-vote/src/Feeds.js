@@ -23,6 +23,7 @@ function Feeds() {
   const [receivers, setReceivers] = useState([]);
   const [tryReceiver, setTryReceiver] = useState(false);
   const [tryComment, setTryComment] = useState(false);
+  const [validVoter, setValidVoter] = useState(null);// used to show a message if voter is not valid
   const [currentFeedViewed, setCurrentFeedViewed] = useState({});
   const [loadingIds, setLoadingIds] = useState({});
   const [show, setShow] = useState(false);
@@ -101,6 +102,50 @@ function Feeds() {
   }, [currentGroup, groups])
 
 
+  const checkVoter = async () => {
+
+    try {
+      let key = document.getElementById('voterKey').value;
+
+      key = key.trim();
+      let kp = keyPattern;///[a-z0-9]+-[a-z0-9]+-[a-z0-9]+-[a-z0-9]+-[a-z0-9]+/
+
+      let myres = key && kp.test(key);
+
+      if (key && kp.test(key)) {
+        setLoading(true);
+
+        const payload = {
+          voterKey: key
+        }
+        const resObj = await axios.post(`${config.apiBaseUrl}/votes`, payload, { withCredentials: true });
+
+
+        if (resObj && resObj.data && resObj.data.isVerified === true) {
+          setIsSaved(true);
+          setShowKey(false);
+          setShowError(false);
+          setValidVoter(true);
+          getVotes();
+        } else { 
+          setShowError(true);
+          setErrorMsg("no voter found");
+          setValidVoter(false);
+        }
+        setLoading(false);
+      } else {
+        alert('incorrect voter key')
+      }
+    } catch (err) {
+
+      setLoading(false);
+      setShowError(true);
+      setErrorMsg("error getting voter");
+      setValidVoter(false);
+    }
+
+
+  }
 
 
 
