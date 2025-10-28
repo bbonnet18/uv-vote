@@ -176,7 +176,7 @@ function VoteChart(props){
 
 
     return(
-        <Container>
+        <Container className="vote-chart" >
             <Row>
                 {voteCharts && voteCharts.length ?  (
                     voteCharts.map((voteChart,ind) => {
