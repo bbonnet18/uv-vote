@@ -18,6 +18,8 @@ function Feeds() {
   const [currentGroup, setCurrentGroup] = useState("Local");
   const [currentFeeds, setCurrentFeeds] = useState([]);
   const [currentFeed, setCurrentFeed] = useState(null);
+  const keyPattern = /([A-Za-z0-9]){10}v{1}([0-9])+/i //  /[a-z0-9]+-[a-z0-9]+-[a-z0-9]+-[a-z0-9]+-[a-z0-9]+/g;
+  const [searchParams, setSearchParams] = useSearchParams();
   const [feedSet, setFeedSet] = useState([]);// holds the feeds that have been selected
   const [currentReceiver, setCurrentReceiver] = useState(null);
   const [receivers, setReceivers] = useState([]);
@@ -42,9 +44,38 @@ function Feeds() {
 
   // get the set of groups if not already there
   useEffect(() => {
-    console.log('RERENDERING ---- ')
     setLoading(true);
-    const checkFeeds = async () => {
+    if (searchParams && searchParams.size > 0) {
+      searchParams.forEach((itm, name) => {
+        // check the id passed and pattern match to validate format
+        if (name === "id") {
+          // if the test passes, set the key and load the votes
+          if (keyPattern.test(itm)) {
+            checkVoter(itm);
+
+          }
+        }
+      })
+    } else {
+      // if the token is there, attempt to get votes
+      let tokenCookie = cookies.getCookie('voterToken');
+      if (tokenCookie) {
+        checkFeeds();
+      }
+    }
+
+  }, []);
+
+
+  useEffect(() => {
+    let newFeeds = groups[currentGroup] && groups[currentGroup].feeds || [];
+    setCurrentFeeds(newFeeds);
+  }, [currentGroup, groups])
+
+
+
+
+  const checkFeeds = async () => {
       try {
         let feedReceivers = await getReceivers();
         setReceivers(feedReceivers);
@@ -83,34 +114,14 @@ function Feeds() {
       setLoading(false);
 
     }
+  
+  // check voter and call the getFeeds function 
+  const checkVoter = async (key) => {
 
     try {
-      checkFeeds();
-    } catch (err) {
-      setLoading(false);
-      console.log('error: ', err);
-    }
-
-
-
-  }, []);
-
-
-  useEffect(() => {
-    let newFeeds = groups[currentGroup] && groups[currentGroup].feeds || [];
-    setCurrentFeeds(newFeeds);
-  }, [currentGroup, groups])
-
-
-  const checkVoter = async () => {
-
-    try {
-      let key = document.getElementById('voterKey').value;
 
       key = key.trim();
       let kp = keyPattern;///[a-z0-9]+-[a-z0-9]+-[a-z0-9]+-[a-z0-9]+-[a-z0-9]+/
-
-      let myres = key && kp.test(key);
 
       if (key && kp.test(key)) {
         setLoading(true);
@@ -122,26 +133,12 @@ function Feeds() {
 
 
         if (resObj && resObj.data && resObj.data.isVerified === true) {
-          setIsSaved(true);
-          setShowKey(false);
-          setShowError(false);
-          setValidVoter(true);
-          getVotes();
-        } else { 
-          setShowError(true);
-          setErrorMsg("no voter found");
-          setValidVoter(false);
+            await checkFeeds(); 
         }
-        setLoading(false);
-      } else {
-        alert('incorrect voter key')
       }
     } catch (err) {
 
       setLoading(false);
-      setShowError(true);
-      setErrorMsg("error getting voter");
-      setValidVoter(false);
     }
 
 
@@ -502,6 +499,15 @@ function Feeds() {
       return;
 
     }}>
+      <Row className='mb-2'>
+          <Col lg={6} xs={6}>
+            <Row>
+              <Col lg={12} xs={12}>
+              <span><a href="/faqs" alt="more about vote types">Check out our FAQs to learn more.</a></span>
+              </Col>
+            </Row>
+          </Col>
+        </Row>
       <Row>
         {show ? (
           <Col lg={6} xs={12}>
