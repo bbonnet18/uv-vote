@@ -28,17 +28,16 @@ const router = createBrowserRouter(
       <Route path="/" element={<Info />} />
       <Route path="/getkey" element={<Register />}/>
       <Route path="/buddy" element={<Buddy />}/>
-      <Route path="/votes" element={<Home />}/>
-      <Route path="/actions" element={<Actions />}>
+      <Route path="/votes" element={<Feeds />}/>
+      {/* <Route path="/actions" element={<Actions />}>
         <Route index element={<Choices />} />
         <Route path="conduit" element={<Conduit/>} />
-      </Route>
+      </Route> */}
       <Route path="/confirm" element={<Confirm />}/>
       <Route path="/registration-error" element={<Error />}/>
       <Route path="/validate" element={<Validate />}/>
       <Route path="/faqs" element={<FAQs />}/>
       <Route path="/about" element={<About />}/>
-      <Route path="/feeds" element={<Feeds />}/>
       <Route path="*" element={<NotFound></NotFound>} />
     </Route>
   )

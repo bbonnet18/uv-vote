@@ -61,6 +61,8 @@ function Feeds() {
       let tokenCookie = cookies.getCookie('voterToken');
       if (tokenCookie) {
         checkFeeds();
+      }else{
+        navigate('/validate');
       }
     }
 
@@ -136,6 +138,7 @@ function Feeds() {
             await checkFeeds(); 
         }
       }
+
     } catch (err) {
 
       setLoading(false);

@@ -37,9 +37,7 @@ export default function Navbar() {
           <li className='nav-item'><NavLink to="/">Home</NavLink></li>
           <li><NavLink to="/votes">Your Votes</NavLink></li>
           {hasKey ? (<></>) : (<li><NavLink to="/getkey">Get a voter key</NavLink></li>)}
-          <li><NavLink to="/actions">Actions</NavLink></li>
           <li><NavLink to="/about">About</NavLink></li>
-          <li><NavLink to="/feeds">Feeds</NavLink></li>
         </ul>
       </nav>
   )
