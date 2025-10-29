@@ -698,6 +698,20 @@ Form input.error {
   margin-top: 5px;
 }
 
+.no-key{
+  margin:auto;
+  text-align: center;
+}
+
+.no-key img{
+  width: 40%; 
+  max-width: 100px;
+}
+
+.no-key-info{
+  text-align: left;
+}
+
 .no-voter{
   border-bottom: 1px solid red;
   text-align: center;

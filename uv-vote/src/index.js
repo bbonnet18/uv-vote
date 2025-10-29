@@ -2,18 +2,15 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
-import Actions from './Actions';
 import About from './About';
-import Choices from './Choices';
-import Conduit from './Conduit';
 import Confirm from './Confirm';
 import Feeds from './Feeds';
 import Register from './Register';
 import Buddy from './Buddy';
-import Home from './Home';
 import Info from './Info';
 import Error from "./Error";
 import NotFound from './NotFound';
+import NoKey from './NoKey'; 
 import Validate from "./Validate";
 import FAQs from './FAQs';
 import reportWebVitals from './reportWebVitals';
@@ -33,6 +30,7 @@ const router = createBrowserRouter(
         <Route index element={<Choices />} />
         <Route path="conduit" element={<Conduit/>} />
       </Route> */}
+      <Route path="/nokey" element={<NoKey />} />
       <Route path="/confirm" element={<Confirm />}/>
       <Route path="/registration-error" element={<Error />}/>
       <Route path="/validate" element={<Validate />}/>

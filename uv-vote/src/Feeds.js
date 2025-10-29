@@ -62,7 +62,7 @@ function Feeds() {
       if (tokenCookie) {
         checkFeeds();
       }else{
-        navigate('/validate');
+        navigate('/nokey');
       }
     }
 
@@ -155,7 +155,7 @@ function Feeds() {
       // get the JWT to use for auth
       const authCookie = cookies.getCookie('voterToken') || "";
       if (authCookie === "") {
-        navigate('/validate');
+        navigate('/nokey');
       }
       // get the cookie and set the auth header
       const reqOpts = {
