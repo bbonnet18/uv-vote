@@ -28,7 +28,7 @@ import {
 
 
 function VoteChart(props){
-
+    const statsURL = 'https://statistics.u-vote.us/'
     const [voteCharts,setVoteCharts] = useState([]);// will be used to hold the actual data
     useEffect(()=>{
         const checkData = async ()=>{
@@ -40,7 +40,7 @@ function VoteChart(props){
 
     const getCSVData = async (surveyId) => {
         try{
-           let csvData = await csv(`${config.apiBaseUrl}/${surveyId}Stats.csv`);
+           let csvData = await csv(`${statsURL}/${surveyId}Stats.csv`);
            processData(csvData);
         } catch (error) {
             console.error("Error loading CSV data:", error);
