@@ -3,6 +3,7 @@ import { Button, Container, Row, Col, Card } from "react-bootstrap";
 import { useEffect, useState } from 'react';
 import {csv} from 'd3-fetch';
 import config from './config';
+import axios from "axios";
 
 import {
     Chart as ChartJS,
