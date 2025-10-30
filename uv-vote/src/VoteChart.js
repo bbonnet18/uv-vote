@@ -1,8 +1,9 @@
 import './App.css';
 import { Button, Container, Row, Col, Card } from "react-bootstrap";
 import { useEffect, useState } from 'react';
-import {csv} from 'd3-fetch';
-import config from './config';
+// import {csv} from 'd3-fetch';
+// import {csvParse} from 'd3';
+import Papa from 'papaparse';
 import axios from "axios";
 
 import {
@@ -31,22 +32,54 @@ import {
 function VoteChart(props){
     const statsURL = `https://statistics.u-vote.us/${props.surveyId}Stats.csv`;
     const [voteCharts,setVoteCharts] = useState([]);// will be used to hold the actual data
+    const [csvData, setCsvData] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    
     useEffect(()=>{
         const checkData = async ()=>{
+            setLoading(true); 
             if(props && props.surveyId)
             await getCSVData(props.surveyId);
         }
         checkData();
     },[])
 
+    useEffect(()=>{
+        processData(csvData);
+    },[csvData])
+
     const getCSVData = async (surveyId) => {
         try{
-           let csvData = await csv(statsURL);
-           processData(csvData);
+            let myData = await getCSVWithAxios(); 
+           //let csvData = await csv(statsURL);
+           //processData(csvData);
         } catch (error) {
             console.error("Error loading CSV data:", error);
         }
     }
+
+    const getCSVWithAxios = async () => {
+        try {
+            // Replace with the actual path to your CSV file
+            const response = await axios.get(`https://statistics.u-vote.us/${props.surveyId}Stats.csv`); 
+            
+            Papa.parse(response.data, {
+              header: true, // If your CSV has a header row
+              complete: (results) => {
+                setCsvData(results.data);
+                setLoading(false);
+              },
+              error: (err) => {
+                setError(err);
+                setLoading(false);
+              }
+            });
+          } catch (err) {
+            setError(err);
+            setLoading(false);
+          }
+        }
 
     // grab just the questions, they will be after the summary
     const getQuestions =  (data)=> {
@@ -166,11 +199,12 @@ function VoteChart(props){
                         votingCharts.push(chartData)
                     }
                 }
-                
                 setVoteCharts(votingCharts);
+                setLoading(false);
             }
         } catch (error) {
             console.error("Error processing data:", error);
+            setLoading(false); 
         }
     }
 
