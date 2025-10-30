@@ -28,8 +28,7 @@ import {
 
 
 function VoteChart(props){
-    const statsURL = 'https://statistics.u-vote.us/433471Stats.csv';
-    //const statsURL = 'http://localhost:8000'
+    const statsURL = `https://statistics.u-vote.us/${props.surveyId}Stats.csv`;
     const [voteCharts,setVoteCharts] = useState([]);// will be used to hold the actual data
     useEffect(()=>{
         const checkData = async ()=>{
