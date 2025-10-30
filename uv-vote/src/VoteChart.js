@@ -62,7 +62,11 @@ function VoteChart(props){
     const getCSVWithAxios = async () => {
         try {
             // Replace with the actual path to your CSV file
-            const response = await axios.get(`https://statistics.u-vote.us/${props.surveyId}Stats.csv`); 
+            const response = await axios.get(`https://statistics.u-vote.us/${props.surveyId}Stats.csv`,{
+                headers:{
+                   "Accept": "text/csv"
+                }
+            }); 
             
             Papa.parse(response.data, {
               header: true, // If your CSV has a header row
