@@ -18,23 +18,24 @@ function Register() {
     "state": "",
     "zipcode": "",
     "phone": "",
-    "DOB": ""
   }
   const [loading, setLoading] = useState(false);
   const [disabled, setDisabled] = useState(true);
   const [currentVoter, setCurrentVoter] = useState(starterVoter);
+  const [newAddress, setNewAddress] = useState(true);// used to set the options to unselected 
   const [addressOptions, setAddressOptions] = useState([]);// used to show addresses as the user types 
   const [selectedAddress, setSelectedAddress] = useState();// the address the user chose
   const [addressError, setAddressError] = useState("");// shows if no address was returned or error happens
   const [showSelect, setShowSelect] = useState(false);// controls showing the address select
   const [selectedStreet1, setSelectedStreet1] = useState("");
   const [selectedStreet2, setSelectedStreet2] = useState("");
+  const [dob, setDob] = useState("");// used to hold date of birth
   const [normalizedStreet, setNormalizedStreet] = useState("");
   const [verified, setVerified] = useState(false);// used to handle selections and updates to address
   const [registerToken, setRegisterToken] = useState(null);
   const [showError, setShowError] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
-  const [agree, setAgree] = useState(false); 
+  const [agree, setAgree] = useState(false);
   const [modalShow, setModalShow] = useState(false);
 
   const handleClose = () => setModalShow(false);
@@ -43,29 +44,6 @@ function Register() {
   // for captcha
   const recaptchaRef = useRef(null);
 
-  useEffect(() => {
-    if (addressOptions && addressOptions.length === 1) {
-      setSelectedAddress(addressOptions[0])
-      setSelectedStreet1(addressOptions[0].streetLine);
-      setSelectedStreet2(addressOptions[0].secondary);
-      setNormalizedStreet(addressOptions[0].streetLine);// this will be the value we use in the registration
-      let streetInput = document.getElementById('address1');
-      if (streetInput && streetInput.value) {
-        streetInput.value = addressOptions[0].streetLine;
-      }
-      //setShowSelect(false);
-      setVerified(true);
-    }
-
-    if (addressOptions && addressOptions.length === 0) {
-      setSelectedAddress("")
-      setSelectedStreet1("");
-      setSelectedStreet2("");
-      setNormalizedStreet("");// this will be the value we use in the registration
-      //setShowSelect(false);
-      setVerified(false);
-    }
-  }, [addressOptions])
 
   // check validity states with a listener on all form element item changes. 
 
@@ -94,8 +72,14 @@ function Register() {
   }
 
   // checks to see if the address entered is a real address and offers options 
-  const checkAddress = async (val) => {
+  const checkAddress = async (val, hasSecondary = false) => {
 
+    // For apartments and other mult-unit dwellings, include unit number in the search
+    // allow the user to select an entry with multiple units and then that
+    // will trigger another query to the address API so that it can suggest the number of possible address
+    // options. Basically, if the user selects an entry with multiple units, we want to show them all the possible
+    // addresses for that entry. 
+    // this will mean that the query will trigger another query based on the user's selection
     if (val.length === 0) {
       return;
     }
@@ -103,30 +87,56 @@ function Register() {
     setShowSelect(true);
 
     const formCheck = document.getElementById('formCheck');
-
+    const selectAddress = document.getElementById('address');
     try {
-      const payload = { address: val };
+      const payload = { 
+        address: val, 
+        hasSecondary: hasSecondary
+      };
+       
       let res = await axios.post(`${config.apiBaseUrl}/address`, payload, { withCredentials: true });
       if (res.status === 200) {
         const addressArr = res.data.result;
-        if (Array.isArray(addressArr) && addressArr.length > 0) {
-          setAddressOptions(addressArr);
-          setAddressError("");
-          formCheck.classList.remove('address-check');
-        } else {
-          setAddressError("No results returned, please try again");
-          setAddressOptions([]);
-        }
+        let size = addressArr.length > 5 ? 5 : addressArr.length+1;
+        selectAddress.size = size;
+        setAddressOptions(addressArr);
+        setAddressError("");
       } else {
-        setAddressError("Error finding address")
         setAddressOptions([]);
-      }
+        setAddressError("No address found");}   
     } catch (err) {
-      formCheck.classList.add('address-check');
+      formCheck.classList.remove('address-check');
       setAddressError("Error finding address");
 
     }
+    setVerified(false); 
+    setNewAddress(true)
+    setSelectedAddress({});// always unset the address when running a new query
+  }
 
+
+
+  const checkDate = (e) => {
+    const formattedDate = formatToMMDDYYYY(e.target.value);
+    setDob(formattedDate);
+  }
+
+
+  function formatToMMDDYYYY(input) {
+    // Remove non-digit characters
+    const digits = input.replace(/\D/g, '');
+
+    // Extract month, day, year
+    const month = digits.substring(0, 2);
+    const day = digits.substring(2, 4);
+    const year = digits.substring(4, 8);
+
+    let formatted = '';
+    if (month) formatted += month;
+    if (day) formatted += '/' + day;
+    if (year) formatted += '/' + year;
+
+    return formatted;
   }
 
 
@@ -182,7 +192,7 @@ function Register() {
       formData.append('idFile', idFile.files[0]);
       formData.append('selfyFile', selfyFile.files[0]);
       formData.append('regToken', registerToken);// received from captcha challenges
-      formData.append('agree',agreeCheck.checked);
+      formData.append('agree', agreeCheck.checked);
       try {
         setLoading(true)
         let res = await axios.post(`${config.apiBaseUrl}/register`, formData, { withCredentials: true });//await axios.post("https://vote.u-vote.us/register", formData);
@@ -262,7 +272,7 @@ function Register() {
                 <Form.Label id="aDOB">DOB</Form.Label>
               </Col>
               <Col lg={10}>
-                <Form.Control id="DOB" name="DOB" size="lg" type="text" pattern='(0[1-9]|1[1,2,0])\/(0[1-9]|[12][0-9]|3[01])\/(19|20)\d{2}' maxLength={10} minLength={10} placeholder="MM/DD/YYYY" defaultValue={currentVoter.DOB} required />
+                <Form.Control id="DOB" name="DOB" size="lg" type="text" pattern='(0[1-9]|1[1,2,0])\/(0[1-9]|[12][0-9]|3[01])\/(19|20)\d{2}' maxLength={10} minLength={10} placeholder="MM/DD/YYYY" value={dob} onChange={checkDate} required />
                 <Form.Text muted>
                   You must be 18 or older
                 </Form.Text>
@@ -309,13 +319,9 @@ function Register() {
                   <InputGroup>
                     <Form.Control id="address1" name="address1" lg={6} type="text" maxLength={75} placeholder="enter and select your address" onChange={(e) => {
 
-                      if (verified && normalizedStreet !== e.currentTarget.value) {
-                        setAddressOptions([]);
-                      }
-                      else {
-                        setSelectedStreet1(e.currentTarget.value)
-                      }
-
+                      let val = e.target.value;
+                      setSelectedStreet1(val);
+                      setVerified(false);
 
                     }} value={selectedStreet1} required />
                     <Button id="verifyAddress" variant={(verified) ? 'success' : 'warning'} onClick={() => {
@@ -343,26 +349,47 @@ function Register() {
                       <Form.Label id="verifiedAddress" >Verified Address:</Form.Label>
                     </Col>
                     <Col lg={10}>
-                      <Form.Select id="address" name="address" lg={6} type="text" minLength={2} placeholder="enter and select your address" onChange={(e) => {
+                      <Form.Select id="address" name="address" lg={6} className={verified ? 'verified' : 'unverified'}  type="text" minLength={2} placeholder="enter and select your address" onChange={(e) => {
 
-                        setSelectedAddress(addressOptions[e.target.value]);
-                        if (addressOptions[e.target.value].streetLine) {
-                          setSelectedStreet1(addressOptions[e.target.value].streetLine);
-                          setNormalizedStreet(addressOptions[e.target.value].streetLine)
-                          setSelectedStreet2(addressOptions[e.target.value].secondary);
-                          let streetInput = document.getElementById('address1');
-                          if (streetInput && streetInput.value) {
-                            streetInput.value = addressOptions[0].streetLine;
-                          }
+                        //clear
+                          setNormalizedStreet("")
+                          setSelectedStreet2("");
+                          setSelectedAddress({});
+                        // if has secondary, re-run a query
+                        let selectedOption = addressOptions[e.target.value];
+                        let optionEl = e.currentTarget; 
+                        if (selectedOption && selectedOption.entries && selectedOption.entries > 1) {
+                          // trigger another query to the address API
+                          // build the string for another query
+                          let addressStr = `${selectedOption.streetLine} ${selectedOption.secondary} (${selectedOption.entries}) ${selectedOption.city} ${selectedOption.state}, ${selectedOption.zipcode}`;
+                          checkAddress(addressStr, true);
+                          return; 
                         }
 
-                        setVerified(true);
+                        if(selectedOption){
+                            setSelectedAddress(addressOptions[e.target.value]);
+                            
+                            if (addressOptions[e.target.value].streetLine) {
+                              setSelectedStreet1(addressOptions[e.target.value].streetLine);
+                              setNormalizedStreet(addressOptions[e.target.value].streetLine)
+                              setSelectedStreet2(addressOptions[e.target.value].secondary);
+                              
+                              let streetInput = document.getElementById('address1');
+                              if (streetInput && streetInput.value) {
+                                streetInput.value = addressOptions[0].streetLine;
+                              }
+                          }
 
+                        optionEl.size = 1;
+                        setVerified(true);
+                        }
+                        setNewAddress(false);
                         //setShowSelect(false);
                       }}
-                        className={verified ? 'verified' : 'unverified'} required >
+                        required>
+                          <option key={"unselected"} disabled selected={newAddress} value="">Select an address</option>
                         {addressOptions.map((itm, ind) => {
-                          return <option key={ind} value={ind}>{itm.streetLine} {itm.secondary}</option>
+                          return <option key={ind}  value={ind}>{itm.streetLine} {itm.secondary} {itm.entries && itm.entries > 1 ? `(${itm.entries})` : ''} {itm.city} {itm.state}, {itm.zipcode}</option>
                         })}
                       </Form.Select>
                     </Col>
@@ -467,8 +494,8 @@ function Register() {
                 <Form.Check // prettier-ignore
                   type={'checkbox'}
                   id={'agree'}
-                  label={'I agree to the U-Vote terms of service'} onClick={(e)=> setModalShow(true)} checked={agree} onChange={(e)=>{}} required /> 
-                  <Button variant='primary' onClick={(e) => setModalShow(true)}>Review Terms</Button>
+                  label={'I agree to the U-Vote terms of service'} onClick={(e) => setModalShow(true)} checked={agree} onChange={(e) => { }} required />
+                <Button variant='primary' onClick={(e) => setModalShow(true)}>Review Terms</Button>
                 <Form.Text id="agreeHelp">
                   * You must agree to terms of service to participate in U-Vote
                 </Form.Text>
