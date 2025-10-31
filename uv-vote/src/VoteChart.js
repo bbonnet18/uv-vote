@@ -1,8 +1,6 @@
 import './App.css';
-import { Button, Container, Row, Col, Card } from "react-bootstrap";
+import { Container, Row, Spinner } from "react-bootstrap";
 import { useEffect, useState } from 'react';
-// import {csv} from 'd3-fetch';
-// import {csvParse} from 'd3';
 import Papa from 'papaparse';
 import axios from "axios";
 
@@ -30,11 +28,10 @@ import {
 
 
 function VoteChart(props){
-    const statsURL = `https://statistics.u-vote.us/${props.surveyId}Stats.csv`;
     const [voteCharts,setVoteCharts] = useState([]);// will be used to hold the actual data
     const [csvData, setCsvData] = useState([]);
-    const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [loading,setLoading] = useState(false);
     
     useEffect(()=>{
         const checkData = async ()=>{
@@ -52,10 +49,10 @@ function VoteChart(props){
     const getCSVData = async (surveyId) => {
         try{
             let myData = await getCSVWithAxios(); 
-           //let csvData = await csv(statsURL);
-           //processData(csvData);
+            setLoading(false);
         } catch (error) {
             console.error("Error loading CSV data:", error);
+            setLoading(false);
         }
     }
 
@@ -174,7 +171,7 @@ function VoteChart(props){
                 // Process the data here
                 let questions = getQuestions(filtered);
                 //extract the actual data and labels
-                let votingCharts = [...voteCharts]
+                let votingCharts = [];//[...voteCharts]
                 let questionKeys = Object.keys(questions);
                 for(let qKey in questionKeys){
                     if(questions[questionKeys[qKey]]){
@@ -216,6 +213,7 @@ function VoteChart(props){
 
     return(
         <Container className="vote-chart" >
+            {loading ? (<div className="comment-loading loading-centered"><Spinner animation="border" role="status" className='loading-spinner'> <span className="visually-hidden">Loading...</span></Spinner></div>):(
             <Row>
                 {voteCharts && voteCharts.length ?  (
                     voteCharts.map((voteChart,ind) => {
@@ -223,6 +221,8 @@ function VoteChart(props){
                     })) : (<span>No votes</span>)
                 }
             </Row>
+            )
+        }
         </Container>
     );
 }

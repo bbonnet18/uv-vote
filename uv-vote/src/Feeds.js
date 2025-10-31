@@ -6,7 +6,6 @@ import { Badge, Button, Container, Row, Col, Nav, OverlayTrigger, Spinner, Toast
 import { useNavigate } from 'react-router-dom';
 import Comment from './Comment';
 import Feed from './Feed';
-import TestComp from './TestComp';
 import cookies from './cookies';
 import config from './config';
 import Receiver from './Receiver';
