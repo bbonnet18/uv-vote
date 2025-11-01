@@ -5,6 +5,7 @@ import { useSearchParams } from "react-router-dom";
 import { Badge, Button, Container, Row, Col, Nav, OverlayTrigger, Spinner, Toast, ToastContainer, Tooltip, Table, Tab, } from "react-bootstrap";
 import { useNavigate } from 'react-router-dom';
 import Comment from './Comment';
+import VoterInfo from './VoterInfo';
 import Feed from './Feed';
 import cookies from './cookies';
 import config from './config';
@@ -28,6 +29,7 @@ function Feeds() {
   const [currentFeedViewed, setCurrentFeedViewed] = useState({});
   const [loadingIds, setLoadingIds] = useState({});
   const [show, setShow] = useState(false);
+  const [showInfo, setShowInfo] = useState(false); 
   const [alertTitle, setAlertTitle] = useState('Success!')
   const [alertMsg, setAlertMsg] = useState("Thanks for submitting your comment");
   const [alertType, setAlertType] = useState('success');
@@ -139,8 +141,13 @@ function Feeds() {
       }
 
     } catch (err) {
-
-      setLoading(false);
+      console.log('error: ',err);
+      if(err.response && err.response.data){
+        if(err.response.data.demographics === false){
+          setShowInfo(true); 
+        }
+      } 
+     setLoading(false);
     }
 
 
@@ -644,6 +651,7 @@ function Feeds() {
     </Tab.Container>)}
     {tryComment && currentFeed ? (<Comment show={tryComment} hide={setTryComment} send={sendComment} topic={currentFeed.title}></Comment>) : ("")}
     {tryReceiver && currentReceiver ? (<Receiver show={tryReceiver} hide={setTryReceiver} receiver={currentReceiver}></Receiver>) : ("")}
+    {showInfo ? (<VoterInfo show={showInfo}></VoterInfo>):(<></>)}
   </Container>)
 }
 

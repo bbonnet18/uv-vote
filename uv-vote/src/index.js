@@ -26,7 +26,7 @@ const router = createBrowserRouter(
       <Route path="/getkey" element={<Register />}/>
       <Route path="/buddy" element={<Buddy />}/>
       <Route path="/votes" element={<Feeds />}/>
-      {/* <Route path="/actions" element={<Actions />}>
+      {/*<Route path="/actions" element={<Actions />}>
         <Route index element={<Choices />} />
         <Route path="conduit" element={<Conduit/>} />
       </Route> */}
