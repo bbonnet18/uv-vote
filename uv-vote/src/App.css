@@ -990,6 +990,40 @@ Form input.error {
   width: 300px;
 }
 
+.voterinfo-dialog{
+  margin-top: 0;
+}
+
+.voter-info-header{
+  text-align: center;
+}
+
+.voter-info-header .voter-info-img{
+  width: 60px;
+  margin: auto;
+
+}
+
+.voter-info-header .voter-info-img img{
+  width: 60px; 
+}
+
+.voter-info-note{
+  background-color: crimson;
+  font-weight: bold;
+  margin-top:0;
+}
+.voter-info-form{
+  padding: 5px;
+}
+.voter-info-form .data-block {
+  border-top: 1px solid black;
+}
+
+.voter-info-callout{
+
+}
+
 #voterKey {
   border: 1px black;
 }
