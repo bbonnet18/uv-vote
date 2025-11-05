@@ -12,6 +12,7 @@ import Error from "./Error";
 import NotFound from './NotFound';
 import NoKey from './NoKey'; 
 import Validate from "./Validate";
+import VoterInfo from './VoterInfo';  
 import FAQs from './FAQs';
 import reportWebVitals from './reportWebVitals';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -34,6 +35,7 @@ const router = createBrowserRouter(
       <Route path="/confirm" element={<Confirm />}/>
       <Route path="/registration-error" element={<Error />}/>
       <Route path="/validate" element={<Validate />}/>
+      <Route path="/voterinfo" element={<VoterInfo />}/>
       <Route path="/faqs" element={<FAQs />}/>
       <Route path="/about" element={<About />}/>
       <Route path="*" element={<NotFound></NotFound>} />

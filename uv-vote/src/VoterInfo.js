@@ -1,44 +1,51 @@
 import './App.css';
-import { Button, Col, Form, InputGroup, Modal, Row, Spinner } from "react-bootstrap";
+import { Button, Col, Container, Form, InputGroup, Modal, Row, Spinner } from "react-bootstrap";
 import { useState, useEffect } from 'react';
+import config from './config';
+import axios from 'axios';
 
-function VoterInfo(props) {
+function VoterInfo() {
 
     const [eco, setEco] = useState();
     const [race, setRace] = useState();
     const [lean, setLean] = useState();
 
+    // submit the voter info to the backend
+    const submitVoterInfo = async () => {
+
+        let income = document.getElementById('incomeGroup').querySelector('input[name="income"]:checked');
+        let race = document.getElementById('raceGroup').querySelector('input[name="race"]:checked');
+        let lean = document.getElementById('leanGroup').querySelector('input[name="lean"]:checked');
+        const payload   = {
+            income: income ? income.value : null,
+            race: race ? race.value : null,
+            lean: lean ? lean.value : null
+        };
+
+        if(!income || !race || !lean){
+            alert('Please fill out all fields before submitting.');
+            return;
+        }
+
+
+        const resObj = await axios.post(`${config.apiBaseUrl}/votes/voter-info`, payload ,{withCredentials:true});
+
+        const response = resObj.data;
+        if(response.data.status === 'success'){
+            // redirect to votes page
+            window.location.href = '/votes';
+        }else{
+            alert('There was an error submitting your information. Please try again later.');
+        }
+    }
+
 
     return (
-        <Modal show={props.show} onHide={props.hide}>
-
-            <Modal.Dialog className="mt-0">
-
-                <Modal.Header>
-                    <Modal.Title>Welcome to U-Vote!</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <Row>
-                        <Col sm={12} className='voter-info-header'>
-                            <Col sm={12}>
-                                <div className='voter-info-img mt-2 mb-2'><img src="../incognito.svg" alt="you are anonymous" titl="you are anonymous" /> </div>
-                                <p>You are here and you are anonymous.</p>
-                                <div className='voter-info-callout'>We just need 3 things to best represent you.</div>
-                            </Col>
-                            <Col sm={12} className='voter-info-note'>
-                                <p>Note: This info is only associated with your anonymous key, not with you. We never store this type of data with your registration information. </p>
-                            </Col>
-                            {/* <Col sm={12}>
-                                <Form.Select value={eco} onChange={(e)=>setEco(e.currentTarget.value)}>
-                                    <option value="">Select</option>
-                                </Form.Select>
-                            </Col> */}
-
-                        </Col>
-                    </Row>
-                    <Form className="voter-info-form">
+       <Container className="voter-info-container">
+        
+                    <Form id="voterInfoForm" className="voter-info-form">
                         <Row className='data-block'>
-                        <Form.Group as={Row} className="mb-3" controlId="formEco">
+                        <Form.Group as={Row} className="mb-3" controlId="formRace" id="raceGroup">
                                     <div key={`inline-radio`} className="mb-3">
                                     <Form.Label column sm={4}>
                                             Race
@@ -49,24 +56,28 @@ function VoterInfo(props) {
                                             name="race"
                                             type="radio"
                                             id="race-white"
+                                            value='White'
                                         />
                                         <Form.Check
                                             label="Black/African American"
                                             name="race"
                                             type="radio"
                                             id="race-black"
+                                            value='Black/African American'
                                         />
                                         <Form.Check
                                             name="race"
                                             label="Asian"
                                             type="radio"
                                             id="race-asian"
+                                            value='Asian'
                                         />
                                         <Form.Check
                                             label="American Indian or Alaska Native"
                                             type="radio"
                                             name="race"
                                             id="race-native"
+                                            value='American Indian or Alaska Native'
                                         />
                                     </Col>
                                     <Col sm={6}>
@@ -75,27 +86,28 @@ function VoterInfo(props) {
                                             label="Native Hawaiian or Pacific Islander"
                                             type="radio"
                                             id="race-hawaiian"
+                                            value='Native Hawaiian or Pacific Islander'
                                         />
                                         <Form.Check
                                             name="race"
                                             label="Hispanic/Latino"
                                             type="radio"
                                             id="race-latino"
+                                            value='Hispanic/Latino'
                                         />
                                         <Form.Check
                                             name="race"
                                             label="Some other race"
                                             type="radio"
                                             id="race-other"
+                                            value='Some other race'
                                         />
-                                    
                                     </Col>
                                     </div> 
-                                    
                         </Form.Group>
                         </Row>
                         <Row className='data-block'>
-                        <Form.Group>
+                        <Form.Group as={Row} className="mb-3" controlId="formLean" id="leanGroup">
                             <Form.Label>Political Lean</Form.Label>
                             <div key={`inline-radio`} className="mb-3">
                                         <Form.Check
@@ -104,6 +116,7 @@ function VoterInfo(props) {
                                             name="lean"
                                             type="radio"
                                             id="lean-left"
+                                            value='Left'
                                         />
                                         <Form.Check
                                             inline
@@ -111,6 +124,7 @@ function VoterInfo(props) {
                                             name="lean"
                                             type="radio"
                                             id="lean-center"
+                                            value='Center'
                                         />
                                         <Form.Check
                                             inline
@@ -118,14 +132,14 @@ function VoterInfo(props) {
                                             name="lean"
                                             type="radio"
                                             id="lean-right"
+                                            value='Right'
                                         />
                                     </div>
                             
                         </Form.Group>   
                         </Row>
                         <Row className='data-block'>
-                        <Form.Group>
-                           
+                        <Form.Group as={Row} className="mb-3" controlId="formIncome" id="incomeGroup">
                             <Form.Label>Income</Form.Label>
                             <div key={`inline-radio`} className="mb-3">
                                         <Form.Check
@@ -134,6 +148,7 @@ function VoterInfo(props) {
                                             name="income"
                                             type="radio"
                                             id="income-50"
+                                            value='under 50k'
                                         />
                                         <Form.Check
                                             inline
@@ -141,6 +156,7 @@ function VoterInfo(props) {
                                             name="income"
                                             type="radio"
                                             id="income-100"
+                                            value='under 100k'
                                         />
                                         <Form.Check
                                             inline
@@ -148,6 +164,7 @@ function VoterInfo(props) {
                                             name="income"
                                             type="radio"
                                             id="income-200"
+                                            value='under 200k'
                                         />
                                          <Form.Check
                                             inline
@@ -155,19 +172,16 @@ function VoterInfo(props) {
                                             name="income"
                                             type="radio"
                                             id="income-over"
+                                            value='over 200k'
                                         />
                                     </div>
                         </Form.Group> 
                         </Row>
+                        <Button variant="primary" onClick={submitVoterInfo}>
+                            Submit
+                        </Button>
                     </Form>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="success" onClick={props.hide}>Go!</Button>
-                </Modal.Footer>
-
-            </Modal.Dialog>
-
-        </Modal>
+         </Container>
     );
 }
 

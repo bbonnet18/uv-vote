@@ -5,7 +5,6 @@ import { useSearchParams } from "react-router-dom";
 import { Badge, Button, Container, Row, Col, Nav, OverlayTrigger, Spinner, Toast, ToastContainer, Tooltip, Table, Tab, } from "react-bootstrap";
 import { useNavigate } from 'react-router-dom';
 import Comment from './Comment';
-import VoterInfo from './VoterInfo';
 import Feed from './Feed';
 import cookies from './cookies';
 import config from './config';
@@ -97,7 +96,6 @@ function Feeds() {
           newGroups["National"].feeds = voterFeeds.national.feeds;
           newGroups["National"].name = voterFeeds.national.name
         } else {
-
           newGroups["Local"].feeds = [];
           newGroups["State"].feeds = [];
           newGroups["National"].feeds = [];
@@ -651,7 +649,6 @@ function Feeds() {
     </Tab.Container>)}
     {tryComment && currentFeed ? (<Comment show={tryComment} hide={setTryComment} send={sendComment} topic={currentFeed.title}></Comment>) : ("")}
     {tryReceiver && currentReceiver ? (<Receiver show={tryReceiver} hide={setTryReceiver} receiver={currentReceiver}></Receiver>) : ("")}
-    {showInfo ? (<VoterInfo show={showInfo}></VoterInfo>):(<></>)}
   </Container>)
 }
 
