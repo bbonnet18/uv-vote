@@ -52,7 +52,6 @@ function Feeds() {
           // if the test passes, set the key and load the votes
           if (keyPattern.test(itm)) {
             checkVoter(itm);
-
           }
         }
       })

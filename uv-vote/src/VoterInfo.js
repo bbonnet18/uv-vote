@@ -7,10 +7,7 @@ import axios from 'axios';
 
 function VoterInfo() {
 
-    const [eco, setEco] = useState();
-    const [race, setRace] = useState();
-    const [lean, setLean] = useState();
-
+    const [errMsg, setErrMsg] = useState(""); 
     // submit the voter info to the backend
     const submitVoterInfo = async () => {
 
@@ -23,8 +20,9 @@ function VoterInfo() {
             lean: lean ? lean.value : null
         };
 
+       
         if(!income || !race || !lean){
-            alert('Please fill out all fields before submitting.');
+            setErrMsg('Please fill out all fields!')
             return;
         }
 
@@ -41,27 +39,32 @@ function VoterInfo() {
 
         const resObj = await axios.post(`${config.apiBaseUrl}/votes/voter-info`, payload ,reqOpts);
 
-        const response = resObj.data;
-        if(response.data.status === 'success'){
+        if(resObj && resObj.status === 200){
             // redirect to votes page
             window.location.href = '/votes';
         }else{
-            alert('There was an error submitting your information. Please try again later.');
+            setErrMsg('Unable to update data');
         }
     }
 
 
     return (
        <Container className="voter-info-container">
-        
+            <div class="jumbotron jumbotron-fluid">   
+                {/* <h1 class="display-4">Welcome - You Are Anonymous!</h1> */}
+                    <div className='voter-info-header voter-info-note'>
+                            <div className='voter-info-img'>
+                                <img src="../incognito.svg" alt="anonymous image" title="anonymous image" />
+                            </div>
+                        <p class="lead">You are now completely anonymous!</p> 
+                        <p class="lead">Just a little more info, so we can best represent you.</p>
+                    </div>
+                    </div>
                     <Form id="voterInfoForm" className="voter-info-form">
                         <Row className='data-block'>
+                            <Form.Label>Race:</Form.Label>
                         <Form.Group as={Row} className="mb-3" controlId="formRace" id="raceGroup">
-                                    <div key={`inline-radio`} className="mb-3">
-                                    <Form.Label column sm={4}>
-                                            Race
-                                    </Form.Label>
-                                    <Col sm={6}>
+                                    <Col lg={6}>
                                     <Form.Check
                                             label="White"
                                             name="race"
@@ -91,7 +94,7 @@ function VoterInfo() {
                                             value='American Indian or Alaska Native'
                                         />
                                     </Col>
-                                    <Col sm={6}>
+                                    <Col lg={6}>
                                         <Form.Check
                                             name="race"
                                             label="Native Hawaiian or Pacific Islander"
@@ -114,12 +117,11 @@ function VoterInfo() {
                                             value='Some other race'
                                         />
                                     </Col>
-                                    </div> 
                         </Form.Group>
                         </Row>
                         <Row className='data-block'>
                         <Form.Group as={Row} className="mb-3" controlId="formLean" id="leanGroup">
-                            <Form.Label>Political Lean</Form.Label>
+                            <Form.Label>Political Lean:</Form.Label>
                             <div key={`inline-radio`} className="mb-3">
                                         <Form.Check
                                             inline
@@ -151,7 +153,7 @@ function VoterInfo() {
                         </Row>
                         <Row className='data-block'>
                         <Form.Group as={Row} className="mb-3" controlId="formIncome" id="incomeGroup">
-                            <Form.Label>Income</Form.Label>
+                            <Form.Label>Income:</Form.Label>
                             <div key={`inline-radio`} className="mb-3">
                                         <Form.Check
                                             inline
@@ -188,9 +190,19 @@ function VoterInfo() {
                                     </div>
                         </Form.Group> 
                         </Row>
-                        <Button variant="primary" onClick={submitVoterInfo}>
-                            Submit
-                        </Button>
+                        <Row className={errMsg ? 'voter-info-err-msg show': 'voter-info-err-msg'}>
+                            <div className='voter-info-error-msg-txt'>
+                                Error updating info: {errMsg}
+                            </div>
+                        </Row>
+                        <Row>
+                            <div className='voter-info-action'>
+                                <Button variant="primary" onClick={submitVoterInfo}>
+                                Let's Go!
+                                </Button>
+                            </div>
+                            
+                        </Row>
                     </Form>
          </Container>
     );

@@ -993,9 +993,17 @@ Form input.error {
 .voterinfo-dialog{
   margin-top: 0;
 }
+.voter-info-container{
+  padding: .1em;
+}
+.voter-info-container .jumbotron{
+  background-image: none;
+  height: auto;
+}
 
 .voter-info-header{
   text-align: center;
+  padding: .5em .1em;
 }
 
 .voter-info-header .voter-info-img{
@@ -1008,6 +1016,10 @@ Form input.error {
   width: 60px; 
 }
 
+.voter-info-header .lead{
+  margin-bottom:.2em;
+}
+
 .voter-info-note{
   background-color: crimson;
   font-weight: bold;
@@ -1017,11 +1029,20 @@ Form input.error {
   padding: 5px;
 }
 .voter-info-form .data-block {
-  border-top: 1px solid black;
+  border-top: 1px solid rgba(12, 45, 72, 0.2);
 }
 
-.voter-info-callout{
+.voter-info-action{
+  margin:auto;
+  text-align: center;
+}
 
+.voter-info-err-msg{
+  color: red;
+  display: none !important;
+}
+.voter-info-err-msg.show{
+  display: block !important;
 }
 
 #voterKey {
