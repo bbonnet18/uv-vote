@@ -52,7 +52,6 @@ function Feeds() {
           // if the test passes, set the key and load the votes
           if (keyPattern.test(itm)) {
             checkVoter(itm);
-
           }
         }
       })
@@ -132,6 +131,9 @@ function Feeds() {
         }
         const resObj = await axios.post(`${config.apiBaseUrl}/votes`, payload, { withCredentials: true });
 
+        if(resObj && resObj.data && resObj.data.voterInfo === false){
+          navigate('/voterinfo');
+        }
 
         if (resObj && resObj.data && resObj.data.isVerified === true) {
             await checkFeeds(); 
