@@ -132,6 +132,9 @@ function Feeds() {
         }
         const resObj = await axios.post(`${config.apiBaseUrl}/votes`, payload, { withCredentials: true });
 
+        if(resObj && resObj.data && resObj.data.voterInfo === false){
+          navigate('/voterinfo');
+        }
 
         if (resObj && resObj.data && resObj.data.isVerified === true) {
             await checkFeeds(); 
@@ -171,6 +174,11 @@ function Feeds() {
 
 
       const resObj = await axios.post(`${config.apiBaseUrl}/votes/my-feeds`, {}, reqOpts);
+
+      if(resObj && resObj.data && resObj.data.voterInfo === false){
+        navigate('/voterinfo');
+      }
+
       if (resObj && resObj.data.feeds) {
 
         // unescape the topic if it was escaped and fix the tags

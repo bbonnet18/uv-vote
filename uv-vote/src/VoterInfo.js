@@ -2,6 +2,7 @@ import './App.css';
 import { Button, Col, Container, Form, InputGroup, Modal, Row, Spinner } from "react-bootstrap";
 import { useState, useEffect } from 'react';
 import config from './config';
+import cookies from './cookies';
 import axios from 'axios';
 
 function VoterInfo() {
@@ -27,8 +28,18 @@ function VoterInfo() {
             return;
         }
 
+        const authCookie = cookies.getCookie('voterToken') || "";
+        // get the cookie and set the auth header
+        const reqOpts = {
+        headers: {
+            "Authorization": `Bearer ${authCookie}`
+        },
+        withCredentials: true
+        }
+        
 
-        const resObj = await axios.post(`${config.apiBaseUrl}/votes/voter-info`, payload ,{withCredentials:true});
+
+        const resObj = await axios.post(`${config.apiBaseUrl}/votes/voter-info`, payload ,reqOpts);
 
         const response = resObj.data;
         if(response.data.status === 'success'){
