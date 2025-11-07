@@ -114,8 +114,10 @@ function Validate() {
 
   return(<Container fluid="md">
     <h2 className='mt-1'>Validate to recieve your voter key</h2>
-    <Row className='pt-1'>
-        <p>Voters validate each quarter to receive a new voter key. If you're new to U-Vote, get started by <a href="/getkey">registering</a> for a voter key.</p>
+    <Row className='pt-1 pb-2 validate-instructions'>
+        <div>Validate each quarter to receive a new voter key.</div> 
+        <div>If you're new to U-Vote, get started by <a href="/getkey">registering</a> for a voter key.</div>
+        <div>If you have already received your voter key this quarter, use the link from your latest message from U-Vote.</div>
     </Row>
    
   {loading ? (<Spinner></Spinner>) : (<>
@@ -157,6 +159,10 @@ function Validate() {
         <Form.Text id="phonesampleHelp" >The <strong>10 digit</strong> phone number you used during registration</Form.Text>
     </Col>
     </Row>
+
+<Row className='mb-4 mt-4' >
+              <ReCAPTCHA ref={recaptchaRef} sitekey={"6Le-QPIoAAAAAJT5-G3P009gn52wZR3TLLSBB3Fj"} onChange={() => checkCaptcha()} />
+            </Row>
     <Row>
     <Col lg={{span:10,offset:2}} >
     <Button variant='primary' id="validateBtn" type="button" class="btn btn-primary" onClick={() => validate()} disabled={disabled}>Submit</Button>
@@ -165,9 +171,6 @@ function Validate() {
     </Row>
 </Form>
 
-<Row className='mb-4 mt-4' >
-              <ReCAPTCHA ref={recaptchaRef} sitekey={"6Le-QPIoAAAAAJT5-G3P009gn52wZR3TLLSBB3Fj"} onChange={() => checkCaptcha()} />
-            </Row>
 
 </>)}
   </>)}</Container>)

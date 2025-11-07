@@ -8,6 +8,7 @@ import axios from 'axios';
 function VoterInfo() {
 
     const [errMsg, setErrMsg] = useState(""); 
+    const [loading, setLoading] = useState(false);
     // submit the voter info to the backend
     const submitVoterInfo = async () => {
 
@@ -34,17 +35,16 @@ function VoterInfo() {
         },
         withCredentials: true
         }
-        
-
-
+        setLoading(true);
         const resObj = await axios.post(`${config.apiBaseUrl}/votes/voter-info`, payload ,reqOpts);
 
         if(resObj && resObj.status === 200){
             // redirect to votes page
             window.location.href = '/votes';
         }else{
-            setErrMsg('Unable to update data');
+            setErrMsg('Unable to update data, please try again. If the problem persists, contact support@u-vote.us.');
         }
+        setLoading(false);
     }
 
 
@@ -60,7 +60,14 @@ function VoterInfo() {
                         <p class="lead">Just a little more info, so we can best represent you.</p>
                     </div>
                     </div>
-                    <Form id="voterInfoForm" className="voter-info-form">
+                    { loading ? (
+                        <div className='voter-info-loading'>
+                            <Spinner animation="border" role="status">
+                                <span className="visually-hidden">Loading...</span>
+                            </Spinner>
+                        </div>
+                    ) : (
+                        <Form id="voterInfoForm" className="voter-info-form">
                         <Row className='data-block'>
                             <Form.Label>Race:</Form.Label>
                         <Form.Group as={Row} className="mb-3" controlId="formRace" id="raceGroup">
@@ -197,13 +204,15 @@ function VoterInfo() {
                         </Row>
                         <Row>
                             <div className='voter-info-action'>
-                                <Button variant="primary" onClick={submitVoterInfo}>
-                                Let's Go!
+                                <Button variant="outline-primary" className='voter-info-btn' onClick={submitVoterInfo}>
+                                GO<img src="../check.svg" alt="check" title="check" />
                                 </Button>
                             </div>
                             
                         </Row>
                     </Form>
+                    ) }
+                    
          </Container>
     );
 }

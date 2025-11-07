@@ -131,6 +131,10 @@ function Feeds() {
         }
         const resObj = await axios.post(`${config.apiBaseUrl}/votes`, payload, { withCredentials: true });
 
+        if(resObj && resObj.data && resObj.data.isExpired === true){
+          navigate('/validate');
+        }
+
         if(resObj && resObj.data && resObj.data.voterInfo === false){
           navigate('/voterinfo');
         }
@@ -561,7 +565,7 @@ function Feeds() {
                   <Col lg={6} xs={12}><p>Description: {groups[itm].description}</p>
                     {itm === 'State' || itm === 'National' ? (<div className='limit-notice'><p>U-Vote is currntly testing <strong>local</strong> issues. Issues are here to show <strong>state</strong> and <strong>national</strong> capability. </p></div>) : (<></>)}
                   </Col>
-                  <h4 className='mt-1'>{groups[itm].title} <img src={`../${groups[itm].name}.png`} alt={groups[itm].name} title={groups[itm].name} className='table-group-img'></img></h4>
+                  <h4 className='mt-1'>{groups[itm].name !== "none" ? groups[itm].title : "No Group Established"} {groups[itm].name !== "none" ? (<img src={`../${groups[itm].name}.png`} alt={groups[itm].name} title={groups[itm].name} className='table-group-img'></img>) : (<img src={'../none.svg'} alt={"no group established"} title={"no group established"} className='table-group-img'></img>)}</h4>
                   {currentFeeds && currentFeeds.length ? (
                     <>
                       <Table className='feeds-table' key={ind} striped bordered hover>
