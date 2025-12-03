@@ -144,7 +144,7 @@ option:disabled {
 }
 
 button, .btn {
-  border-radius: 0 !important;
+  /* border-radius: 0 !important; */
 }
 
 
@@ -292,7 +292,7 @@ button, .btn {
 .state{
   background-color: #030A8C !important;
 }
-.national{
+.federal{
   background-color: #0D0D0D !important;
 }
 
@@ -454,6 +454,7 @@ button, .btn {
   color: #FFF;
   margin:auto;
   font-size: smaller;
+  border-radius: 5px;
 }
 
 .feeds-table .table-link-col .feed-action .completed img{
@@ -859,7 +860,11 @@ Form input.error {
 .table-info-col{
   width: 80%;
 }
-
+.table-info-col .title{
+  font-weight: bolder;
+  font-size: larger;
+  text-align: left;
+}
 .table-link-col {
   text-align: center;
   max-width: 20%;
@@ -869,6 +874,8 @@ Form input.error {
   flex-direction: column;
   justify-content: center;
   height: 100%;
+  color: #FFF;
+  font-size: medium;
 }
  /* .table-link-col .btn{
   padding: 0 !important;
@@ -1231,6 +1238,7 @@ Form input.error {
   .feed-action .vote-buttons.completed{
     background-color: rgb(99, 98, 98);
     height: auto;
+    border-radius: 5px;
   }
 }
 
@@ -1397,7 +1405,7 @@ Form input.error {
   vertical-align: middle;
   box-sizing: content-box;
   overflow: hidden;
-  font-size: small;
+  font-size: medium;
   margin-left: 5px;
   margin-right: 5px;
   margin-top: 10px;

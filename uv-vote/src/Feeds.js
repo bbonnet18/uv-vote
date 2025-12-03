@@ -417,7 +417,7 @@ function Feeds() {
       let receiverMap = {}
       if (feedReceivers && feedReceivers.length) {
         feedReceivers.map((itm, ind) => {
-          receiverMap[itm.receiverId.S] = itm.level.S;
+          receiverMap[itm.receiverId.S] = itm.category.S;
         });
       }
       let tagsColl = tags.split("|");
@@ -425,9 +425,9 @@ function Feeds() {
         let tag = itm.split("-");
         let tagId = tag[0];
         let lastname = tag[1];
-        let receiverLevel = receiverMap[tagId];
+        let receiverCategory = receiverMap[tagId];
         if (tagId) {
-          tagsArr.push({ receiverId: tagId, lastname: lastname, level: receiverLevel });
+          tagsArr.push({ receiverId: tagId, lastname: lastname, category: receiverCategory });
         }
       });
     } catch (err) {
@@ -552,7 +552,7 @@ function Feeds() {
             <Nav.Link eventKey="State">State<div className='nav-indicator state'></div></Nav.Link>
           </Nav.Item>
           <Nav.Item>
-            <Nav.Link eventKey="National">National<div className='nav-indicator national'></div></Nav.Link>
+            <Nav.Link eventKey="National">National<div className='nav-indicator federal'></div></Nav.Link>
           </Nav.Item>
         </Nav>
       </Row>
@@ -565,13 +565,13 @@ function Feeds() {
                   <Col lg={6} xs={12}><p>Description: {groups[itm].description}</p>
                     {itm === 'State' || itm === 'National' ? (<div className='limit-notice'><p>U-Vote is currntly testing <strong>local</strong> issues. Issues are here to show <strong>state</strong> and <strong>national</strong> capability. </p></div>) : (<></>)}
                   </Col>
-                  <h4 className='mt-1'>{groups[itm].name !== "none" ? groups[itm].title : "No Group Established"} {groups[itm].name !== "none" ? (<img src={`../${groups[itm].name}.png`} alt={groups[itm].name} title={groups[itm].name} className='table-group-img'></img>) : (<img src={'../none.svg'} alt={"no group established"} title={"no group established"} className='table-group-img'></img>)}</h4>
+                  <h4 className='mt-1'>{groups[itm].name !== "none" ? groups[itm].title : "No Group Established"} {groups[itm].name !== "none" ? (<><img src={`../${groups[itm].name}.png`} alt={groups[itm].name} title={groups[itm].name} className='table-group-img'></img> <span>{groups[itm].name}</span></>) : (<img src={'../none.svg'} alt={"no group established"} title={"no group established"} className='table-group-img'></img>)}</h4>
                   {currentFeeds && currentFeeds.length ? (
                     <>
                       <Table className='feeds-table' key={ind} striped bordered hover>
                         <thead>
                           <tr>
-                            <th>Feeds</th>
+                            <th><h2>Issues</h2></th>
                             <th className='table-link-col'>Action</th>
                           </tr>
                         </thead>
@@ -581,11 +581,11 @@ function Feeds() {
                               <tr key={ind}>
                                 <td key={`${ind}-info`} className='table-info-col'>
                                   <div className='title'>{itm.title}</div>
-                                  <div className='tags'>Receivers: <div className="receivers-action"></div> <div className='receivers'>{itm.tags && Array.isArray(itm.tags) ? (itm.tags.map((itm, ind) => {
+                                  <div className='tags'>Tagged: <div className="receivers-action"></div> <div className='receivers'>{itm.tags && Array.isArray(itm.tags) ? (itm.tags.map((itm, ind) => {
                                     return (<>{ind && ind > 0 ? (" ") : (<></>)}<Button key={ind} className={'conduit-receivers'} value={itm.receiverId} onClick={(e) => {
                                       getReceiver(e.currentTarget.value);
                                       setTryReceiver(true);
-                                    }}><div className='conduit-receiver-label'>{itm.lastname}</div> <div className={`nav-indicator ${itm && itm.level ? itm.level : ''}`}></div> </Button> </>);
+                                    }}><div className='conduit-receiver-label'>{itm.lastname}</div> <div className={`nav-indicator ${itm && itm.category ? itm.category : ''}`}></div> </Button> </>);
                                   })) : (<></>)}</div></div>
                                    <div className='table-row-buttons'><div className='feed-action'>{itm.hasCommented ? (<OverlayTrigger overlay={<Tooltip id={`tooltip${ind}`}>You Commented</Tooltip>}><div className='vote-buttons completed'><img className='button-icon' src='../check-square.svg' alt='vote completed' title='vote completed'></img><div className='label'>Done</div></div></OverlayTrigger>) : (
                                     <Button className='vote-buttons' variant='primary' onClick={(e) => {
