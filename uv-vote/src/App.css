@@ -70,10 +70,12 @@ option:disabled {
 
 .alpha-mark {
 
-  display: inline-block;
+  display: block;
   margin-left: 30px;
   color: darkgray;
-  font-size: medium;
+  font-size: large;
+  position: relative;
+  top:-10px; 
   /* text-decoration: underline; */
 }
 
@@ -141,6 +143,19 @@ option:disabled {
 
 .bg-grey {
   background-color: #f6f6f6;
+}
+
+.brand{
+  /* font-family: 'Roboto', sans-serif;
+  font-weight: 500;
+  font-size: 1.5em;
+  color: #0C2D48; */
+  width: 50%;
+  display: inline-block;
+}
+
+.brand div{
+  vertical-align: middle;
 }
 
 button, .btn {
@@ -524,6 +539,11 @@ Form input.error {
   width:54px;
 }
 
+.header-holder{
+  display:inline-block;
+  vertical-align: middle;
+  height: 60px;
+}
 .formSection {
   padding-top: 10px;
   border-radius: 8px;
@@ -979,6 +999,12 @@ Form input.error {
   padding-bottom: 10px;
 }
 
+.u-vote-title{
+  /* font-weight: bolder;
+  font-size: xx-large;
+  color: #0C2D48; */
+}
+
 .validate-instructions{
   font-size: small;
   /* color: gray; */
@@ -1245,6 +1271,7 @@ Form input.error {
 
 
 @media screen and (min-width: 1024px) {
+
   .step-one {
     background-image: url('number-one-icon.svg');
     background-position: center;
@@ -1327,6 +1354,13 @@ Form input.error {
   } */
 }
 
+@media screen and (max-width: 600px) {
+
+  .countdown{
+    font-size: small;
+  }
+
+}
 
 @media screen and (max-width:450px) {
 
@@ -1343,9 +1377,7 @@ Form input.error {
     padding: 1px 2px !important;
   }
   
-  .countdown{
-    font-size: small;
-  }
+
   .countdown div{
     display: inline-block;
     font-size: small;
@@ -1442,6 +1474,15 @@ Form input.error {
   }
 }
 
+@media screen and (max-width: 400px) {
+
+  .countdown{
+    font-size: small;
+    display: block;
+    margin-left:0px; 
+  }
+
+}
 
 @-webkit-keyframes fadeOut {
   0% {

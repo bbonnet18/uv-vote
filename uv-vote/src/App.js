@@ -9,35 +9,47 @@ import Countdown from './Countdown';
 
 export default function App() {
 
-  const [agreeCookies,setAgreeCookies] = useState(true);
+  const [agreeCookies, setAgreeCookies] = useState(true);
 
-  useEffect(()=>{
+  useEffect(() => {
 
     let agreeCookie = cookies.getCookie('accepts');
-    if(!agreeCookie){
+    if (!agreeCookie) {
       setAgreeCookies(false);
     }
 
-  },[agreeCookies]);
+  }, [agreeCookies]);
 
-  const setUserAgree = (cname,cval)=> {
-      cookies.setCookie(cname,cval);
-      setAgreeCookies(true);
+  const setUserAgree = (cname, cval) => {
+    cookies.setCookie(cname, cval);
+    setAgreeCookies(true);
   }
 
 
   return (
     <>
-    <div className="icon-brand"><div className='container'><img src='logo64.webp' alt="U-Vote" title="U-Vote" className='header-img'></img>U-Vote<div className='alpha-mark'>BETA</div><Countdown /></div></div>
-    <hr className='nav-sep'></hr>
-    
-    <Container className='p-0'>
-      <Container className='top-nav'>
-      <Navbar></Navbar>
+      <div className="icon-brand">
+        <div className='container'>
+          <div className='brand'>
+            <img src='logo64.webp' alt="U-Vote" title="U-Vote" className='header-img'></img>
+            <div className="header-holder">
+              <div className='u-vote-title'>U-Vote</div>
+              <div className='alpha-mark'>BETA</div>
+            </div>
+            
+          </div>
+          <Countdown />
+        </div>
+      </div>
+      <hr className='nav-sep'></hr>
+
+      <Container className='p-0'>
+        <Container className='top-nav'>
+          <Navbar></Navbar>
+        </Container>
+        <Outlet />
       </Container>
-    <Outlet />
-    </Container>
-    {agreeCookies ? (<></>):(<CookieNotice setAgree={setUserAgree}></CookieNotice>)}
+      {agreeCookies ? (<></>) : (<CookieNotice setAgree={setUserAgree}></CookieNotice>)}
     </>
   );
 }

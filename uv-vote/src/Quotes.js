@@ -49,10 +49,8 @@ function Quotes(props){
     useEffect(()=>{
             const fadeFunc=()=>{
                     if(quote && quote.quote){
-                        console.log('quote: ', quote); 
                         let newFadeClass = `${fadeClass} fade-${quote.fade}`;
                         let newAuthorFadeClass = `${authorFadeClass} fade-${quote.fade}`;
-                        console.log('fade: ', newFadeClass, ' author: ', newAuthorFadeClass);
                         setFadeClass(newFadeClass); 
                         setAuthorFadeClass(newAuthorFadeClass);
                     }
