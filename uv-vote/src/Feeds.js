@@ -26,9 +26,10 @@ function Feeds() {
   const [tryComment, setTryComment] = useState(false);
   const [validVoter, setValidVoter] = useState(null);// used to show a message if voter is not valid
   const [currentFeedViewed, setCurrentFeedViewed] = useState({});
+  const [descriptionShow, setDescriptionShow] = useState({});
   const [loadingIds, setLoadingIds] = useState({});
   const [show, setShow] = useState(false);
-  const [showInfo, setShowInfo] = useState(false); 
+  const [showInfo, setShowInfo] = useState(false);
   const [alertTitle, setAlertTitle] = useState('Success!')
   const [alertMsg, setAlertMsg] = useState("Thanks for submitting your comment");
   const [alertType, setAlertType] = useState('success');
@@ -580,7 +581,12 @@ function Feeds() {
                             return (
                               <tr key={ind}>
                                 <td key={`${ind}-info`} className='table-info-col'>
-                                  <div className='title'>{itm.title}</div>
+                                  <div className='title'>{itm.title} <span><Button className='info-button' variant='link' onClick={() => {
+                                    setDescriptionShow(prevState => ({ ...prevState, [ind]: !descriptionShow[ind] }));
+                                  }}><img src='../info-circle.svg' alt='more info' title='more info' />Description</Button></span> </div>
+                                  <div className={'description'}>
+                                    {itm.description && itm.description.length > 0 ? (<div className={descriptionShow[ind] ? 'description-show' : 'description-hide'}>{itm.description}</div>) : (<div className={descriptionShow[ind] ? 'description-show' : 'description-hide'}>No description provided.</div>)}
+                                  </div>
                                   <div className='tags'>Tagged: <div className="receivers-action"></div> <div className='receivers'>{itm.tags && Array.isArray(itm.tags) ? (itm.tags.map((itm, ind) => {
                                     return (<>{ind && ind > 0 ? (" ") : (<></>)}<Button key={ind} className={'conduit-receivers'} value={itm.receiverId} onClick={(e) => {
                                       getReceiver(e.currentTarget.value);
