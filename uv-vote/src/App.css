@@ -423,7 +423,19 @@ button, .btn {
   background-image: url('check2-square.svg');
   background-repeat: no-repeat;
 }
-
+.description-info{
+  margin-top: 10px;
+  text-align: left;
+}
+.description div{
+  margin-top: 10px;
+  font-size: small;
+  color: #000;
+  text-align: left;
+  border-radius: 5px;
+  padding: 5px;
+  background-color: rgb(49, 210, 242)
+}
 .description-hide{
   display: none;
 }

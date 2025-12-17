@@ -581,9 +581,10 @@ function Feeds() {
                             return (
                               <tr key={ind}>
                                 <td key={`${ind}-info`} className='table-info-col'>
-                                  <div className='title'>{itm.title} <span><Button className='info-button' variant='link' onClick={() => {
+                                  <div className='title'>{itm.title}</div>
+                                  <div className='description-info'><Button variant='outline-info' onClick={() => {
                                     setDescriptionShow(prevState => ({ ...prevState, [ind]: !descriptionShow[ind] }));
-                                  }}><img src='../info-circle.svg' alt='more info' title='more info' />Description</Button></span> </div>
+                                  }}><img src={descriptionShow[ind] ? '../chevron-up.svg' : '../chevron-down.svg'} alt='more info' title='more info' />Learn More</Button></div>
                                   <div className={'description'}>
                                     {itm.description && itm.description.length > 0 ? (<div className={descriptionShow[ind] ? 'description-show' : 'description-hide'}>{itm.description}</div>) : (<div className={descriptionShow[ind] ? 'description-show' : 'description-hide'}>No description provided.</div>)}
                                   </div>
